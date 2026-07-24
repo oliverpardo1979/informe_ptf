@@ -396,21 +396,22 @@ def write_aggregate_contribution_tables(
     lines = [
         r"\begin{table}[htbp]",
         r"\centering",
-        r"\caption{Descomposición de la PTF del total de la economía por actividad, 2006--2024}",
+        r"\caption{Evolución de la PTF por actividad y contribución al total, 2005--2024}",
         r"\label{tab:contribucion_ptf_total}",
-        r"\small",
-        r"\setlength{\tabcolsep}{4pt}",
-        r"\begin{tabular}{p{5.4cm}>{\raggedleft\arraybackslash}p{2.1cm}>{\raggedleft\arraybackslash}p{2.7cm}>{\raggedleft\arraybackslash}p{2.8cm}}",
+        r"\footnotesize",
+        r"\setlength{\tabcolsep}{3pt}",
+        r"\begin{tabular}{p{4.3cm}>{\raggedleft\arraybackslash}p{1.7cm}>{\raggedleft\arraybackslash}p{2.25cm}>{\raggedleft\arraybackslash}p{2.2cm}>{\raggedleft\arraybackslash}p{2.35cm}}",
         r"\toprule",
-        r"Actividad & Peso promedio & PTF de la actividad & Contribución al total \\",
-        r" & (\%) & (pp por año) & (pp por año) \\",
+        r"Actividad & Peso promedio & Crecimiento acumulado & PTF anualizada & Contribución al total \\",
+        r" & (\%) & 2005--2024 (\%) & (pp por año) & (pp por año) \\",
         r"\midrule",
     ]
     for row in sectors:
         lines.append(
-            "{} & {} & {} & {} \\\\".format(
+            "{} & {} & {} & {} & {} \\\\".format(
                 tex_escape(TEX_NAMES[str(row["activity"])]),
                 tex_fmt(float(row["average_weight"]) * 100),
+                tex_fmt(float(row["ptf_index_2024"]) - 100),
                 tex_fmt(float(row["average_sector_ptf"])),
                 tex_fmt3(float(row["average_contribution"])),
             )
@@ -419,13 +420,14 @@ def write_aggregate_contribution_tables(
         [
             r"\midrule",
             r"\textbf{Total de la economía} & \textbf{100,00} & "
+            + rf"\textbf{{{tex_fmt(float(total['ptf_index_2024']) - 100)}}} & "
             + rf"\textbf{{{tex_fmt(float(total['average_sector_ptf']))}}} & "
             + rf"\textbf{{{tex_fmt3(float(total['average_contribution']))}}} \\",
             r"\bottomrule",
             r"\end{tabular}",
             r"\vspace{0.15cm}",
             r"\begin{minipage}{0.96\textwidth}",
-            r"\footnotesize \textit{Nota:} el peso es el promedio de las ponderaciones anuales de Törnqvist. La PTF de la actividad mide su propio crecimiento; la contribución multiplica cada PTF anual por su peso anual antes de promediar. Las nueve contribuciones suman la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
+            r"\footnotesize \textit{Nota:} el crecimiento acumulado compara el índice de 2024 con el de 2005; la PTF anualizada es la variación logarítmica promedio. Ambas medidas describen la PTF dentro de cada actividad y los acumulados sectoriales no se suman. La contribución multiplica cada PTF anual por su peso anual antes de promediar; las nueve contribuciones suman la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
             r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
             r"\end{minipage}",
             r"\end{table}",
@@ -740,31 +742,197 @@ def draw_aggregate_contributions_by_period(
 
 
 def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
-    rows = sorted(long_run, key=lambda d: float(d["ptf"]))
-    img, draw, f = canvas(
-        "Variación promedio de la PTF: total y actividades",
-        "PTF promedio anual dentro de cada actividad, 2006–2024 (puntos porcentuales)",
+    rows = sorted(
+        long_run,
+        key=lambda d: float(d["average_sector_ptf"]),
+        reverse=True,
     )
-    left, right, top, bottom = 590, 1690, 215, 1000
-    xmin, xmax = -2.6, 1.6
-    xscale = (right - left) / (xmax - xmin)
-    x0 = left + (0 - xmin) * xscale
+    img, draw, f = canvas(
+        "Crecimiento acumulado y anualizado de la PTF",
+        "Total y actividades, 2005–2024",
+        1800,
+        1180,
+    )
+    left_label = 55
+    top, bottom = 260, 955
+    accumulated_left, accumulated_right = 600, 1080
+    annualized_left, annualized_right = 1245, 1725
+    accumulated_min, accumulated_max = -40.0, 30.0
+    annualized_min, annualized_max = -2.6, 1.6
+
+    draw.text(
+        (665, 190),
+        "Crecimiento acumulado (%)",
+        fill=BLUE,
+        font=f["small_bold"],
+    )
+    draw.text(
+        (1300, 190),
+        "PTF anualizada (pp por año)",
+        fill=BLUE,
+        font=f["small_bold"],
+    )
+
+    def x_position(
+        value: float,
+        left: float,
+        right: float,
+        minimum: float,
+        maximum: float,
+    ) -> float:
+        return left + (value - minimum) / (maximum - minimum) * (right - left)
+
+    for tick in [-40, -20, 0, 20]:
+        x = x_position(
+            tick,
+            accumulated_left,
+            accumulated_right,
+            accumulated_min,
+            accumulated_max,
+        )
+        draw.line(
+            (x, top, x, bottom),
+            fill=BLUE if tick == 0 else GRID,
+            width=3 if tick == 0 else 1,
+        )
+        draw.text(
+            (x - 17, bottom + 18),
+            str(tick).replace("-", "−"),
+            fill=GRAY,
+            font=f["small"],
+        )
+
     for tick in [-2, -1, 0, 1]:
-        x = left + (tick - xmin) * xscale
-        draw.line((x, top, x, bottom), fill=BLUE if tick == 0 else GRID, width=3 if tick == 0 else 1)
-        label = str(tick).replace("-", "−")
-        draw.text((x - 10, bottom + 18), label, fill=GRAY, font=f["small"])
+        x = x_position(
+            tick,
+            annualized_left,
+            annualized_right,
+            annualized_min,
+            annualized_max,
+        )
+        draw.line(
+            (x, top, x, bottom),
+            fill=BLUE if tick == 0 else GRID,
+            width=3 if tick == 0 else 1,
+        )
+        draw.text(
+            (x - 10, bottom + 18),
+            str(tick).replace("-", "−"),
+            fill=GRAY,
+            font=f["small"],
+        )
+
+    accumulated_zero = x_position(
+        0,
+        accumulated_left,
+        accumulated_right,
+        accumulated_min,
+        accumulated_max,
+    )
+    annualized_zero = x_position(
+        0,
+        annualized_left,
+        annualized_right,
+        annualized_min,
+        annualized_max,
+    )
     row_h = (bottom - top) / len(rows)
     for i, row in enumerate(rows):
         y = top + (i + 0.5) * row_h
-        value = float(row["ptf"])
-        x = left + (value - xmin) * xscale
-        color = GRAY if str(row["activity"]) == "Total de la economía" else (MID_BLUE if value >= 0 else RED)
-        draw.text((70, y - 16), str(row["activity"]), fill="#222222", font=f["axis"])
-        draw.rectangle((min(x, x0), y - 22, max(x, x0), y + 22), fill=color)
-        anchor_x = x + 12 if value >= 0 else x - 78
-        draw.text((anchor_x, y - 16), fmt(value), fill=color, font=f["axis_bold"])
-    draw.text((85, 1060), "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.", fill=GRAY, font=f["small"])
+        annualized = float(row["average_sector_ptf"])
+        accumulated = float(row["ptf_index_2024"]) - 100
+        accumulated_x = x_position(
+            accumulated,
+            accumulated_left,
+            accumulated_right,
+            accumulated_min,
+            accumulated_max,
+        )
+        annualized_x = x_position(
+            annualized,
+            annualized_left,
+            annualized_right,
+            annualized_min,
+            annualized_max,
+        )
+        color = (
+            GRAY
+            if str(row["activity"]) == "Total de la economía"
+            else (MID_BLUE if annualized >= 0 else RED)
+        )
+        draw.text(
+            (left_label, y - 16),
+            str(row["activity"]),
+            fill="#222222",
+            font=f["axis"],
+        )
+        draw.rectangle(
+            (
+                min(accumulated_x, accumulated_zero),
+                y - 18,
+                max(accumulated_x, accumulated_zero),
+                y + 18,
+            ),
+            fill=color,
+        )
+        draw.rectangle(
+            (
+                min(annualized_x, annualized_zero),
+                y - 18,
+                max(annualized_x, annualized_zero),
+                y + 18,
+            ),
+            fill=color,
+        )
+
+        accumulated_label = f"{accumulated:.1f}".replace("-", "−")
+        annualized_label = fmt(annualized)
+        accumulated_box = draw.textbbox(
+            (0, 0),
+            accumulated_label,
+            font=f["small_bold"],
+        )
+        annualized_box = draw.textbbox(
+            (0, 0),
+            annualized_label,
+            font=f["small_bold"],
+        )
+        accumulated_label_width = accumulated_box[2] - accumulated_box[0]
+        annualized_label_width = annualized_box[2] - annualized_box[0]
+        draw.text(
+            (
+                accumulated_x + 9
+                if accumulated >= 0
+                else accumulated_x - accumulated_label_width - 9,
+                y - 13,
+            ),
+            accumulated_label,
+            fill=color,
+            font=f["small_bold"],
+        )
+        draw.text(
+            (
+                annualized_x + 9
+                if annualized >= 0
+                else annualized_x - annualized_label_width - 9,
+                y - 13,
+            ),
+            annualized_label,
+            fill=color,
+            font=f["small_bold"],
+        )
+    draw.text(
+        (70, 1035),
+        "Nota: el acumulado compara 2024 con 2005. La medida anualizada es la variación logarítmica promedio.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (70, 1080),
+        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        fill=GRAY,
+        font=f["small"],
+    )
     img.save(FIGURES / "fig_ptf_promedio_actividad.png", quality=95)
 
 
@@ -1057,7 +1225,7 @@ def main() -> None:
     draw_total_index(index_rows)
     draw_aggregate_contributions(contribution_long)
     draw_aggregate_contributions_by_period(contribution_periods)
-    draw_ptf_bars(comparison_long_run)
+    draw_ptf_bars(contribution_long)
     draw_decomposition(long_run)
     draw_series(observations)
     draw_heatmap([*total_observations, *observations])
