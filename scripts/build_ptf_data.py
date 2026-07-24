@@ -1044,16 +1044,32 @@ def interpolate_color(value: float, limit: float = 6.0) -> str:
 def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
     rows = [d for d in observations if int(d["year"]) >= 2006]
     lookup = {(str(d["activity"]), int(d["year"])): float(d["ptf"]) for d in rows}
+    years = list(range(2006, 2025))
+    sector_activities = [
+        activity for activity in ACTIVITY_ORDER if activity != "Total de la economía"
+    ]
+    cumulative_ptf = {
+        activity: 100
+        * (
+            math.exp(
+                sum(lookup[(activity, year)] for year in years) / 100
+            )
+            - 1
+        )
+        for activity in sector_activities
+    }
+    activities = [
+        "Total de la economía",
+        *sorted(sector_activities, key=cumulative_ptf.get),
+    ]
     img, draw, f = canvas(
         "Variación anual de la PTF: total y actividades",
-        "2006–2024, puntos porcentuales; azul = PTF positiva, rojo = PTF negativa",
+        "2006–2024, puntos porcentuales; actividades ordenadas por PTF acumulada, de menor a mayor",
         1900,
         1200,
     )
     left, top = 520, 235
     cell_w, cell_h = 68, 70
-    years = list(range(2006, 2025))
-    activities = ACTIVITY_ORDER
     for j, year in enumerate(years):
         x = left + j * cell_w
         draw.text((x + 7, top - 38), str(year)[2:], fill=GRAY, font=f["small"])
