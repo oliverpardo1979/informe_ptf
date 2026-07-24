@@ -83,16 +83,20 @@ c_{i,t}=\bar{s}_{i,t}\Delta\ln A_{i,t}.
 \label{eq:contribucion_ptf}
 \end{equation}
 
-El cálculo se hace año por año y después se promedia. Multiplicar el peso promedio por la PTF promedio de una actividad no conserva exactamente la identidad, porque omite la variación conjunta de ambas series. La contribución de largo plazo es el promedio de \(c_{i,t}\) entre 2006 y 2024. Esta definición garantiza que la suma de las nueve contribuciones de largo plazo sea igual al crecimiento promedio de la PTF total:
+El cálculo se hace año por año. La contribución de largo plazo de la actividad \(i\) es el promedio de las 19 contribuciones anuales:
 
 \begin{equation}
-\overline{\Delta\ln A}=
-\sum_{i=1}^{9}\overline{c_i}.
+\overline{c_i}
+\equiv\frac{1}{19}\sum_{t=2006}^{2024}c_{i,t}
+=\frac{1}{19}\sum_{t=2006}^{2024}\bar{s}_{i,t}\Delta\ln A_{i,t}.
 \label{eq:contribucion_largo_plazo}
 \end{equation}
 
+El producto del peso promedio por la PTF promedio no es equivalente a \(\overline{c_i}\), porque omite la variación conjunta de ambas series. Por construcción, \(\overline{\Delta\ln A}=\sum_{i=1}^{9}\overline{c_i}\).
+
 \textbf{El anexo publica los resultados agregados, pero no reporta una columna separada con los pesos anuales.} El CJC recupera los pesos implícitos a partir de las filas de las nueve actividades y del total de la economía. Los pesos son positivos, suman uno y reproducen todas las columnas publicadas para el total con precisión numérica. El apéndice presenta el sistema de ecuaciones y su validación.
 
+\newpage
 El informe usa el enfoque de producción porque es el que contiene la historia anual comparable para las nueve actividades. El DANE también publica una PTF del total de la economía por el enfoque de valor agregado. Las dos medidas responden a identidades distintas y no deben combinarse en una misma descomposición.
 
 \section{Resultados}
