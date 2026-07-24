@@ -229,6 +229,9 @@ def tex_escape(text: str) -> str:
 
 def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
     lines = [
+        r"\begingroup",
+        r"\small",
+        r"\setlength{\tabcolsep}{4pt}",
         r"\begin{longtable}{p{4.45cm}rrrrrrr}",
         r"\caption{Descomposición promedio anual del crecimiento de la producción por actividad, 2006--2024}",
         r"\label{tab:descomposicion_largo_plazo}\\",
@@ -273,6 +276,7 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
             r"\multicolumn{8}{p{15.9cm}}{\footnotesize \textit{Nota:} cifras en puntos porcentuales promedio por año, salvo la producción, expresada como tasa logarítmica anual. El periodo usa las 19 variaciones de 2006 a 2024, que enlazan los niveles de 2005 y 2024. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades. Por redondeo, los componentes pueden no sumar exactamente la producción.}\\",
             r"\multicolumn{8}{l}{\footnotesize Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.}\\",
             r"\end{longtable}",
+            r"\endgroup",
         ]
     )
     (SECTIONS / "tabla_descomposicion_largo_plazo.tex").write_text(
@@ -280,6 +284,9 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
     )
 
     detail = [
+        r"\begingroup",
+        r"\small",
+        r"\setlength{\tabcolsep}{4pt}",
         r"\begin{longtable}{p{4.65cm}rrrrrr}",
         r"\caption{Descomposición de los servicios de trabajo y capital, promedio anual 2006--2024}",
         r"\label{tab:detalle_factores}\\",
@@ -323,6 +330,7 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
             r"\multicolumn{7}{p{15.9cm}}{\footnotesize \textit{Nota:} aportes en puntos porcentuales promedio por año. Trabajo es la suma de composición laboral y horas; capital es la suma de capital TIC y no TIC. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades.}\\",
             r"\multicolumn{7}{l}{\footnotesize Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.}\\",
             r"\end{longtable}",
+            r"\endgroup",
         ]
     )
     (SECTIONS / "tabla_detalle_factores.tex").write_text(
@@ -594,13 +602,14 @@ def draw_total_index(
 def draw_aggregate_contributions(
     long_rows: list[dict[str, float | int | str]],
 ) -> None:
-    rows = [
+    sector_rows = [
         row for row in long_rows if str(row["activity"]) != "Total de la economía"
     ]
-    rows.sort(key=lambda row: float(row["average_contribution"]))
+    sector_rows.sort(key=lambda row: float(row["average_contribution"]))
     total = next(
         row for row in long_rows if str(row["activity"]) == "Total de la economía"
     )
+    rows = [*sector_rows, total]
     img, draw, f = canvas(
         "Contribuciones de las actividades a la PTF total",
         "Acumuladas y anualizadas, 2006–2024",
@@ -626,21 +635,6 @@ def draw_aggregate_contributions(
         fill=BLUE,
         font=f["small_bold"],
     )
-    cumulative_total = float(total["cumulative_log_contribution"])
-    annualized_total = float(total["average_contribution"])
-    draw.text(
-        (715, 222),
-        f"Suma: {cumulative_total:.3f}".replace("-", "−"),
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (1405, 222),
-        f"Suma: {annualized_total:.3f}".replace("-", "−"),
-        fill=GRAY,
-        font=f["small"],
-    )
-
     def x_position(
         value: float,
         left: float,
@@ -707,6 +701,7 @@ def draw_aggregate_contributions(
     row_h = (bottom - top) / len(rows)
     for index, row in enumerate(rows):
         y = top + (index + 0.5) * row_h
+        is_total = str(row["activity"]) == "Total de la economía"
         accumulated = float(row["cumulative_log_contribution"])
         annualized = float(row["average_contribution"])
         accumulated_x = x_position(
@@ -723,12 +718,19 @@ def draw_aggregate_contributions(
             annualized_min,
             annualized_max,
         )
-        color = MID_BLUE if annualized >= 0 else RED
+        color = "#333333" if is_total else (MID_BLUE if annualized >= 0 else RED)
+        if is_total:
+            separator_y = y - row_h / 2
+            draw.line(
+                (left_label, separator_y, annualized_right, separator_y),
+                fill=BLUE,
+                width=3,
+            )
         draw.text(
             (left_label, y - 15),
             str(row["activity"]),
             fill="#222222",
-            font=f["axis"],
+            font=f["axis_bold"] if is_total else f["axis"],
         )
         draw.rectangle(
             (
@@ -883,11 +885,19 @@ def draw_aggregate_contributions_by_period(
 
 
 def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
-    rows = sorted(
-        long_run,
+    sector_rows = sorted(
+        [
+            row
+            for row in long_run
+            if str(row["activity"]) != "Total de la economía"
+        ],
         key=lambda d: float(d["average_sector_ptf"]),
         reverse=True,
     )
+    total = next(
+        row for row in long_run if str(row["activity"]) == "Total de la economía"
+    )
+    rows = [*sector_rows, total]
     img, draw, f = canvas(
         "Crecimiento acumulado y anualizado de la PTF",
         "Total y actividades, 2005–2024",
@@ -980,6 +990,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
     row_h = (bottom - top) / len(rows)
     for i, row in enumerate(rows):
         y = top + (i + 0.5) * row_h
+        is_total = str(row["activity"]) == "Total de la economía"
         annualized = float(row["average_sector_ptf"])
         accumulated = float(row["ptf_index_2024"]) - 100
         accumulated_x = x_position(
@@ -996,16 +1007,19 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
             annualized_min,
             annualized_max,
         )
-        color = (
-            GRAY
-            if str(row["activity"]) == "Total de la economía"
-            else (MID_BLUE if annualized >= 0 else RED)
-        )
+        color = GRAY if is_total else (MID_BLUE if annualized >= 0 else RED)
+        if is_total:
+            separator_y = y - row_h / 2
+            draw.line(
+                (left_label, separator_y, annualized_right, separator_y),
+                fill=BLUE,
+                width=3,
+            )
         draw.text(
             (left_label, y - 16),
             str(row["activity"]),
             fill="#222222",
-            font=f["axis"],
+            font=f["axis_bold"] if is_total else f["axis"],
         )
         draw.rectangle(
             (
@@ -1200,8 +1214,8 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
         for activity in sector_activities
     }
     activities = [
-        "Total de la economía",
         *sorted(sector_activities, key=cumulative_ptf.get),
+        "Total de la economía",
     ]
     img, draw, f = canvas(
         "Variación anual de la PTF: total y actividades",
@@ -1216,6 +1230,12 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
         draw.text((x + 7, top - 38), str(year)[2:], fill=GRAY, font=f["small"])
     for i, activity in enumerate(activities):
         y = top + i * cell_h
+        if activity == "Total de la economía":
+            draw.line(
+                (55, y - 3, left + len(years) * cell_w, y - 3),
+                fill=BLUE,
+                width=4,
+            )
         draw.text((60, y + 19), activity, fill="#222222", font=f["axis"])
         for j, year in enumerate(years):
             value = lookup[(activity, year)]
@@ -1231,12 +1251,6 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
                 label,
                 fill=text_color,
                 font=f["small"],
-            )
-        if activity == "Total de la economía":
-            draw.line(
-                (55, y + cell_h - 1, left + len(years) * cell_w, y + cell_h - 1),
-                fill=BLUE,
-                width=4,
             )
     legend_y = 1010
     draw.text((525, legend_y - 2), "PTF negativa", fill=GRAY, font=f["small"])
