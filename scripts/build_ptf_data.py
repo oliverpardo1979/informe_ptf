@@ -447,11 +447,11 @@ def write_aggregate_contribution_tables(
         for period in periods
     }
     lines = [
-        r"\begin{table}[htbp]",
+        r"\begin{table}[H]",
         r"\centering",
         r"\caption{Contribución de cada actividad a la PTF total por subperiodo}",
         r"\label{tab:contribucion_ptf_subperiodos}",
-        r"\small",
+        r"\footnotesize",
         r"\setlength{\tabcolsep}{3pt}",
         r"\begin{tabular}{p{5.3cm}*{5}{>{\raggedleft\arraybackslash}p{1.45cm}}}",
         r"\toprule",

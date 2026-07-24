@@ -10,101 +10,48 @@
 
 \textbf{La PTF total cercana a cero no provino de pequeñas variaciones similares en todas las actividades.} Servicios sociales, comercio, agricultura y transporte aportaron en conjunto 0,361 puntos porcentuales por año. Las otras cinco actividades restaron 0,441 puntos. Servicios sociales tuvo la mayor contribución positiva, con 0,148 puntos, mientras finanzas e inmobiliarias restó 0,137 y minería restó 0,133.
 
-El cuerpo del informe está organizado en cuatro secciones. Después de esta introducción, la sección 2 presenta la metodología de medición, encadenamiento y agregación. La sección 3 analiza la PTF total, su descomposición por actividad y los cambios entre subperiodos. La sección 4 presenta las conclusiones, formula hipótesis que requieren más evidencia y propone líneas de política y de investigación. El apéndice contiene el detalle anual, las pruebas de reconciliación y la correspondencia de actividades.
+El cuerpo del informe está organizado en cuatro secciones. Después de esta introducción, la sección 2 explica qué mide la PTF, qué publica el DANE y cómo se construyen los resultados de largo plazo. La sección 3 analiza la PTF total, su descomposición por actividad y los cambios entre subperiodos. La sección 4 presenta las conclusiones, formula hipótesis que requieren más evidencia y propone líneas de política y de investigación. El apéndice contiene las ecuaciones, la validación de las ponderaciones, los resultados por subperiodos y la correspondencia de actividades.
 
 \clearpage
 \section{Metodología}
 \thispagestyle{fancy}
 
-\subsection{La PTF anual por actividad económica}
+\subsection{Qué es y cómo se calcula la PTF}
 
-\textbf{El DANE calcula la PTF por actividad como un residuo de la contabilidad del crecimiento.} Para cada actividad económica \(i\), el crecimiento logarítmico de la producción se descompone de la siguiente manera:
+\textbf{La PTF es la parte del crecimiento de la producción que no se explica por el crecimiento medido de los insumos.} El DANE usa la contabilidad del crecimiento KLEMS para separar las contribuciones del trabajo, el capital, la energía, los materiales y los servicios. Para cada actividad económica \(i\), la PTF se calcula como:
 
 \begin{equation}
-\Delta \ln Y_{i,t}=
-C^{L}_{i,t}+C^{K}_{i,t}+C^{X}_{i,t}
-+\Delta \ln A_{i,t},
+\Delta \ln A_{i,t}=
+\Delta \ln Y_{i,t}
+-\left(
+C^{L}_{i,t}+C^{K}_{i,t}+C^{E}_{i,t}
++C^{M}_{i,t}+C^{S}_{i,t}
+\right),
 \label{eq:ptf_actividad}
 \end{equation}
 
-donde \(Y\) representa la producción; \(C^{L}\), \(C^{K}\) y \(C^{X}\) son las contribuciones de los servicios laborales, los servicios de capital y los consumos intermedios; y \(\Delta \ln A\) es la variación de la PTF. Los consumos intermedios comprenden energía, materiales y servicios.
+donde \(Y\) representa la producción y cada \(C\) la contribución de un grupo de insumos. El trabajo incluye horas y composición laboral; el capital, activos TIC y no TIC; y los consumos intermedios, energía, materiales y servicios. Cada contribución pondera la variación de los servicios del insumo por su participación en los costos: no es la tasa de crecimiento del insumo.
 
-Una PTF positiva indica que la producción aumentó más de lo explicado por los aportes medidos de los factores. Una PTF negativa indica lo contrario. El residuo también puede recoger cambios en la utilización de la capacidad, reasignaciones dentro de las actividades, errores de medición y otros elementos no observados. Por esta razón, una variación de la PTF no debe interpretarse automáticamente como un cambio tecnológico.
+Una PTF positiva indica que la producción aumentó más de lo explicado por esas contribuciones; una PTF negativa indica lo contrario. El residuo también puede recoger cambios en la utilización de la capacidad, reasignaciones y errores de medición, por lo que no equivale necesariamente a cambio tecnológico.
 
-El informe toma directamente del anexo del DANE las variaciones anuales de la ecuación (\ref{eq:ptf_actividad}). Los detalles sobre la construcción de los servicios laborales, los servicios de capital, los consumos intermedios y sus participaciones se encuentran en el \href{https://www.dane.gov.co/files/investigaciones/boletines/pib/productividad/doc-metodologico-PTF-productividad-total-factores-2021.pdf}{documento metodológico de la PTF del DANE}.
+\subsection{Qué publica el DANE y cómo se construye el largo plazo}
 
-\subsection{El encadenamiento de las variaciones anuales}
+\textbf{El anexo del DANE reporta resultados anuales para el total de la economía y nueve agregados de actividad.} Incluye el crecimiento de la producción, las cinco contribuciones KLEMS y la PTF, y desagrega los componentes del trabajo y el capital.
 
-\textbf{Las variaciones anuales se encadenan para comparar el nivel de la PTF de 2024 con el de 2005.} El índice de cada actividad parte de 100 en 2005 y se actualiza mediante:
+El informe usa el enfoque de producción, que ofrece la historia sectorial comparable; la PTF del total por el enfoque de valor agregado responde a otra identidad. El periodo contiene las 19 variaciones de 2006 a 2024; la fila rotulada como 2005 compara 2005 con 2004. El \href{https://www.dane.gov.co/files/investigaciones/boletines/pib/productividad/doc-metodologico-PTF-productividad-total-factores-2021.pdf}{documento metodológico del DANE} contiene el detalle.
 
-\begin{equation}
-I_{i,t}=I_{i,t-1}\exp\left(\frac{\Delta\ln A_{i,t}}{100}\right).
-\label{eq:indice_ptf}
-\end{equation}
+\textbf{El encadenamiento permite comparar 2024 con 2005.} El índice parte de 100 en 2005 y cada variación anual se aplica al nivel obtenido el año anterior. Así, el cambio acumulado compara los extremos de la serie; el crecimiento promedio de largo plazo promedia las 19 variaciones logarítmicas.
 
-La función exponencial convierte la variación logarítmica publicada en un cambio multiplicativo del índice. La variación acumulada entre 2005 y 2024 es:
+\textbf{La PTF total no es el promedio simple de las PTF sectoriales.} Cada PTF sectorial se multiplica por un peso anual de Törnqvist basado en el valor agregado. El CJC recupera esos pesos. La contribución de largo plazo promedia los 19 productos anuales, no multiplica dos promedios. El apéndice presenta las ecuaciones y la validación.
 
-\begin{equation}
-100\left[
-\exp\left(
-\frac{\sum_{t=2006}^{2024}\Delta\ln A_{i,t}}{100}
-\right)-1
-\right].
-\label{eq:crecimiento_acumulado}
-\end{equation}
-
-El crecimiento promedio de largo plazo se reporta como el promedio de las 19 variaciones logarítmicas. Esta medida se expresa en puntos porcentuales por año y conserva la suma de las contribuciones sectoriales. Para valores pequeños, es prácticamente igual a una tasa de crecimiento anual compuesta; el índice encadenado conserva la diferencia exacta entre los niveles inicial y final.
-
-\subsection{La PTF total y su descomposición por actividad}
-
-\textbf{El total de la economía no se calcula como un promedio simple de las PTF sectoriales.} El DANE agrega las variaciones de las actividades con un índice de Törnqvist basado en su participación en el valor agregado. La PTF total del año \(t\) puede escribirse como:
-
-\begin{equation}
-\Delta\ln A_t=
-\sum_{i=1}^{9}\bar{s}_{i,t}\Delta\ln A_{i,t},
-\label{eq:agregacion_ptf}
-\end{equation}
-
-donde \(\bar{s}_{i,t}\) es el peso de Törnqvist de la actividad \(i\). Si \(s_{i,t}\) representa la participación de la actividad en el valor agregado a precios corrientes, el peso se calcula como:
-
-\begin{equation}
-\bar{s}_{i,t}=\frac{1}{2}\left(s_{i,t-1}+s_{i,t}\right),
-\qquad
-s_{i,t}=\frac{VA_{i,t}}{\sum_j VA_{j,t}}.
-\label{eq:peso_tornqvist}
-\end{equation}
-
-Los nueve pesos suman uno.
-
-\textbf{La contribución anual de una actividad a la PTF total es el producto entre su peso y la PTF de esa actividad.} Por lo tanto:
-
-\begin{equation}
-c_{i,t}=\bar{s}_{i,t}\Delta\ln A_{i,t}.
-\label{eq:contribucion_ptf}
-\end{equation}
-
-El cálculo se hace año por año. La contribución de largo plazo de la actividad \(i\) es el promedio de las 19 contribuciones anuales:
-
-\begin{equation}
-\overline{c_i}
-\equiv\frac{1}{19}\sum_{t=2006}^{2024}c_{i,t}
-=\frac{1}{19}\sum_{t=2006}^{2024}\bar{s}_{i,t}\Delta\ln A_{i,t}.
-\label{eq:contribucion_largo_plazo}
-\end{equation}
-
-El producto del peso promedio por la PTF promedio no es equivalente a \(\overline{c_i}\), porque omite la variación conjunta de ambas series. Por construcción, \(\overline{\Delta\ln A}=\sum_{i=1}^{9}\overline{c_i}\).
-
-\textbf{El anexo publica los resultados agregados, pero no reporta una columna separada con los pesos anuales.} El CJC recupera los pesos implícitos a partir de las filas de las nueve actividades y del total de la economía. Los pesos son positivos, suman uno y reproducen todas las columnas publicadas para el total con precisión numérica. El apéndice presenta el sistema de ecuaciones y su validación.
-
-\newpage
-El informe usa el enfoque de producción porque es el que contiene la historia anual comparable para las nueve actividades. El DANE también publica una PTF del total de la economía por el enfoque de valor agregado. Las dos medidas responden a identidades distintas y no deben combinarse en una misma descomposición.
+\clearpage
 
 \section{Resultados}
 \thispagestyle{fancy}
 
 \subsection{La PTF total terminó por debajo de su nivel de 2005}
 
-\textbf{La PTF del total de la economía disminuyó 1,5\% entre 2005 y 2024.} La Figura \ref{fig:ptf_total_encadenada} presenta el índice construido con la ecuación (\ref{eq:indice_ptf}). El índice pasó de 100 en 2005 a 102,2 en 2006. Después disminuyó y permaneció por debajo de 100 desde 2009. En 2024 fue de 98,5.
+\textbf{La PTF del total de la economía disminuyó 1,5\% entre 2005 y 2024.} La Figura \ref{fig:ptf_total_encadenada} presenta el índice descrito en la metodología. El índice pasó de 100 en 2005 a 102,2 en 2006. Después disminuyó y permaneció por debajo de 100 desde 2009. En 2024 fue de 98,5.
 
 \begin{figure}[H]
   \centering
@@ -216,15 +163,77 @@ El promedio de 2020--2024 ilustra la importancia de descomponer el total. Las co
 \renewcommand{\thefigure}{A\arabic{figure}}
 \renewcommand{\theHtable}{appendix.table.\arabic{table}}
 \renewcommand{\theHfigure}{appendix.figure.\arabic{figure}}
+\renewcommand{\theequation}{A\arabic{equation}}
+\renewcommand{\theHequation}{appendix.equation.\arabic{equation}}
 \setcounter{table}{0}
 \setcounter{figure}{0}
+\setcounter{equation}{0}
 
-\section{Cuadros y figuras de apoyo}
+\section{Detalles metodológicos y cuadros de apoyo}
 \thispagestyle{fancy}
 
-\subsection{Resultados por subperiodos}
+\subsection{Encadenamiento de las variaciones anuales}
 
-\input{Paper/sections/tabla_contribucion_ptf_subperiodos}
+Sea \(I_{i,t}\) el índice de PTF de la actividad \(i\) en el año \(t\), con \(I_{i,2005}=100\). Como las variaciones logarítmicas están en puntos porcentuales, el índice se actualiza mediante:
+
+\begin{equation}
+I_{i,t}=I_{i,t-1}\exp\left(\frac{\Delta\ln A_{i,t}}{100}\right).
+\label{eq:indice_ptf}
+\end{equation}
+
+La variación acumulada entre 2005 y 2024 es:
+
+\begin{equation}
+100\left[
+\exp\left(
+\frac{\sum_{t=2006}^{2024}\Delta\ln A_{i,t}}{100}
+\right)-1
+\right].
+\label{eq:crecimiento_acumulado}
+\end{equation}
+
+El crecimiento promedio de largo plazo se calcula como:
+
+\begin{equation}
+\overline{\Delta\ln A_i}
+=\frac{1}{19}\sum_{t=2006}^{2024}\Delta\ln A_{i,t}.
+\label{eq:promedio_ptf}
+\end{equation}
+
+\subsection{Agregación y contribuciones por actividad}
+
+La PTF del total de la economía en el año \(t\) es la suma ponderada de las PTF sectoriales:
+
+\begin{equation}
+\Delta\ln A_t=
+\sum_{i=1}^{9}\bar{s}_{i,t}\Delta\ln A_{i,t},
+\label{eq:agregacion_ptf}
+\end{equation}
+
+donde \(\bar{s}_{i,t}\) es el peso de Törnqvist de la actividad \(i\). Si \(s_{i,t}\) representa su participación en el valor agregado a precios corrientes, el peso es:
+
+\begin{equation}
+\bar{s}_{i,t}=\frac{1}{2}\left(s_{i,t-1}+s_{i,t}\right),
+\qquad
+s_{i,t}=\frac{VA_{i,t}}{\sum_j VA_{j,t}}.
+\label{eq:peso_tornqvist}
+\end{equation}
+
+Los nueve pesos suman uno. La contribución anual de la actividad \(i\) y su promedio de largo plazo son:
+
+\begin{equation}
+\begin{aligned}
+c_{i,t}
+&=\bar{s}_{i,t}\Delta\ln A_{i,t},\\
+\overline{c_i}
+&\equiv\frac{1}{19}\sum_{t=2006}^{2024}c_{i,t}
+=\frac{1}{19}\sum_{t=2006}^{2024}
+\bar{s}_{i,t}\Delta\ln A_{i,t}.
+\end{aligned}
+\label{eq:contribucion_largo_plazo}
+\end{equation}
+
+Por construcción, \(\overline{\Delta\ln A}=\sum_{i=1}^{9}\overline{c_i}\). El producto del peso promedio por la PTF promedio no conserva esta identidad porque omite la variación conjunta de ambas series.
 
 \subsection{Reconstrucción y validación de las ponderaciones}
 
@@ -252,6 +261,10 @@ Z_{t}^{8}\\
 \end{equation}
 
 donde \(Z_{i,t}^{k}\) es el componente \(k\) publicado para la actividad \(i\) y \(Z_t^k\) es el mismo componente para el total. Los pesos recuperados se encuentran entre 3,0\% y 26,8\% en las 19 observaciones. Al aplicarlos a las trece columnas, incluida la PTF que no se usa como ecuación independiente, el error máximo de reconciliación es \(5,3\times10^{-15}\). El procedimiento identifica los ponderadores implícitos en la publicación; no reconstruye los niveles nominales de valor agregado.
+
+\subsection{Resultados por subperiodos}
+
+\input{Paper/sections/tabla_contribucion_ptf_subperiodos}
 
 \subsection{Actividades incluidas}
 
