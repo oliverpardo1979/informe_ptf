@@ -1,0 +1,10 @@
+build/
+tmp/
+node_modules/
+__pycache__/
+*.pyc
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
