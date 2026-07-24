@@ -242,27 +242,35 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
         r"\endhead",
     ]
     for row in long_run:
+        activity = str(row["activity"])
+        name = tex_escape(TEX_NAMES[activity])
+        values = [
+            tex_fmt(float(row[key]))
+            for key in (
+                "production",
+                "labor",
+                "capital",
+                "energy",
+                "materials",
+                "services",
+                "ptf",
+            )
+        ]
+        if activity == "Total de la economía":
+            name = rf"\textbf{{{name}}}"
+            values = [rf"\textbf{{{value}}}" for value in values]
         lines.append(
             "{} & {} & {} & {} & {} & {} & {} & {} \\\\".format(
-                tex_escape(TEX_NAMES[str(row["activity"])]),
-                *[
-                    tex_fmt(float(row[key]))
-                    for key in (
-                        "production",
-                        "labor",
-                        "capital",
-                        "energy",
-                        "materials",
-                        "services",
-                        "ptf",
-                    )
-                ],
+                name,
+                *values,
             )
         )
+        if activity == "Total de la economía":
+            lines.append(r"\midrule")
     lines.extend(
         [
             r"\bottomrule",
-            r"\multicolumn{8}{p{15.9cm}}{\footnotesize \textit{Nota:} cifras en puntos porcentuales promedio por año, salvo la producción, expresada como tasa logarítmica anual. El periodo usa las 19 variaciones de 2006 a 2024, que enlazan los niveles de 2005 y 2024. Por redondeo, los componentes pueden no sumar exactamente la producción.}\\",
+            r"\multicolumn{8}{p{15.9cm}}{\footnotesize \textit{Nota:} cifras en puntos porcentuales promedio por año, salvo la producción, expresada como tasa logarítmica anual. El periodo usa las 19 variaciones de 2006 a 2024, que enlazan los niveles de 2005 y 2024. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades. Por redondeo, los componentes pueden no sumar exactamente la producción.}\\",
             r"\multicolumn{8}{l}{\footnotesize Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.}\\",
             r"\end{longtable}",
         ]
@@ -285,26 +293,34 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
         r"\endhead",
     ]
     for row in long_run:
+        activity = str(row["activity"])
+        name = tex_escape(TEX_NAMES[activity])
+        values = [
+            tex_fmt(float(row[key]))
+            for key in (
+                "labor_composition",
+                "hours",
+                "labor",
+                "capital_tic",
+                "capital_non_tic",
+                "capital",
+            )
+        ]
+        if activity == "Total de la economía":
+            name = rf"\textbf{{{name}}}"
+            values = [rf"\textbf{{{value}}}" for value in values]
         detail.append(
             "{} & {} & {} & {} & {} & {} & {} \\\\".format(
-                tex_escape(TEX_NAMES[str(row["activity"])]),
-                *[
-                    tex_fmt(float(row[key]))
-                    for key in (
-                        "labor_composition",
-                        "hours",
-                        "labor",
-                        "capital_tic",
-                        "capital_non_tic",
-                        "capital",
-                    )
-                ],
+                name,
+                *values,
             )
         )
+        if activity == "Total de la economía":
+            detail.append(r"\midrule")
     detail.extend(
         [
             r"\bottomrule",
-            r"\multicolumn{7}{p{15.9cm}}{\footnotesize \textit{Nota:} aportes en puntos porcentuales promedio por año. Trabajo es la suma de composición laboral y horas; capital es la suma de capital TIC y no TIC.}\\",
+            r"\multicolumn{7}{p{15.9cm}}{\footnotesize \textit{Nota:} aportes en puntos porcentuales promedio por año. Trabajo es la suma de composición laboral y horas; capital es la suma de capital TIC y no TIC. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades.}\\",
             r"\multicolumn{7}{l}{\footnotesize Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.}\\",
             r"\end{longtable}",
         ]
@@ -1035,7 +1051,7 @@ def main() -> None:
     write_csv(PROCESSED / "ptf_actividad_promedio_2006_2019.csv", pre)
     write_csv(PROCESSED / "ptf_actividad_promedio_2020_2024.csv", post)
     write_csv(PROCESSED / "ptf_total_economia_promedio_2006_2024.csv", total_long_run)
-    write_tex_tables(long_run)
+    write_tex_tables(comparison_long_run)
     write_evolution_table(comparison_long_run, comparison_period_summaries)
     write_aggregate_contribution_tables(contribution_long, contribution_periods)
     draw_total_index(index_rows)
