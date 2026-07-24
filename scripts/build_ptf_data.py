@@ -7,13 +7,22 @@ import math
 from collections import defaultdict
 from pathlib import Path
 
-import openpyxl
 from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data" / "raw" / "anex-PTF-Productividad-2025.xlsx"
+SECTOR_CSV = ROOT / "data" / "processed" / "ptf_actividad_anual.csv"
 TOTAL_CSV = ROOT / "data" / "processed" / "ptf_total_economia_anual.csv"
+CONTRIBUTION_ANNUAL_CSV = (
+    ROOT / "data" / "processed" / "ptf_pesos_contribuciones_anual.csv"
+)
+CONTRIBUTION_LONG_CSV = (
+    ROOT / "data" / "processed" / "ptf_contribucion_largo_plazo.csv"
+)
+CONTRIBUTION_PERIOD_CSV = (
+    ROOT / "data" / "processed" / "ptf_contribucion_subperiodos.csv"
+)
+INDEX_CSV = ROOT / "data" / "processed" / "ptf_indices_encadenados.csv"
 PROCESSED = ROOT / "data" / "processed"
 FIGURES = ROOT / "Paper" / "figures"
 SECTIONS = ROOT / "Paper" / "sections"
@@ -75,25 +84,22 @@ def clean_activity(value: object) -> str:
 
 
 def load_observations() -> list[dict[str, float | int | str]]:
-    wb = openpyxl.load_workbook(RAW, data_only=True, read_only=True)
+    if not SECTOR_CSV.exists():
+        raise RuntimeError(
+            "Falta ptf_actividad_anual.csv. Ejecute primero "
+            "`node scripts/extract_ptf_workbook.mjs`."
+        )
     observations: list[dict[str, float | int | str]] = []
-    for year in range(2005, 2025):
-        ws = wb[f"Cuadro {year - 2001}"]
-        for row in ws.iter_rows(min_row=1, max_col=15, values_only=True):
-            activity = clean_activity(row[1])
-            if activity not in SHORT:
-                continue
-            if not isinstance(row[2], (int, float)):
-                continue
+    with SECTOR_CSV.open("r", encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
             obs: dict[str, float | int | str] = {
-                "year": year,
-                "activity_full": activity,
-                "activity": SHORT[activity],
+                "year": int(row["year"]),
+                "activity_full": row["activity_full"],
+                "activity": row["activity"],
             }
-            for field, value in zip(FIELDS, row[2:15]):
-                obs[field] = float(value)
+            for field in FIELDS:
+                obs[field] = float(row[field])
             observations.append(obs)
-    wb.close()
     if len(observations) != 180:
         raise RuntimeError(f"Se esperaban 180 observaciones y se obtuvieron {len(observations)}")
     return observations
@@ -121,6 +127,29 @@ def load_total_observations() -> list[dict[str, float | int | str]]:
             f"Se esperaban 20 observaciones del total y se obtuvieron {len(observations)}"
         )
     return observations
+
+
+def load_numeric_csv(
+    path: Path,
+    text_fields: set[str],
+    integer_fields: set[str] | None = None,
+) -> list[dict[str, float | int | str]]:
+    integer_fields = integer_fields or set()
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        rows: list[dict[str, float | int | str]] = []
+        for source in csv.DictReader(handle):
+            row: dict[str, float | int | str] = {}
+            for key, value in source.items():
+                if value == "":
+                    row[key] = ""
+                elif key in text_fields:
+                    row[key] = value
+                elif key in integer_fields:
+                    row[key] = int(value)
+                else:
+                    row[key] = float(value)
+            rows.append(row)
+    return rows
 
 
 def validate(observations: list[dict[str, float | int | str]]) -> tuple[float, float]:
@@ -185,7 +214,13 @@ def fmt(value: float) -> str:
 def tex_fmt(value: float) -> str:
     if abs(value) < 0.005:
         value = 0.0
-    return f"{value:.2f}"
+    return f"{value:.2f}".replace(".", ",")
+
+
+def tex_fmt3(value: float) -> str:
+    if abs(value) < 0.0005:
+        value = 0.0
+    return f"{value:.3f}".replace(".", ",")
 
 
 def tex_escape(text: str) -> str:
@@ -331,6 +366,118 @@ def write_evolution_table(
     )
 
 
+def write_aggregate_contribution_tables(
+    long_rows: list[dict[str, float | int | str]],
+    period_rows: list[dict[str, float | int | str]],
+) -> None:
+    sectors = [
+        row for row in long_rows if str(row["activity"]) != "Total de la economía"
+    ]
+    sectors.sort(key=lambda row: float(row["average_contribution"]), reverse=True)
+    total = next(
+        row for row in long_rows if str(row["activity"]) == "Total de la economía"
+    )
+    lines = [
+        r"\begin{table}[htbp]",
+        r"\centering",
+        r"\caption{Descomposición de la PTF del total de la economía por actividad, 2006--2024}",
+        r"\label{tab:contribucion_ptf_total}",
+        r"\small",
+        r"\setlength{\tabcolsep}{4pt}",
+        r"\begin{tabular}{p{5.4cm}>{\raggedleft\arraybackslash}p{2.1cm}>{\raggedleft\arraybackslash}p{2.7cm}>{\raggedleft\arraybackslash}p{2.8cm}}",
+        r"\toprule",
+        r"Actividad & Peso promedio & PTF de la actividad & Contribución al total \\",
+        r" & (\%) & (pp por año) & (pp por año) \\",
+        r"\midrule",
+    ]
+    for row in sectors:
+        lines.append(
+            "{} & {} & {} & {} \\\\".format(
+                tex_escape(TEX_NAMES[str(row["activity"])]),
+                tex_fmt(float(row["average_weight"]) * 100),
+                tex_fmt(float(row["average_sector_ptf"])),
+                tex_fmt3(float(row["average_contribution"])),
+            )
+        )
+    lines.extend(
+        [
+            r"\midrule",
+            r"\textbf{Total de la economía} & \textbf{100,00} & "
+            + rf"\textbf{{{tex_fmt(float(total['average_sector_ptf']))}}} & "
+            + rf"\textbf{{{tex_fmt3(float(total['average_contribution']))}}} \\",
+            r"\bottomrule",
+            r"\end{tabular}",
+            r"\vspace{0.15cm}",
+            r"\begin{minipage}{0.96\textwidth}",
+            r"\footnotesize \textit{Nota:} el peso es el promedio de las ponderaciones anuales de Törnqvist. La PTF de la actividad mide su propio crecimiento; la contribución multiplica cada PTF anual por su peso anual antes de promediar. Las nueve contribuciones suman la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
+            r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
+            r"\end{minipage}",
+            r"\end{table}",
+        ]
+    )
+    (SECTIONS / "tabla_contribucion_ptf_total.tex").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8"
+    )
+
+    periods = ["2006-2010", "2011-2015", "2016-2019", "2020-2024"]
+    by_key = {
+        (str(row["activity"]), str(row["period"])): float(
+            row["average_contribution"]
+        )
+        for row in period_rows
+    }
+    total_by_period = {
+        period: sum(by_key[(activity, period)] for activity in SHORT.values())
+        for period in periods
+    }
+    lines = [
+        r"\begin{table}[htbp]",
+        r"\centering",
+        r"\caption{Contribución de cada actividad a la PTF total por subperiodo}",
+        r"\label{tab:contribucion_ptf_subperiodos}",
+        r"\small",
+        r"\setlength{\tabcolsep}{3pt}",
+        r"\begin{tabular}{p{5.3cm}*{5}{>{\raggedleft\arraybackslash}p{1.45cm}}}",
+        r"\toprule",
+        r"Actividad & 2006--2010 & 2011--2015 & 2016--2019 & 2020--2024 & 2006--2024 \\",
+        r"\midrule",
+    ]
+    long_lookup = {
+        str(row["activity"]): float(row["average_contribution"])
+        for row in long_rows
+    }
+    for activity in SHORT.values():
+        lines.append(
+            "{} & {} & {} & {} & {} & {} \\\\".format(
+                tex_escape(TEX_NAMES[activity]),
+                *[tex_fmt3(by_key[(activity, period)]) for period in periods],
+                tex_fmt3(long_lookup[activity]),
+            )
+        )
+    lines.extend(
+        [
+            r"\midrule",
+            r"\textbf{Total de la economía} & "
+            + " & ".join(
+                rf"\textbf{{{tex_fmt3(total_by_period[period])}}}"
+                for period in periods
+            )
+            + rf" & \textbf{{{tex_fmt3(long_lookup['Total de la economía'])}}} \\",
+            r"\bottomrule",
+            r"\end{tabular}",
+            r"\vspace{0.15cm}",
+            r"\begin{minipage}{0.96\textwidth}",
+            r"\footnotesize \textit{Nota:} promedio anual en puntos porcentuales. Cada celda es el promedio del producto entre el peso anual de la actividad y su PTF anual. Los subperiodos tienen distinta duración.",
+            r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
+            r"\end{minipage}",
+            r"\end{table}",
+        ]
+    )
+    (SECTIONS / "tabla_contribucion_ptf_subperiodos.tex").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8"
+    )
+
+
 def fonts() -> dict[str, ImageFont.FreeTypeFont]:
     regular = Path(r"C:\Windows\Fonts\arial.ttf")
     bold = Path(r"C:\Windows\Fonts\arialbd.ttf")
@@ -353,11 +500,234 @@ def canvas(title: str, subtitle: str, width: int = 1800, height: int = 1120):
     return img, draw, f
 
 
+def draw_total_index(
+    index_rows: list[dict[str, float | int | str]],
+) -> None:
+    rows = [
+        row
+        for row in index_rows
+        if str(row["activity"]) == "Total de la economía"
+    ]
+    rows.sort(key=lambda row: int(row["year"]))
+    img, draw, f = canvas(
+        "Índice encadenado de la PTF del total de la economía",
+        "Enfoque de producción, 2005=100",
+        1800,
+        1000,
+    )
+    left, right, top, bottom = 140, 1690, 225, 815
+    ymin, ymax = 97.0, 103.0
+    for tick in [97, 98, 99, 100, 101, 102, 103]:
+        y = bottom - (tick - ymin) / (ymax - ymin) * (bottom - top)
+        draw.line(
+            (left, y, right, y),
+            fill=BLUE if tick == 100 else GRID,
+            width=3 if tick == 100 else 1,
+        )
+        draw.text((75, y - 13), str(tick), fill=GRAY, font=f["small"])
+    points = []
+    for row in rows:
+        year = int(row["year"])
+        value = float(row["index"])
+        x = left + (year - 2005) / (2024 - 2005) * (right - left)
+        y = bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
+        points.append((x, y))
+    draw.line(points, fill=MID_BLUE, width=6)
+    for x, y in points:
+        draw.ellipse((x - 6, y - 6, x + 6, y + 6), fill=MID_BLUE)
+    for year in [2005, 2006, 2010, 2015, 2020, 2024]:
+        x = left + (year - 2005) / (2024 - 2005) * (right - left)
+        draw.text((x - 26, bottom + 22), str(year), fill=GRAY, font=f["small"])
+    label_rows = {
+        2005: (14, -55),
+        2006: (10, -55),
+        2020: (-45, 18),
+        2024: (-80, -55),
+    }
+    for row in rows:
+        year = int(row["year"])
+        if year not in label_rows:
+            continue
+        value = float(row["index"])
+        x = left + (year - 2005) / (2024 - 2005) * (right - left)
+        y = bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
+        dx, dy = label_rows[year]
+        draw.text(
+            (x + dx, y + dy),
+            f"{value:.1f}".replace("-", "−"),
+            fill=BLUE,
+            font=f["axis_bold"],
+        )
+    draw.text(
+        (80, 900),
+        "Nota: cada variación anual se encadena de forma multiplicativa. La escala vertical se concentra entre 97 y 103.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 935),
+        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    img.save(FIGURES / "fig_ptf_total_encadenada.png", quality=95)
+
+
+def draw_aggregate_contributions(
+    long_rows: list[dict[str, float | int | str]],
+) -> None:
+    rows = [
+        row for row in long_rows if str(row["activity"]) != "Total de la economía"
+    ]
+    rows.sort(key=lambda row: float(row["average_contribution"]))
+    total = next(
+        row for row in long_rows if str(row["activity"]) == "Total de la economía"
+    )
+    img, draw, f = canvas(
+        "Contribución de las actividades a la PTF del total de la economía",
+        "Promedio anual, 2006–2024 (puntos porcentuales)",
+        1800,
+        1120,
+    )
+    left, right, top, bottom = 650, 1680, 235, 930
+    xmin, xmax = -0.17, 0.17
+    xscale = (right - left) / (xmax - xmin)
+    x0 = left + (0 - xmin) * xscale
+    for tick in [-0.15, -0.10, -0.05, 0, 0.05, 0.10, 0.15]:
+        x = left + (tick - xmin) * xscale
+        draw.line(
+            (x, top, x, bottom),
+            fill=BLUE if tick == 0 else GRID,
+            width=3 if tick == 0 else 1,
+        )
+        label = f"{tick:.2f}".replace("-", "−")
+        draw.text((x - 24, bottom + 18), label, fill=GRAY, font=f["small"])
+    row_h = (bottom - top) / len(rows)
+    for index, row in enumerate(rows):
+        y = top + (index + 0.5) * row_h
+        value = float(row["average_contribution"])
+        x = left + (value - xmin) * xscale
+        color = MID_BLUE if value >= 0 else RED
+        draw.text(
+            (65, y - 15),
+            str(row["activity"]),
+            fill="#222222",
+            font=f["axis"],
+        )
+        draw.rectangle((min(x, x0), y - 22, max(x, x0), y + 22), fill=color)
+        label = f"{value:.3f}".replace("-", "−")
+        label_x = x + 12 if value >= 0 else x - 92
+        draw.text((label_x, y - 15), label, fill=color, font=f["axis_bold"])
+    net = float(total["average_contribution"])
+    draw.rounded_rectangle(
+        (1210, 965, 1690, 1050),
+        radius=12,
+        fill="#F2F2F2",
+        outline=BLUE,
+        width=2,
+    )
+    draw.text((1240, 982), "Suma de las nueve actividades", fill=GRAY, font=f["small"])
+    draw.text(
+        (1510, 1014),
+        f"{net:.3f} pp".replace("-", "−"),
+        fill=BLUE,
+        font=f["axis_bold"],
+    )
+    draw.text(
+        (70, 1000),
+        "Nota: cada contribución es el promedio del producto entre la PTF de la actividad y su peso anual de Törnqvist.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (70, 1037),
+        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    img.save(FIGURES / "fig_ptf_contribucion_total_actividad.png", quality=95)
+
+
+def draw_aggregate_contributions_by_period(
+    period_rows: list[dict[str, float | int | str]],
+) -> None:
+    periods = ["2006-2010", "2011-2015", "2016-2019", "2020-2024"]
+    period_labels = ["2006–2010", "2011–2015", "2016–2019", "2020–2024"]
+    colors = ["#9FBAD9", "#4F81BD", "#244A7C", "#E0A12B"]
+    lookup = {
+        (str(row["activity"]), str(row["period"])): float(
+            row["average_contribution"]
+        )
+        for row in period_rows
+    }
+    activities = ["Total de la economía", *SHORT.values()]
+    for period in periods:
+        lookup[("Total de la economía", period)] = sum(
+            lookup[(activity, period)] for activity in SHORT.values()
+        )
+    img, draw, f = canvas(
+        "Contribución de las actividades a la PTF total por subperiodo",
+        "Promedio anual (puntos porcentuales)",
+        1800,
+        1120,
+    )
+    left, right, top, bottom = 620, 1690, 255, 970
+    xmin, xmax = -0.32, 0.30
+    xscale = (right - left) / (xmax - xmin)
+    for tick in [-0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3]:
+        x = left + (tick - xmin) * xscale
+        draw.line(
+            (x, top, x, bottom),
+            fill=BLUE if tick == 0 else GRID,
+            width=3 if tick == 0 else 1,
+        )
+        draw.text(
+            (x - 20, bottom + 18),
+            f"{tick:.1f}".replace("-", "−"),
+            fill=GRAY,
+            font=f["small"],
+        )
+    legend_x = 600
+    for label, color in zip(period_labels, colors):
+        draw.ellipse((legend_x, 190, legend_x + 24, 214), fill=color)
+        draw.text((legend_x + 34, 188), label, fill="#333333", font=f["small"])
+        legend_x += 240
+    row_h = (bottom - top) / len(activities)
+    for index, activity in enumerate(activities):
+        y = top + (index + 0.5) * row_h
+        draw.text((65, y - 14), activity, fill="#222222", font=f["axis"])
+        points = []
+        for period_index, period in enumerate(periods):
+            value = lookup[(activity, period)]
+            x = left + (value - xmin) * xscale
+            yy = y + (period_index - 1.5) * 9
+            points.append((x, yy))
+        draw.line(points, fill="#A7A7A7", width=3)
+        for period_index, (x, yy) in enumerate(points):
+            draw.ellipse(
+                (x - 9, yy - 9, x + 9, yy + 9),
+                fill=colors[period_index],
+            )
+        if activity == "Total de la economía":
+            draw.line(
+                (55, y + row_h / 2, right, y + row_h / 2),
+                fill=BLUE,
+                width=3,
+            )
+    draw.text(
+        (70, 1065),
+        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    img.save(FIGURES / "fig_ptf_contribucion_subperiodos.png", quality=95)
+
+
 def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
     rows = sorted(long_run, key=lambda d: float(d["ptf"]))
     img, draw, f = canvas(
-        "Contribución promedio de la PTF: total y actividades",
-        "Contribución promedio anual de la PTF al crecimiento de la producción, 2006–2024 (puntos porcentuales)",
+        "Variación promedio de la PTF: total y actividades",
+        "PTF promedio anual dentro de cada actividad, 2006–2024 (puntos porcentuales)",
     )
     left, right, top, bottom = 590, 1690, 215, 1000
     xmin, xmax = -2.6, 1.6
@@ -491,8 +861,8 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
     rows = [d for d in observations if int(d["year"]) >= 2006]
     lookup = {(str(d["activity"]), int(d["year"])): float(d["ptf"]) for d in rows}
     img, draw, f = canvas(
-        "Contribución anual de la PTF: total y actividades",
-        "2006–2024, puntos porcentuales; azul = aporte positivo, rojo = aporte negativo",
+        "Variación anual de la PTF: total y actividades",
+        "2006–2024, puntos porcentuales; azul = PTF positiva, rojo = PTF negativa",
         1900,
         1200,
     )
@@ -605,6 +975,25 @@ def main() -> None:
     SECTIONS.mkdir(parents=True, exist_ok=True)
     observations = load_observations()
     total_observations = load_total_observations()
+    contribution_annual = load_numeric_csv(
+        CONTRIBUTION_ANNUAL_CSV,
+        {"activity"},
+        {"year"},
+    )
+    contribution_long = load_numeric_csv(
+        CONTRIBUTION_LONG_CSV,
+        {"activity"},
+    )
+    contribution_periods = load_numeric_csv(
+        CONTRIBUTION_PERIOD_CSV,
+        {"period", "activity"},
+        {"start", "end"},
+    )
+    index_rows = load_numeric_csv(
+        INDEX_CSV,
+        {"activity"},
+        {"year"},
+    )
     identity_error, detail_error = validate(observations)
     total_identity_error, total_detail_error = validate(total_observations)
     long_run = summarize(observations, 2006, 2024)
@@ -642,13 +1031,16 @@ def main() -> None:
         )
         for label, total_rows in total_period_summaries
     ]
-    write_csv(PROCESSED / "ptf_actividad_anual.csv", observations)
     write_csv(PROCESSED / "ptf_actividad_promedio_2006_2024.csv", long_run)
     write_csv(PROCESSED / "ptf_actividad_promedio_2006_2019.csv", pre)
     write_csv(PROCESSED / "ptf_actividad_promedio_2020_2024.csv", post)
     write_csv(PROCESSED / "ptf_total_economia_promedio_2006_2024.csv", total_long_run)
     write_tex_tables(long_run)
     write_evolution_table(comparison_long_run, comparison_period_summaries)
+    write_aggregate_contribution_tables(contribution_long, contribution_periods)
+    draw_total_index(index_rows)
+    draw_aggregate_contributions(contribution_long)
+    draw_aggregate_contributions_by_period(contribution_periods)
     draw_ptf_bars(comparison_long_run)
     draw_decomposition(long_run)
     draw_series(observations)
@@ -660,6 +1052,26 @@ def main() -> None:
     print(
         "Error máximo total economía: "
         f"identidad={total_identity_error:.3e}; detalle={total_detail_error:.3e}"
+    )
+    annual_lookup = {
+        int(row["year"]): float(row["ptf"])
+        for row in total_observations
+        if 2006 <= int(row["year"]) <= 2024
+    }
+    max_aggregate_error = max(
+        abs(
+            sum(
+                float(row["contribution"])
+                for row in contribution_annual
+                if int(row["year"]) == year
+            )
+            - annual_lookup[year]
+        )
+        for year in annual_lookup
+    )
+    print(
+        "Error máximo suma de contribuciones sectoriales = PTF total: "
+        f"{max_aggregate_error:.3e}"
     )
 
 

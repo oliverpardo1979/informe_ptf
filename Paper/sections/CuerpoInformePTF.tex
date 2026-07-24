@@ -1,343 +1,244 @@
-\section{La pregunta}
+\section{Introducción}
 
-La Productividad Total de los Factores (PTF) no evolucionó de la misma manera
-en todas las actividades económicas colombianas. Algunas registraron aportes
-positivos durante buena parte de las dos últimas décadas. Otras tuvieron una
-PTF negativa en la mayoría de los años. También hubo actividades que cambiaron
-de signo entre subperiodos.
+\textbf{La Productividad Total de los Factores (PTF) mide la parte del crecimiento de la producción que no explican las contribuciones observadas del trabajo, el capital y los insumos intermedios.} Cuando la PTF no aumenta, la producción solo puede crecer mediante una mayor cantidad o calidad de esos insumos. Por eso, su evolución permite estudiar si la economía puede expandirse sin depender exclusivamente de la acumulación de factores.
 
-Este informe estudia la evolución de la PTF del total de la economía y de nueve
-agregados de actividad económica entre 2005 y 2024. Compara tres dimensiones:
-el aporte promedio durante todo el periodo, su persistencia anual y los cambios
-entre cuatro subperiodos. El objetivo no es explicar cuánto creció cada
-actividad, sino establecer cuándo la PTF contribuyó a ese crecimiento y cómo
-cambió esa contribución.
+\textbf{El objetivo de este informe es estudiar la evolución de la PTF en Colombia entre 2005 y 2024 y establecer cuánto contribuyó cada actividad económica a la PTF del total de la economía.} El análisis usa el enfoque de producción del DANE para nueve agregados de actividad económica. Este enfoque permite comparar la producción con los servicios laborales, los servicios de capital y los consumos intermedios de cada actividad.
 
-La fuente es el anexo de Productividad Total de los Factores del DANE,
-publicado bajo el enfoque de producción KLEMS. La serie reúne 19 variaciones
-anuales, de 2006 a 2024, que enlazan los niveles de 2005 y 2024.
+\textbf{El periodo contiene 19 variaciones anuales, desde 2006 hasta 2024, que enlazan los niveles de 2005 y 2024.} El informe encadena esas variaciones para construir índices de PTF con 2005 igual a 100. También recupera las ponderaciones anuales implícitas en la agregación publicada por el DANE y multiplica la PTF de cada actividad por su peso en cada año. De esta manera, las contribuciones de las nueve actividades suman la PTF publicada para el total de la economía.
 
-\section{Cómo se mide la PTF}
+\textbf{La PTF del total de la economía disminuyó 1,5\% entre 2005 y 2024 y la mayor parte de la caída ocurrió antes de 2011.} El índice encadenado terminó en 98,5, lo que equivale a una variación promedio de $-0,081$ puntos porcentuales por año. Después de 2010, los promedios por subperiodo estuvieron alrededor de cero: el deterioro inicial se detuvo, pero no dio paso a un crecimiento sostenido de la PTF.
 
-En el enfoque de producción, el crecimiento logarítmico de la producción de
-cada actividad se descompone así:
+\textbf{La PTF total cercana a cero no provino de pequeñas variaciones similares en todas las actividades.} Servicios sociales, comercio, agricultura y transporte aportaron en conjunto 0,361 puntos porcentuales por año. Las otras cinco actividades restaron 0,441 puntos. Servicios sociales tuvo la mayor contribución positiva, con 0,148 puntos, mientras finanzas e inmobiliarias restó 0,137 y minería restó 0,133.
 
-\[
-\Delta \ln Y =
-\Delta \ln L + \Delta \ln K +
-\Delta \ln E + \Delta \ln M + \Delta \ln S +
-\Delta \ln PTF,
-\]
+El cuerpo del informe está organizado en cuatro secciones. Después de esta introducción, la sección 2 presenta la metodología de medición, encadenamiento y agregación. La sección 3 analiza la PTF total, su descomposición por actividad y los cambios entre subperiodos. La sección 4 presenta las conclusiones, formula hipótesis que requieren más evidencia y propone líneas de política y de investigación. El apéndice contiene el detalle anual, las pruebas de reconciliación y la correspondencia de actividades.
 
-donde $L$ corresponde a los servicios laborales; $K$, a los servicios de
-capital; $E$, a energía; $M$, a materiales; y $S$, a servicios intermedios.
-Cada aporte combina el crecimiento del insumo con su participación económica.
+\clearpage
+\section{Metodología}
+\thispagestyle{fancy}
 
-La PTF es la parte del crecimiento de la producción que no queda explicada por
-los aportes medidos del trabajo, el capital y los insumos intermedios. Una PTF
-positiva indica que la producción creció más que esos aportes. Una PTF negativa
-indica que los aportes medidos crecieron más que la producción.
+\subsection{La PTF anual por actividad económica}
 
-La PTF no es una medida pura de tecnología. El residuo puede incluir cambios
-tecnológicos u organizacionales, pero también variaciones en la utilización de
-capacidad, cambios de calidad no capturados y errores de medición. Por esta
-razón, el informe describe la evolución de la PTF sin atribuir sus movimientos
-a un mecanismo que los datos no identifican.
+\textbf{El DANE calcula la PTF por actividad como un residuo de la contabilidad del crecimiento.} Para cada actividad económica \(i\), el crecimiento logarítmico de la producción se descompone de la siguiente manera:
 
-El total de la economía corresponde a la serie publicada por el DANE. No se
-calcula como un promedio simple de las nueve actividades. De acuerdo con la
-nota metodológica del anexo, el DANE pondera la agregación nacional con la
-composición del valor agregado por actividad económica. Este informe usa
-directamente el resultado agregado del DANE.
+\begin{equation}
+\Delta \ln Y_{i,t}=
+C^{L}_{i,t}+C^{K}_{i,t}+C^{X}_{i,t}
++\Delta \ln A_{i,t},
+\label{eq:ptf_actividad}
+\end{equation}
 
-\subsection{El periodo correcto}
+donde \(Y\) representa la producción; \(C^{L}\), \(C^{K}\) y \(C^{X}\) son las contribuciones de los servicios laborales, los servicios de capital y los consumos intermedios; y \(\Delta \ln A\) es la variación de la PTF. Los consumos intermedios comprenden energía, materiales y servicios.
 
-Los cuadros del DANE están rotulados por el año final de cada variación. La fila
-2005 mide el cambio entre 2004 y 2005. Por tanto, la comparación entre los
-niveles de 2005 y 2024 usa las variaciones de 2006 a 2024. El promedio de largo
-plazo presentado en este informe corresponde a esas 19 observaciones.
+Una PTF positiva indica que la producción aumentó más de lo explicado por los aportes medidos de los factores. Una PTF negativa indica lo contrario. El residuo también puede recoger cambios en la utilización de la capacidad, reasignaciones dentro de las actividades, errores de medición y otros elementos no observados. Por esta razón, una variación de la PTF no debe interpretarse automáticamente como un cambio tecnológico.
 
-\section{La PTF del total de la economía permaneció cerca de cero}
+El informe toma directamente del anexo del DANE las variaciones anuales de la ecuación (\ref{eq:ptf_actividad}). Los detalles sobre la construcción de los servicios laborales, los servicios de capital, los consumos intermedios y sus participaciones se encuentran en el \href{https://www.dane.gov.co/files/investigaciones/boletines/pib/productividad/doc-metodologico-PTF-productividad-total-factores-2021.pdf}{documento metodológico de la PTF del DANE}.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{Paper/figures/fig_ptf_promedio_actividad.png}
-\caption{Contribución promedio anual de la PTF del total de la economía y por actividad}
-\label{fig:ptf_promedio}
+\subsection{El encadenamiento de las variaciones anuales}
+
+\textbf{Las variaciones anuales se encadenan para comparar el nivel de la PTF de 2024 con el de 2005.} El índice de cada actividad parte de 100 en 2005 y se actualiza mediante:
+
+\begin{equation}
+I_{i,t}=I_{i,t-1}\exp\left(\frac{\Delta\ln A_{i,t}}{100}\right).
+\label{eq:indice_ptf}
+\end{equation}
+
+La función exponencial convierte la variación logarítmica publicada en un cambio multiplicativo del índice. La variación acumulada entre 2005 y 2024 es:
+
+\begin{equation}
+100\left[
+\exp\left(
+\frac{\sum_{t=2006}^{2024}\Delta\ln A_{i,t}}{100}
+\right)-1
+\right].
+\label{eq:crecimiento_acumulado}
+\end{equation}
+
+El crecimiento promedio de largo plazo se reporta como el promedio de las 19 variaciones logarítmicas. Esta medida se expresa en puntos porcentuales por año y conserva la suma de las contribuciones sectoriales. Para valores pequeños, es prácticamente igual a una tasa de crecimiento anual compuesta; el índice encadenado conserva la diferencia exacta entre los niveles inicial y final.
+
+\subsection{La PTF total y su descomposición por actividad}
+
+\textbf{El total de la economía no se calcula como un promedio simple de las PTF sectoriales.} El DANE agrega las variaciones de las actividades con un índice de Törnqvist basado en su participación en el valor agregado. La PTF total del año \(t\) puede escribirse como:
+
+\begin{equation}
+\Delta\ln A_t=
+\sum_{i=1}^{9}\bar{s}_{i,t}\Delta\ln A_{i,t},
+\label{eq:agregacion_ptf}
+\end{equation}
+
+donde \(\bar{s}_{i,t}\) es el peso de Törnqvist de la actividad \(i\). Si \(s_{i,t}\) representa la participación de la actividad en el valor agregado a precios corrientes, el peso se calcula como:
+
+\begin{equation}
+\bar{s}_{i,t}=\frac{1}{2}\left(s_{i,t-1}+s_{i,t}\right),
+\qquad
+s_{i,t}=\frac{VA_{i,t}}{\sum_j VA_{j,t}}.
+\label{eq:peso_tornqvist}
+\end{equation}
+
+Los nueve pesos suman uno.
+
+\textbf{La contribución anual de una actividad a la PTF total es el producto entre su peso y la PTF de esa actividad.} Por lo tanto:
+
+\begin{equation}
+c_{i,t}=\bar{s}_{i,t}\Delta\ln A_{i,t}.
+\label{eq:contribucion_ptf}
+\end{equation}
+
+El cálculo se hace año por año y después se promedia. Multiplicar el peso promedio por la PTF promedio de una actividad no conserva exactamente la identidad, porque omite la variación conjunta de ambas series. La contribución de largo plazo es el promedio de \(c_{i,t}\) entre 2006 y 2024. Esta definición garantiza que la suma de las nueve contribuciones de largo plazo sea igual al crecimiento promedio de la PTF total:
+
+\begin{equation}
+\overline{\Delta\ln A}=
+\sum_{i=1}^{9}\overline{c_i}.
+\label{eq:contribucion_largo_plazo}
+\end{equation}
+
+\textbf{El anexo publica los resultados agregados, pero no reporta una columna separada con los pesos anuales.} El CJC recupera los pesos implícitos a partir de las filas de las nueve actividades y del total de la economía. Los pesos son positivos, suman uno y reproducen todas las columnas publicadas para el total con precisión numérica. El apéndice presenta el sistema de ecuaciones y su validación.
+
+El informe usa el enfoque de producción porque es el que contiene la historia anual comparable para las nueve actividades. El DANE también publica una PTF del total de la economía por el enfoque de valor agregado. Las dos medidas responden a identidades distintas y no deben combinarse en una misma descomposición.
+
+\section{Resultados}
+\thispagestyle{fancy}
+
+\subsection{La PTF total terminó por debajo de su nivel de 2005}
+
+\textbf{La PTF del total de la economía disminuyó 1,5\% entre 2005 y 2024.} La Figura \ref{fig:ptf_total_encadenada} presenta el índice construido con la ecuación (\ref{eq:indice_ptf}). El índice pasó de 100 en 2005 a 102,2 en 2006. Después disminuyó y permaneció por debajo de 100 desde 2009. En 2024 fue de 98,5.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\textwidth]{Paper/figures/fig_ptf_total_encadenada.png}
+  \caption{Índice encadenado de la PTF del total de la economía, 2005--2024}
+  \label{fig:ptf_total_encadenada}
 \end{figure}
 
-La PTF del total de la economía promedió $-0,08$ puntos porcentuales por año
-entre 2006 y 2024. Ese resultado estuvo por debajo de agricultura, comercio,
-servicios sociales y transporte, y por encima de las otras cinco actividades.
-El valor cercano a cero no implica que las actividades tuvieran resultados
-similares: los promedios sectoriales estuvieron entre 1,28 y $-2,28$ puntos.
+La caída acumulada equivale a una variación promedio de $-0,081$ puntos porcentuales por año. La PTF total fue positiva en 10 de los 19 años, pero los aumentos no compensaron las reducciones de los otros nueve. Desde 2011, las variaciones anuales estuvieron entre $-0,78$ puntos en 2020 y 0,62 en 2024.
 
-La agricultura registró el mayor aporte promedio de la PTF:
-1,28 puntos porcentuales por año. Le siguieron comercio, hoteles y restaurantes
-con 1,03 puntos, y los servicios sociales, comunales y personales con 0,89.
-Transporte, almacenamiento y comunicaciones tuvo un aporte positivo de
-0,11 puntos, cercano a cero.
+\textbf{La mayor parte de la caída del índice ocurrió antes de 2011.} La PTF total promedió $-0,296$ puntos por año en 2006--2010. Los promedios posteriores fueron mucho más cercanos a cero: 0,022 puntos en 2011--2015, $-0,040$ en 2016--2019 y $-0,001$ en 2020--2024. El cambio representa una mejora frente al primer subperiodo, pero no una trayectoria sostenida de crecimiento.
 
-Las otras cinco actividades registraron una PTF promedio negativa. Minería
-tuvo el menor aporte, con $-2,28$ puntos por año. Construcción registró
-$-0,95$ puntos; finanzas e inmobiliarias, $-0,93$; manufactura, $-0,35$; y
-electricidad, gas y agua, $-0,32$.
+\subsection{Las contribuciones positivas no compensaron las negativas}
 
-\newpage
-El promedio de largo plazo permite ordenar las actividades, pero oculta cambios
-importantes. El total de la economía pasó de un promedio negativo en
-2006--2010 a valores cercanos a cero después de 2010. Agricultura tuvo un
-promedio positivo a pesar de registrar una PTF negativa durante 2006--2010.
-Electricidad, gas y agua tuvo un promedio negativo, aunque cambió a un aporte
-positivo durante 2020--2024.
+\textbf{Las contribuciones sectoriales explican por qué la PTF total terminó cerca de cero.} La Figura \ref{fig:ptf_contribucion_total} muestra el aporte promedio anual de cada actividad. Cuatro contribuciones sumaron 0,361 puntos porcentuales por año. Las otras cinco sumaron $-0,441$ puntos. La diferencia entre ambos grupos fue el resultado total de $-0,081$ puntos.
 
-\section{La trayectoria cambió entre subperiodos}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{Paper/figures/fig_ptf_periodos_actividad.png}
-\caption{Contribución promedio anual de la PTF del total de la economía y por actividad en cuatro subperiodos}
-\label{fig:ptf_periodos}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\textwidth]{Paper/figures/fig_ptf_contribucion_total_actividad.png}
+  \caption{Contribución de las actividades a la PTF del total de la economía, 2006--2024}
+  \label{fig:ptf_contribucion_total}
 \end{figure}
 
-La Figura \ref{fig:ptf_periodos} compara cuatro promedios: 2006--2010,
-2011--2015, 2016--2019 y 2020--2024. Los puntos unidos pertenecen a una misma
-actividad. Un movimiento hacia la derecha indica un mayor aporte promedio de la
-PTF; un cruce de la línea vertical indica un cambio de signo.
+\textbf{Servicios sociales registró la mayor contribución positiva, con 0,148 puntos porcentuales por año.} La actividad tuvo un peso promedio de 16,1\% y su PTF aumentó 0,89 puntos por año. Comercio aportó 0,128 puntos y agricultura, 0,076. La PTF de agricultura tuvo el mayor aumento, 1,28 puntos por año, pero su peso promedio fue de 6,1\%. Transporte aportó 0,008 puntos.
 
-\input{Paper/sections/tabla_evolucion_ptf.tex}
+\textbf{Finanzas e inmobiliarias y minería registraron las mayores contribuciones negativas.} Finanzas e inmobiliarias restó 0,137 puntos por año: su PTF disminuyó 0,93 puntos y su peso promedio fue de 14,7\%. Minería restó 0,133 puntos. Aunque su peso fue menor, 6,1\%, su PTF cayó 2,28 puntos por año.
 
-\subsection{El total pasó de un promedio negativo a valores cercanos a cero}
+\textbf{Manufactura y construcción restaron cerca de 0,081 puntos por año cada una, pero por razones distintas.} Manufactura tuvo la mayor ponderación promedio, 23,3\%, y su PTF disminuyó 0,35 puntos por año. Construcción pesó 8,7\%, pero su PTF cayó 0,95 puntos por año. Electricidad, gas y agua tuvo una contribución negativa menor, de 0,009 puntos.
 
-La PTF del total de la economía promedió $-0,30$ puntos por año en
-2006--2010. El promedio fue de 0,02 puntos en 2011--2015, $-0,04$ en
-2016--2019 y 0,00 en 2020--2024, después del redondeo. La PTF agregada pasó de
-un promedio negativo a valores pequeños alrededor de cero. Uno de los tres
-promedios posteriores a 2010 fue positivo y dos fueron levemente negativos.
+\input{Paper/sections/tabla_contribucion_ptf_total}
 
-La PTF del total fue positiva en 10 de 19 años y negativa en nueve. En 2024
-aportó 0,62 puntos, después de restar 0,51 en 2023. La alternancia de signos
-explica por qué los tres últimos promedios permanecieron cerca de cero.
+No se presentan las contribuciones como porcentaje de la PTF total. Dado que el total está cerca de cero, esa división produciría porcentajes muy grandes e inestables. Los puntos porcentuales muestran directamente cuánto añade o resta cada actividad y conservan la identidad de agregación.
 
-\subsection{Agricultura pasó de una PTF negativa a aportes positivos}
+\subsection{La composición de las contribuciones cambió entre subperiodos}
 
-La PTF de la agricultura fue de $-0,38$ puntos por año en 2006--2010. Pasó a
-2,35 puntos en 2011--2015 y se mantuvo positiva en los dos subperiodos
-siguientes: 1,65 puntos en 2016--2019 y 1,58 en 2020--2024. El cambio no
-corresponde a un solo año. La agricultura registró una PTF positiva en todos
-los años entre 2011 y 2021. Fue negativa en 2022 y volvió a ser positiva en
-2023 y 2024.
+\textbf{La PTF total pasó de una contribución negativa en 2006--2010 a valores pequeños alrededor de cero en los tres subperiodos siguientes.} La primera fila de la Figura \ref{fig:ptf_contribucion_subperiodos} muestra este cambio. Las demás filas permiten identificar qué actividades explicaron los movimientos.
 
-En el conjunto del periodo, la agricultura tuvo una PTF positiva en 15 de
-19 años. Esta combinación de magnitud y persistencia explica por qué ocupa el
-primer lugar en el promedio de largo plazo.
-
-\subsection{Comercio mantuvo un promedio positivo, con una caída en 2023}
-
-Comercio, hoteles y restaurantes tuvo una PTF promedio positiva en los cuatro
-subperiodos. El aporte pasó de 0,55 puntos en 2006--2010 a 1,81 en 2011--2015.
-Después fue de 0,59 puntos en 2016--2019 y 1,07 en 2020--2024.
-
-La trayectoria anual fue más volátil que esos promedios. La PTF alcanzó
-6,42 puntos en 2021 y cayó a $-3,49$ en 2023. En 2024 fue de $-0,09$ puntos.
-Por tanto, el promedio positivo de 2020--2024 combina una recuperación alta en
-2021 con dos resultados negativos al final del subperiodo.
-
-\subsection{Servicios sociales aumentó su aporte en los periodos recientes}
-
-Los servicios sociales, comunales y personales también tuvieron una PTF
-promedio positiva en los cuatro subperiodos. El aporte fue de 0,51 puntos en
-2006--2010, 0,36 en 2011--2015, 1,16 en 2016--2019 y 1,59 en 2020--2024.
-
-La PTF fue positiva en 14 de 19 años. En 2023 y 2024 aportó 3,47 y
-2,74 puntos, respectivamente. A diferencia de comercio, los dos últimos años
-mantuvieron el signo positivo del promedio reciente.
-
-\subsection{Minería tuvo una PTF negativa en los cuatro subperiodos}
-
-Minería fue la actividad con el resultado negativo más persistente. La PTF
-promedio fue de $-0,84$ puntos en 2006--2010, $-2,54$ en 2011--2015,
-$-2,84$ en 2016--2019 y $-3,01$ en 2020--2024. Solo dos de los 19 años
-registraron una PTF positiva: 2009 y 2011.
-
-El resultado de 2020, $-8,48$ puntos, redujo el promedio reciente. Sin embargo,
-el signo negativo precede a la pandemia y se mantuvo entre 2021 y 2024. La
-trayectoria de minería no puede explicarse únicamente por el choque de 2020.
-
-\subsection{Manufactura permaneció cerca de cero, pero del lado negativo}
-
-La PTF manufacturera fue negativa en los cuatro subperiodos: $-0,43$ puntos en
-2006--2010, $-0,68$ en 2011--2015, $-0,10$ en 2016--2019 y $-0,16$ en
-2020--2024. La cercanía a cero en los dos últimos promedios no significa
-estabilidad anual. La PTF pasó de $-1,93$ puntos en 2020 a 3,97 en 2021 y
-volvió a ser negativa entre 2022 y 2024.
-
-Manufactura tuvo una PTF positiva en cuatro de 19 años. El promedio de largo
-plazo fue menos negativo que el de minería, construcción o finanzas e
-inmobiliarias, pero el signo positivo fue poco frecuente.
-
-\subsection{Finanzas e inmobiliarias no consolidó un cambio de signo}
-
-La PTF del agregado financiero e inmobiliario fue negativa en los cuatro
-subperiodos. El promedio pasó de $-1,26$ puntos en 2006--2010 a $-0,28$ en
-2011--2015, pero volvió a $-1,11$ en 2016--2019 y fue de $-1,10$ en
-2020--2024.
-
-La PTF fue positiva en tres de los últimos cinco años. Sin embargo, la caída de
-$-6,70$ puntos en 2021 mantuvo negativo el promedio reciente. Como el agregado
-incluye intermediación financiera, actividades inmobiliarias, empresariales y
-de alquiler, el resultado no debe atribuirse exclusivamente al sistema
-financiero.
-
-\subsection{Electricidad cambió de signo; construcción se deterioró}
-
-Electricidad, gas y agua pasó de promedios negativos en los tres primeros
-subperiodos a 0,65 puntos en 2020--2024. La PTF fue positiva entre 2021 y 2024,
-después de registrar $-0,88$ puntos en 2020. Es el cambio de signo más claro
-del periodo reciente.
-
-Construcción siguió la dirección contraria. La PTF promedio fue de
-$-0,19$ puntos en 2006--2010, $-0,27$ en 2011--2015 y $-0,80$ en
-2016--2019. En 2020--2024 cayó a $-2,52$ puntos. El resultado está afectado
-por la caída de $-9,76$ puntos en 2020, pero la PTF también fue negativa en
-2021 y 2023.
-
-\subsection{Transporte mejoró después de 2010, sin sostener un aporte alto}
-
-Transporte y comunicaciones pasó de $-0,87$ puntos en 2006--2010 a
-0,88 puntos en 2011--2015. El promedio disminuyó a 0,43 puntos en
-2016--2019 y a 0,08 en 2020--2024. La actividad mejoró frente al primer
-subperiodo, pero no consolidó un aporte positivo de magnitud creciente.
-
-La PTF cayó a $-2,50$ puntos en 2023 y subió a 1,15 en 2024. Esa reversión
-explica por qué el promedio reciente terminó cerca de cero.
-
-\section{La serie anual muestra persistencia y choques}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{Paper/figures/fig_ptf_mapa_anual.png}
-\caption{Contribución anual de la PTF del total de la economía y por actividad}
-\label{fig:ptf_mapa}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\textwidth]{Paper/figures/fig_ptf_contribucion_subperiodos.png}
+  \caption{Contribución de las actividades a la PTF total por subperiodo}
+  \label{fig:ptf_contribucion_subperiodos}
 \end{figure}
 
-La Figura \ref{fig:ptf_mapa} presenta el valor anual de la PTF. Las celdas
-azules indican aportes positivos y las rojas, aportes negativos. La intensidad
-del color aumenta con la magnitud. La figura permite distinguir un resultado
-persistente de un promedio dominado por uno o dos años extremos.
+\textbf{Los aportes positivos se ampliaron después de 2010.} Agricultura pasó de restar 0,019 puntos por año en 2006--2010 a aportar entre 0,094 y 0,122 puntos en los tres subperiodos siguientes. Servicios sociales aportó 0,078 puntos en el primer subperiodo y 0,276 en 2020--2024. Comercio fue positivo en los cuatro subperiodos y alcanzó su mayor contribución, 0,217 puntos, en 2011--2015.
 
-La primera fila muestra que la PTF del total de la economía alternó entre
-valores positivos y negativos. El aporte anual estuvo entre 2,21 puntos en
-2006 y $-1,39$ en 2007. Desde 2011, todos los valores se ubicaron entre
-$-0,78$ y 0,62 puntos.
+\textbf{Las fuentes de las contribuciones negativas también cambiaron.} Finanzas e inmobiliarias restó 0,173 puntos por año en 2006--2010, solo 0,038 en 2011--2015 y nuevamente alrededor de 0,17 en los dos subperiodos siguientes. Desde 2011, minería restó entre 0,153 y 0,193 puntos por año. Construcción pasó de contribuciones negativas cercanas a 0,02 puntos en los dos primeros subperiodos a $-0,202$ en 2020--2024.
 
-Agricultura, comercio y servicios sociales acumularon 15, 14 y 14 años
-positivos, respectivamente. Minería tuvo 17 años negativos y manufactura, 15.
-Electricidad, construcción y finanzas e inmobiliarias tuvieron 12, 12 y
-11 años negativos. Transporte fue la actividad más dividida: 11 años positivos
-y ocho negativos.
+El promedio de 2020--2024 ilustra la importancia de descomponer el total. Las contribuciones positivas sumaron 0,558 puntos por año. Las negativas sumaron $-0,559$. El resultado agregado fue prácticamente cero, pero ninguno de los dos grupos tuvo una contribución pequeña.
 
-\subsection{La pandemia amplificó la volatilidad}
+\clearpage
+\section{Conclusiones}
 
-En 2020, construcción y minería registraron las caídas más grandes de toda su
-serie: $-9,76$ y $-8,48$ puntos. En 2021, comercio alcanzó 6,42 puntos y
-manufactura 3,97, mientras finanzas e inmobiliarias cayó a $-6,70$. Estos
-movimientos afectan los promedios de 2020--2024 y dificultan interpretar ese
-subperiodo como una tendencia estable.
+\textbf{La PTF del total de la economía no creció entre 2005 y 2024.} El índice encadenado pasó de 100 a 98,5 y la variación promedio fue de $-0,081$ puntos porcentuales por año. El resultado mejoró después de 2010, pero los tres promedios posteriores permanecieron alrededor de cero.
 
-La PTF del total de la economía fue de $-0,78$ puntos en 2020 y 0,61 en 2021.
-Después aportó 0,04 puntos en 2022, restó 0,51 en 2023 y aportó 0,62 en 2024.
-El promedio 2020--2024 fue 0,00 porque los años positivos y negativos se
-compensaron.
+\textbf{El estancamiento agregado fue el resultado de contribuciones sectoriales de signo contrario.} Servicios sociales, comercio, agricultura y transporte aportaron 0,361 puntos por año. Finanzas e inmobiliarias, minería, construcción, manufactura y electricidad restaron 0,441. La magnitud de una contribución depende tanto de la PTF de la actividad como de su peso en el valor agregado. Por eso, la caída moderada de la PTF manufacturera tuvo un efecto agregado similar a la caída más pronunciada de la construcción.
 
-El choque pandémico no explica todos los signos de largo plazo. Minería,
-manufactura y finanzas e inmobiliarias ya tenían promedios negativos antes de
-2020. Agricultura, comercio y servicios sociales ya registraban promedios
-positivos.
+\textbf{La descomposición permite formular hipótesis, pero no identifica las causas de cada resultado.} La persistencia de la contribución negativa de minería puede estar relacionada con el agotamiento de recursos, la composición de la extracción, la inversión o las condiciones regulatorias. El resultado de finanzas e inmobiliarias puede combinar actividades con comportamientos distintos y problemas de medición propios de los servicios financieros e inmobiliarios. La caída reciente de construcción puede reflejar el ciclo de inversión, la utilización de capacidad y la productividad de los proyectos. Estas hipótesis deben evaluarse con aperturas más detalladas antes de convertirlas en recomendaciones.
 
-\subsection{En 2024 aumentó la PTF del total y de seis actividades}
+\textbf{La política de productividad debe comenzar por identificar obstáculos verificables dentro de las actividades que más restan.} En manufactura, el siguiente diagnóstico debe medir la adopción de tecnologías, las prácticas gerenciales y la exposición a mercados externos. En construcción, debe establecer si los tiempos de licenciamiento, la gestión de proyectos o la baja adopción de métodos digitales e industrializados limitan la productividad. En minería, debe estudiar la exploración, la infraestructura y la estabilidad de los procesos de inversión junto con las salvaguardas ambientales. Solo si esos obstáculos se confirman será posible escoger instrumentos de política. Para finanzas e inmobiliarias, la prioridad estadística es separar sus subactividades y establecer dónde se origina la contribución negativa.
 
-Entre 2023 y 2024, la PTF del total de la economía pasó de $-0,51$ a
-0,62 puntos. También aumentó en seis de las nueve actividades. Los
-mayores aportes en 2024 fueron los de agricultura (3,80 puntos), servicios
-sociales (2,74), transporte y comunicaciones (1,15) y electricidad, gas y agua
-(0,94). Construcción y finanzas e inmobiliarias también tuvieron aportes
-positivos, de 0,53 y 0,41 puntos.
+\textbf{Una línea futura es construir contrafactuales contables con los pesos recuperados.} Estos ejercicios pueden estimar cuánto habría cambiado el crecimiento agregado si la variación anual de la PTF de determinadas actividades hubiera sido cero, hubiera conservado el promedio de un periodo anterior o hubiera cerrado parte de su brecha. El resultado debe interpretarse como una simulación contable, no como una estimación causal, porque no incorpora respuestas del capital, el trabajo, los precios ni la reasignación de recursos.
 
-Manufactura y minería mantuvieron una PTF negativa en 2024, con $-1,20$ y
-$-2,33$ puntos. Comercio pasó de $-3,49$ puntos en 2023 a $-0,09$ en 2024:
-mejoró, pero no cambió de signo. Un solo año no modifica la clasificación de
-largo plazo, aunque sí muestra que las posiciones sectoriales pueden cambiar
-con rapidez.
+\clearpage
+\appendix
+\renewcommand{\thetable}{A\arabic{table}}
+\renewcommand{\thefigure}{A\arabic{figure}}
+\renewcommand{\theHtable}{appendix.table.\arabic{table}}
+\renewcommand{\theHfigure}{appendix.figure.\arabic{figure}}
+\setcounter{table}{0}
+\setcounter{figure}{0}
 
-\section{Qué añade la descomposición de los factores}
+\section{Cuadros y figuras de apoyo}
+\thispagestyle{fancy}
 
-El foco de este informe es la evolución de la PTF. La descomposición de trabajo,
-capital, energía, materiales y servicios se presenta en los apéndices para
-aclarar qué significa un residuo positivo o negativo.
+\subsection{Detalle anual y por subperiodos}
 
-En minería, por ejemplo, el capital aportó 2,99 puntos por año entre 2006 y
-2024, mientras la PTF restó 2,28. En finanzas e inmobiliarias, el capital
-aportó 2,04 puntos y la PTF restó 0,93. Estos resultados muestran que un aporte
-alto del capital no coincidió con una PTF positiva.
+La Figura \ref{fig:ptf_mapa} presenta las variaciones anuales de la PTF total y de cada actividad. El color permite distinguir el signo; la cifra de cada celda conserva el valor observado.
 
-En agricultura, la PTF aportó 1,28 puntos y explicó 49\% del crecimiento
-promedio de la producción. En comercio explicó 28\% y en servicios sociales,
-19\%. La descomposición ayuda a dimensionar la PTF, pero no identifica qué
-cambios tecnológicos, organizacionales o de medición explicaron su trayectoria.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{Paper/figures/fig_ptf_mapa_anual.png}
+  \caption{PTF anual del total de la economía y por actividad, 2006--2024}
+  \label{fig:ptf_mapa}
+\end{figure}
 
-\section{Implicaciones}
+\input{Paper/sections/tabla_contribucion_ptf_subperiodos}
 
-\textbf{El promedio del total no describe la dispersión sectorial.} La PTF del
-total de la economía promedió $-0,08$ puntos, mientras los promedios por
-actividad estuvieron entre 1,28 puntos en agricultura y $-2,28$ en minería.
-El total publicado incorpora las ponderaciones del DANE y no debe interpretarse
-como el desempeño de una actividad representativa.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.98\textwidth]{Paper/figures/fig_ptf_promedio_actividad.png}
+  \caption{PTF promedio del total de la economía y por actividad, 2006--2024}
+  \label{fig:ptf_promedio_actividad}
+\end{figure}
 
-\textbf{El promedio de largo plazo debe acompañarse con una medida de
-persistencia.} Agricultura y comercio tuvieron aportes promedio similares,
-pero sus últimos años fueron distintos. Agricultura cerró 2024 con 3,80 puntos;
-comercio, con $-0,09$. El número de años positivos y la trayectoria reciente
-evitan interpretar el promedio como un resultado constante.
+\clearpage
+\begin{landscape}
+\subsection{Descomposición KLEMS de cada actividad}
+\input{Paper/sections/tabla_descomposicion_largo_plazo}
+\end{landscape}
 
-\textbf{Los cambios de signo requieren seguimiento.} Electricidad, gas y agua
-tuvo una PTF positiva entre 2021 y 2024 después de tres subperiodos con
-promedios negativos. Construcción registró el movimiento contrario en
-2020--2024. La publicación de nuevos años permitirá establecer si esos cambios
-persisten o responden a la volatilidad posterior a la pandemia.
+\begin{landscape}
+\input{Paper/sections/tabla_detalle_factores}
+\end{landscape}
 
-\textbf{La PTF no identifica por sí sola la causa de una trayectoria.} El
-resultado permite localizar actividades y periodos que requieren una
-explicación adicional. Determinar la causa exige información sectorial sobre
-producción e insumos que no está contenida en el residuo.
+\subsection{Reconstrucción y validación de las ponderaciones}
 
-\textbf{El DANE debería publicar la serie en formato longitudinal.} Los cuadros
-anuales permiten reconstruir la evolución, pero exigen enlazar veinte hojas.
-Una base única, con metadatos sobre revisiones y correspondencias entre
-clasificaciones, permitiría distinguir una revisión estadística de un cambio
-económico.
+Para cada año se recupera un vector de nueve ponderaciones. El sistema usa las filas sectoriales y la fila del total para ocho componentes independientes: producción, composición del trabajo, horas, capital TIC, capital no TIC, energía, materiales y servicios. La novena ecuación exige que los pesos sumen uno. En notación matricial:
 
-\section{Conclusión}
+\begin{equation}
+\begin{bmatrix}
+Z_{1,t}^{1} & \cdots & Z_{9,t}^{1}\\
+\vdots & \ddots & \vdots\\
+Z_{1,t}^{8} & \cdots & Z_{9,t}^{8}\\
+1 & \cdots & 1
+\end{bmatrix}
+\begin{bmatrix}
+\bar{s}_{1,t}\\
+\vdots\\
+\bar{s}_{9,t}
+\end{bmatrix}
+=
+\begin{bmatrix}
+Z_{t}^{1}\\
+\vdots\\
+Z_{t}^{8}\\
+1
+\end{bmatrix},
+\end{equation}
 
-La PTF del total de la economía promedió $-0,08$ puntos por año entre 2006 y
-2024. Después del promedio de $-0,30$ puntos en 2006--2010, los tres
-subperiodos siguientes permanecieron cerca de cero. Este resultado agregado
-coexistió con promedios sectoriales entre 1,28 y $-2,28$ puntos.
+donde \(Z_{i,t}^{k}\) es el componente \(k\) publicado para la actividad \(i\) y \(Z_t^k\) es el mismo componente para el total. Los pesos recuperados se encuentran entre 3,0\% y 26,8\% en las 19 observaciones. Al aplicarlos a las trece columnas, incluida la PTF que no se usa como ecuación independiente, el error máximo de reconciliación es \(5,3\times10^{-15}\). El procedimiento identifica los ponderadores implícitos en la publicación; no reconstruye los niveles nominales de valor agregado.
 
-Agricultura, comercio y servicios sociales registraron aportes positivos y
-frecuentes entre 2005 y 2024. Minería, manufactura y finanzas e inmobiliarias
-tuvieron promedios negativos en los cuatro subperiodos. Electricidad cambió de
-signo, construcción cayó a $-2,52$ puntos en 2020--2024 y transporte terminó
-cerca de cero.
+\subsection{Actividades incluidas}
 
-La PTF de la agricultura pasó de $-0,38$ puntos en
-2006--2010 a promedios superiores a 1,5 puntos en los tres subperiodos
-siguientes. Minería registró el deterioro más persistente y construcción, la
-mayor caída reciente. Electricidad fue la única actividad que pasó de tres
-subperiodos negativos a un promedio positivo en 2020--2024.
+\input{Paper/sections/tabla_subactividades}
 
-El resultado de 2024 fue mejor que el de 2023 para el total de la economía y
-para seis actividades. Los próximos años mostrarán si el total consolida un
-aporte positivo, si agricultura y servicios sociales sostienen sus resultados,
-si electricidad conserva el cambio de signo y si construcción, manufactura y
-minería interrumpen sus trayectorias negativas.
+\subsection{Fuentes y reproducibilidad}
+
+La fuente primaria es el archivo \emph{anex-PTF-Productividad-2025.xlsx} del DANE. El repositorio del informe conserva una copia del anexo, las bases procesadas y los programas que extraen las series publicadas, seleccionan las 19 variaciones de 2006 a 2024, reconstruyen los pesos, verifican las identidades contables y generan los cuadros y figuras.
+
+La descripción de la medición se apoya en el \href{https://www.dane.gov.co/files/investigaciones/boletines/pib/productividad/doc-metodologico-PTF-productividad-total-factores-2021.pdf}{documento metodológico de la Productividad Total de los Factores del DANE}. La correspondencia sectorial se documenta con la \href{https://www.dane.gov.co/files/investigaciones/publicaciones/publicaciones/CIIU_rev3.pdf}{CIIU Revisión 3 adaptada para Colombia} y la \href{https://www.dane.gov.co/files/sen/nomenclatura/ciiu/CIIURev31AC.pdf}{CIIU Revisión 3.1 adaptada para Colombia}.
