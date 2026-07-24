@@ -244,7 +244,50 @@ c_{i,t}
 \label{eq:contribucion_largo_plazo}
 \end{equation}
 
-Por construcción, \(\overline{\Delta\ln A}=\sum_{i=1}^{9}\overline{c_i}\). El producto del peso promedio por la PTF promedio no conserva esta identidad porque omite la variación conjunta de ambas series.
+Por construcción, \(\overline{\Delta\ln A}=\sum_{i=1}^{9}\overline{c_i}\). Esta identidad requiere multiplicar el peso por la PTF de cada año antes de promediar.
+
+\subsection{Qué se pondera en el largo plazo}
+
+La agregación no pondera los crecimientos acumulados sectoriales con un único vector. En cada año multiplica la variación logarítmica de la PTF de cada actividad por el peso de Törnqvist correspondiente. El CJC replica esta operación para las 19 variaciones anuales.
+
+La diferencia frente al uso de un peso fijo puede expresarse de manera explícita. Sea \(\widetilde{s}_i\) el promedio de los 19 pesos anuales de la actividad \(i\). La contribución de largo plazo satisface:
+
+\begin{equation}
+\overline{c_i}
+=\widetilde{s}_i\,\overline{g_i}
++\operatorname{Cov}_t\left(
+\bar{s}_{i,t},\Delta\ln A_{i,t}
+\right),
+\qquad
+\widetilde{s}_i=\frac{1}{19}\sum_{t=2006}^{2024}\bar{s}_{i,t},
+\label{eq:contribucion_covarianza}
+\end{equation}
+
+donde la covarianza se calcula sobre los 19 años, con divisor 19. Por lo tanto, la PTF anualizada del total de la economía es:
+
+\begin{equation}
+\overline{g}
+=\sum_{i=1}^{9}\overline{c_i}
+=\sum_{i=1}^{9}\widetilde{s}_i\,\overline{g_i}
++\sum_{i=1}^{9}\operatorname{Cov}_t\left(
+\bar{s}_{i,t},\Delta\ln A_{i,t}
+\right).
+\label{eq:agregacion_largo_plazo}
+\end{equation}
+
+Los pesos promedio \(\widetilde{s}_i\) suman uno. Sin embargo, multiplicarlos por las PTF sectoriales anualizadas y sumar los productos solo aproxima el resultado cuando los pesos cambian en el tiempo. En los datos de este informe, esa aproximación arroja \(-0,088\) puntos porcentuales por año, frente al resultado exacto de \(-0,081\). La diferencia, \(0,007\) puntos, corresponde a la suma de los términos de covarianza. El resultado exacto se obtiene al promediar las contribuciones calculadas año por año.
+
+Finalmente, el crecimiento acumulado del total, expresado en porcentaje, se obtiene a partir de su PTF anualizada:
+
+\begin{equation}
+G_{2005,2024}
+=100\left[
+\exp\left(\frac{19\,\overline{g}}{100}\right)-1
+\right].
+\label{eq:acumulado_total}
+\end{equation}
+
+La transformación exponencial implica que el crecimiento acumulado del total tampoco es un promedio aritmético ponderado de los crecimientos acumulados sectoriales. La magnitud que se suma exactamente entre actividades es la contribución a la variación logarítmica anual de la PTF; en el largo plazo, se suman los promedios de esas contribuciones.
 
 \subsection{Reconstrucción y validación de las ponderaciones}
 
