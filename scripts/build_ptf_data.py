@@ -1111,30 +1111,16 @@ def draw_aggregate_contributions(
     )
     rows = [*sector_rows, total]
     img, draw, f = canvas(
-        "Contribuciones de las actividades a la PTF total",
-        "Acumuladas y anualizadas, 2005–2024",
+        "Contribución de cada actividad a la tasa anualizada de la PTF total",
+        "Promedio anual, 2005–2024; puntos porcentuales por año",
         1800,
-        1120,
+        980,
     )
     left_label = 55
-    top, bottom = 275, 910
-    cumulative_left, cumulative_right = 610, 1090
-    annualized_left, annualized_right = 1240, 1720
-    cumulative_min, cumulative_max = -3.0, 3.3
+    top, bottom = 190, 790
+    annualized_left, annualized_right = 760, 1690
     annualized_min, annualized_max = -0.17, 0.17
 
-    draw.text(
-        (645, 185),
-        "Contribución acumulada (puntos logarítmicos)",
-        fill=BLUE,
-        font=f["small_bold"],
-    )
-    draw.text(
-        (1290, 185),
-        "Contribución anualizada (pp por año)",
-        fill=BLUE,
-        font=f["small_bold"],
-    )
     def x_position(
         value: float,
         left: float,
@@ -1143,26 +1129,6 @@ def draw_aggregate_contributions(
         maximum: float,
     ) -> float:
         return left + (value - minimum) / (maximum - minimum) * (right - left)
-
-    for tick in [-3, -2, -1, 0, 1, 2, 3]:
-        x = x_position(
-            tick,
-            cumulative_left,
-            cumulative_right,
-            cumulative_min,
-            cumulative_max,
-        )
-        draw.line(
-            (x, top, x, bottom),
-            fill=BLUE if tick == 0 else GRID,
-            width=3 if tick == 0 else 1,
-        )
-        draw.text(
-            (x - 12, bottom + 18),
-            str(tick).replace("-", "−"),
-            fill=GRAY,
-            font=f["small"],
-        )
 
     for tick in [-0.15, -0.10, -0.05, 0, 0.05, 0.10, 0.15]:
         x = x_position(
@@ -1184,13 +1150,6 @@ def draw_aggregate_contributions(
             font=f["small"],
         )
 
-    cumulative_zero = x_position(
-        0,
-        cumulative_left,
-        cumulative_right,
-        cumulative_min,
-        cumulative_max,
-    )
     annualized_zero = x_position(
         0,
         annualized_left,
@@ -1202,15 +1161,7 @@ def draw_aggregate_contributions(
     for index, row in enumerate(rows):
         y = top + (index + 0.5) * row_h
         is_total = str(row["activity"]) == "Total de la economía"
-        accumulated = float(row["cumulative_log_contribution"])
         annualized = float(row["average_contribution"])
-        accumulated_x = x_position(
-            accumulated,
-            cumulative_left,
-            cumulative_right,
-            cumulative_min,
-            cumulative_max,
-        )
         annualized_x = x_position(
             annualized,
             annualized_left,
@@ -1234,15 +1185,6 @@ def draw_aggregate_contributions(
         )
         draw.rectangle(
             (
-                min(accumulated_x, cumulative_zero),
-                y - 20,
-                max(accumulated_x, cumulative_zero),
-                y + 20,
-            ),
-            fill=color,
-        )
-        draw.rectangle(
-            (
                 min(annualized_x, annualized_zero),
                 y - 20,
                 max(annualized_x, annualized_zero),
@@ -1251,31 +1193,13 @@ def draw_aggregate_contributions(
             fill=color,
         )
 
-        accumulated_label = f"{accumulated:.2f}".replace("-", "−")
         annualized_label = f"{annualized:.3f}".replace("-", "−")
-        accumulated_box = draw.textbbox(
-            (0, 0),
-            accumulated_label,
-            font=f["small_bold"],
-        )
         annualized_box = draw.textbbox(
             (0, 0),
             annualized_label,
             font=f["small_bold"],
         )
-        accumulated_width = accumulated_box[2] - accumulated_box[0]
         annualized_width = annualized_box[2] - annualized_box[0]
-        draw.text(
-            (
-                accumulated_x + 10
-                if accumulated >= 0
-                else accumulated_x - accumulated_width - 10,
-                y - 13,
-            ),
-            accumulated_label,
-            fill=color,
-            font=f["small_bold"],
-        )
         draw.text(
             (
                 annualized_x + 10
@@ -1289,19 +1213,19 @@ def draw_aggregate_contributions(
         )
 
     draw.text(
-        (70, 992),
-        "Nota: el acumulado suma las 20 contribuciones anuales en puntos logarítmicos; la anualizada divide esa suma por 20.",
+        (70, 880),
+        "Nota: cada barra es el promedio de las 20 contribuciones anuales. Las barras suman −0,073 puntos porcentuales",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
-        (70, 1029),
-        "El acumulado no se interpreta como puntos porcentuales del cambio acumulado de −1,45%.",
+        (70, 917),
+        "por año, que corresponde a la tasa anualizada de crecimiento de la PTF total.",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
-        (70, 1066),
+        (70, 954),
         "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
         fill=GRAY,
         font=f["small"],
