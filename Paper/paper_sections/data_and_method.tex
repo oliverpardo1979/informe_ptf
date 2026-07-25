@@ -1,0 +1,133 @@
+\section{Data and Accounting Framework}
+
+\subsection{DANE production-account data}
+
+DANE publishes annual growth-accounting results for the total economy and nine activity aggregates \citep{DANE2025Annex}. The source annex reports output growth; contributions from labor composition and hours; contributions from information and communication technology (ICT) and non-ICT capital; contributions from energy, materials, and services; and TFP. The activity classification follows CIIU Rev. 3/3.1 as implemented in Colombia. The appendix lists the activities included in each aggregate.
+
+The analysis uses the 19 annual changes from 2006 through 2024. These observations connect the level in 2005 with the level in 2024. The row labeled 2005 in the DANE annex measures the change from 2004 to 2005 and is therefore not part of the 2005--2024 comparison.
+
+For activity \(i\) and year \(t\), the production-account identity is
+
+\begin{equation}
+\Delta \ln Y_{i,t}
+=
+C^{L}_{i,t}
++C^{K}_{i,t}
++C^{E}_{i,t}
++C^{M}_{i,t}
++C^{S}_{i,t}
++\Delta \ln A_{i,t},
+\label{eq:production_identity}
+\end{equation}
+
+where \(Y\) is output, \(A\) is TFP, and \(C^{L}\), \(C^{K}\), \(C^{E}\), \(C^{M}\), and \(C^{S}\) are the measured contributions of labor, capital, energy, materials, and services. Labor includes changes in hours and labor composition. Capital includes ICT and non-ICT assets. Each contribution combines input growth with its cost share; it is not the growth rate of the corresponding input. TFP is the residual between output growth and the measured input contributions.
+
+This residual has a precise accounting meaning but not a unique structural interpretation. Under the assumptions used in growth accounting, it is commonly associated with changes in efficiency or technology \citep{Solow1957,JorgensonGollopFraumeni1987}. In annual activity data, it may also capture changes in capacity utilization, reallocation, omitted inputs, and measurement error \citep{OECD2001Productivity}. We therefore describe the TFP paths and formulate possible mechanisms as hypotheses rather than identified causes.
+
+\subsection{Chaining annual TFP changes}
+
+Let \(I_{i,t}\) denote the TFP index for activity \(i\), normalized to \(I_{i,2005}=100\). Because the annex reports log changes in percentage points, the index evolves according to
+
+\begin{equation}
+I_{i,t}
+=I_{i,t-1}
+\exp\left(\frac{\Delta\ln A_{i,t}}{100}\right).
+\label{eq:index_chain}
+\end{equation}
+
+The cumulative percentage change between 2005 and 2024 is
+
+\begin{equation}
+G_i
+=100\left[
+\exp\left(
+\frac{\sum_{t=2006}^{2024}\Delta\ln A_{i,t}}{100}
+\right)-1
+\right],
+\label{eq:cumulative_tfp}
+\end{equation}
+
+and the annualized log change is
+
+\begin{equation}
+\overline{g_i}
+=\frac{1}{19}\sum_{t=2006}^{2024}\Delta\ln A_{i,t}
+=\frac{100}{19}\ln\left(\frac{I_{i,2024}}{I_{i,2005}}\right).
+\label{eq:annualized_tfp}
+\end{equation}
+
+The cumulative percentage change and the annualized log change describe TFP within an activity. They cannot be added across activities.
+
+\subsection{Aggregate TFP and activity contributions}
+
+DANE states that aggregate productivity and its components are constructed as T\"ornqvist-weighted sums of activity growth rates \citep{DANE2022TFP}. T\"ornqvist aggregation belongs to the superlative index-number methods used to approximate changes in flexible production structures \citep{Diewert1976}. The annual aggregate TFP identity can therefore be written as
+
+\begin{equation}
+\Delta\ln A_t
+=\sum_{i=1}^{9}w_{i,t}\Delta\ln A_{i,t},
+\qquad
+\sum_{i=1}^{9}w_{i,t}=1,
+\label{eq:aggregate_tfp}
+\end{equation}
+
+where \(w_{i,t}\) is the annual aggregation weight. The public annex does not report these weights. We recover one vector for each year by requiring the same weights to reproduce eight independent published components for the total economy and by imposing that the nine weights sum to one. The recovered weights also reproduce the five remaining columns, including aggregate TFP, even though those columns are not used to identify the system. Appendix~A describes this validation.
+
+The contribution of activity \(i\) in year \(t\) is
+
+\begin{equation}
+c_{i,t}=w_{i,t}\Delta\ln A_{i,t}.
+\label{eq:annual_contribution}
+\end{equation}
+
+Its average annual contribution over the full period is
+
+\begin{equation}
+\overline{c_i}
+=\frac{1}{19}\sum_{t=2006}^{2024}c_{i,t}.
+\label{eq:long_run_contribution}
+\end{equation}
+
+By construction,
+
+\begin{equation}
+\overline{\Delta\ln A}
+=\sum_{i=1}^{9}\overline{c_i}.
+\label{eq:long_run_adding_up}
+\end{equation}
+
+This operation differs from applying a single set of average weights to cumulative sectoral growth. Let \(\widetilde{w}_i\) denote the mean annual weight. Then
+
+\begin{equation}
+\overline{c_i}
+=
+\widetilde{w}_i\,\overline{g_i}
++\operatorname{Cov}_t
+\left(w_{i,t},\Delta\ln A_{i,t}\right).
+\label{eq:covariance_decomposition}
+\end{equation}
+
+The covariance term matters whenever activity weights and TFP growth move together. In the data, multiplying average weights by annualized sectoral TFP yields aggregate TFP of $-0.088$ percentage points per year. The exact year-by-year calculation yields $-0.081$ points; the 0.007-point difference is the sum of the covariance terms.
+
+\subsection{Accounting counterfactual}
+
+Let \(\mathcal{S}\) contain mining, construction, finance and real estate, and manufacturing. These are the four activities with the lowest annualized TFP growth over 2006--2024. The counterfactual replaces their annual TFP growth with zero:
+
+\begin{equation}
+\Delta\ln A_t^{CF}
+=
+\Delta\ln A_t
+-\sum_{i\in\mathcal{S}}c_{i,t}.
+\label{eq:counterfactual_tfp}
+\end{equation}
+
+All other input contributions and the recovered annual weights remain fixed. The production-account identity then implies
+
+\begin{equation}
+\Delta\ln Y_t^{CF}
+=
+\Delta\ln Y_t
+-\sum_{i\in\mathcal{S}}c_{i,t}.
+\label{eq:counterfactual_output}
+\end{equation}
+
+The exercise is deliberately mechanical. Activity selection uses the full sample, the counterfactual does not specify an intervention, and it does not allow labor, capital, intermediate inputs, prices, or weights to respond. Its purpose is to measure the accounting importance of the four negative long-run contributions.

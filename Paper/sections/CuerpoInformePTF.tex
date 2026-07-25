@@ -4,7 +4,7 @@
 
 \textbf{El objetivo de este informe es estudiar la evolución de la PTF en Colombia entre 2005 y 2024 y establecer cuánto contribuyó cada actividad económica a la PTF del total de la economía.} El análisis usa el enfoque de producción del DANE para nueve agregados de actividad económica. Este enfoque permite comparar la producción con los servicios laborales, los servicios de capital y los consumos intermedios de cada actividad.
 
-\textbf{El periodo contiene 19 variaciones anuales, desde 2006 hasta 2024, que enlazan los niveles de 2005 y 2024.} El informe encadena esas variaciones para calcular el crecimiento acumulado de la PTF y luego anualiza el resultado. También recupera las ponderaciones anuales implícitas en la agregación publicada por el DANE y multiplica la PTF de cada actividad por su peso en cada año. De esta manera, las contribuciones de las nueve actividades suman la PTF publicada para el total de la economía.
+\textbf{El periodo contiene 19 variaciones anuales, desde 2006 hasta 2024, que enlazan los niveles de 2005 y 2024.} El informe usa esas variaciones para comparar la trayectoria de la PTF entre actividades y calcular su contribución al total de la economía. El documento académico \emph{Sectoral Sources of Total Factor Productivity Growth in Colombia, 2005--2024} presenta la derivación y las validaciones.
 
 \textbf{La PTF del total de la economía disminuyó 1,5\% entre 2005 y 2024 y la mayor parte de la caída ocurrió antes de 2011.} El índice encadenado terminó en 98,5, lo que equivale a una variación logarítmica anualizada de $-0,081$ puntos porcentuales por año. Después de 2010, los promedios por subperiodo estuvieron alrededor de cero: el deterioro inicial se detuvo, pero no dio paso a un crecimiento sostenido de la PTF.
 
@@ -16,23 +16,11 @@
 \section{Metodología}
 \thispagestyle{fancy}
 
-\subsection{Qué es y cómo se calcula la PTF}
+\textbf{El informe usa los resultados anuales del enfoque de producción KLEMS publicados por el DANE para el total de la economía y nueve actividades.} La PTF es la parte del crecimiento de la producción que no explican las contribuciones medidas del trabajo, el capital, la energía, los materiales y los servicios. Como es un residuo contable, también puede recoger cambios en la utilización de la capacidad, reasignaciones y errores de medición.
 
-\textbf{La PTF es la parte del crecimiento de la producción que no se explica por el crecimiento medido de los insumos.} El DANE usa la contabilidad del crecimiento KLEMS para separar las contribuciones del trabajo, el capital, la energía, los materiales y los servicios. La PTF corresponde a la diferencia entre el crecimiento de la producción y la suma de esas contribuciones.
+\textbf{El CJC encadena las 19 variaciones de 2006 a 2024 para calcular el crecimiento acumulado de la PTF y después anualiza el resultado.} Para descomponer la PTF total, recupera los ponderadores anuales implícitos en la publicación y calcula la contribución de cada actividad antes de promediar. El contrafactual fija en cero la PTF anual de cuatro actividades y mantiene constantes los ponderadores y las demás contribuciones. Por eso, es un ejercicio contable del enfoque de producción y no una estimación causal ni una trayectoria del PIB.
 
-El trabajo incluye horas y composición laboral; el capital, activos TIC y no TIC; y los consumos intermedios, energía, materiales y servicios. Cada contribución combina la variación de los servicios del insumo con su participación en los costos: no es la tasa de crecimiento del insumo. El apéndice presenta las ecuaciones.
-
-Una PTF positiva indica que la producción aumentó más de lo explicado por esas contribuciones; una PTF negativa indica lo contrario. El residuo también puede recoger cambios en la utilización de la capacidad, reasignaciones y errores de medición, por lo que no equivale necesariamente a cambio tecnológico.
-
-\subsection{Qué publica el DANE y cómo se construye el largo plazo}
-
-\textbf{El anexo del DANE reporta resultados anuales para el total de la economía y nueve agregados de actividad.} Incluye el crecimiento de la producción, las cinco contribuciones KLEMS y la PTF, y desagrega los componentes del trabajo y el capital.
-
-El informe usa el enfoque de producción, que ofrece la historia sectorial comparable; la PTF del total por el enfoque de valor agregado responde a otra identidad. El periodo contiene las 19 variaciones de 2006 a 2024; la fila rotulada como 2005 compara 2005 con 2004. El \href{https://www.dane.gov.co/files/investigaciones/boletines/pib/productividad/doc-metodologico-PTF-productividad-total-factores-2021.pdf}{documento metodológico del DANE} contiene el detalle.
-
-\textbf{El informe construye primero el crecimiento acumulado de la PTF y después lo anualiza.} El índice parte de 100 en 2005 y cada variación anual se aplica al nivel obtenido el año anterior. La comparación entre el índice de 2024 y el de 2005 muestra el cambio acumulado. Ese cambio se anualiza sobre los 19 intervalos del periodo. El cuerpo del informe presenta el acumulado en porcentaje y la variación logarítmica anualizada en puntos porcentuales por año; el apéndice contiene las ecuaciones.
-
-\textbf{La PTF total no es el promedio simple de las PTF sectoriales.} La PTF de cada actividad se multiplica por su peso de Törnqvist en cada año y luego se promedian los 19 resultados. En el contrafactual, la PTF de cuatro actividades se fija en cero; los pesos y las demás contribuciones no cambian. Dentro de la identidad KLEMS, esto modifica en igual magnitud el crecimiento de la producción. No estima el PIB ni un efecto causal. El apéndice presenta las ecuaciones y la validación.
+\textbf{El paper académico contiene la metodología completa.} \emph{Sectoral Sources of Total Factor Productivity Growth in Colombia, 2005--2024} presenta las ecuaciones de encadenamiento, la recuperación y validación de los ponderadores, la descomposición de largo plazo y el contrafactual. El documento y los materiales de replicación están disponibles en el \href{https://github.com/oliverpardo1979/informe_ptf}{repositorio del proyecto}. El \href{https://www.dane.gov.co/files/investigaciones/boletines/pib/productividad/doc-metodologico-PTF-productividad-total-factores-2021.pdf}{documento metodológico del DANE} describe la medición KLEMS.
 
 \clearpage
 
@@ -153,196 +141,17 @@ El ejercicio mide la importancia contable de la PTF de esas actividades, pero no
 \setcounter{figure}{0}
 \setcounter{equation}{0}
 
-\section{Detalles metodológicos y cuadros de apoyo}
+\section{Cuadros de apoyo}
 \thispagestyle{fancy}
 
-\subsection{Cálculo de la PTF}
+\subsection{Resultados por subperiodos}
 
-Para cada actividad económica \(i\), la PTF se calcula como la diferencia entre el crecimiento de la producción y las contribuciones del trabajo, el capital, la energía, los materiales y los servicios:
-
-\begin{equation}
-\Delta \ln A_{i,t}=
-\Delta \ln Y_{i,t}
--\left(
-C^{L}_{i,t}+C^{K}_{i,t}+C^{E}_{i,t}
-+C^{M}_{i,t}+C^{S}_{i,t}
-\right),
-\label{eq:ptf_actividad}
-\end{equation}
-
-donde \(Y\) representa la producción y cada \(C\) la contribución de un grupo de insumos.
-
-\subsection{Encadenamiento de las variaciones anuales}
-
-Sea \(I_{i,t}\) el índice de PTF de la actividad \(i\) en el año \(t\), con \(I_{i,2005}=100\). El índice se actualiza multiplicando el valor del año anterior por la razón entre los niveles de PTF de dos años consecutivos. Como el DANE publica esa variación en términos logarítmicos:
-
-\begin{equation}
-I_{i,t}
-=I_{i,t-1}\frac{A_{i,t}}{A_{i,t-1}}
-=I_{i,t-1}\exp\left(\frac{\Delta\ln A_{i,t}}{100}\right).
-\label{eq:indice_ptf}
-\end{equation}
-
-La variación acumulada entre 2005 y 2024 es:
-
-\begin{equation}
-100\left[
-\exp\left(
-\frac{\sum_{t=2006}^{2024}\Delta\ln A_{i,t}}{100}
-\right)-1
-\right].
-\label{eq:crecimiento_acumulado}
-\end{equation}
-
-La variación logarítmica anualizada se obtiene a partir del crecimiento acumulado:
-
-\begin{equation}
-\overline{g_i}
-=\frac{100}{19}\ln\left(\frac{I_{i,2024}}{I_{i,2005}}\right)
-=\frac{1}{19}\sum_{t=2006}^{2024}\Delta\ln A_{i,t}.
-\label{eq:promedio_ptf}
-\end{equation}
-
-\subsection{Agregación y contribuciones por actividad}
-
-La PTF del total de la economía en el año \(t\) es la suma ponderada de las PTF sectoriales:
-
-\begin{equation}
-\Delta\ln A_t=
-\sum_{i=1}^{9}\bar{s}_{i,t}\Delta\ln A_{i,t},
-\label{eq:agregacion_ptf}
-\end{equation}
-
-donde \(\bar{s}_{i,t}\) es el peso de Törnqvist de la actividad \(i\). Si \(s_{i,t}\) representa su participación en el valor agregado a precios corrientes, el peso es:
-
-\begin{equation}
-\bar{s}_{i,t}=\frac{1}{2}\left(s_{i,t-1}+s_{i,t}\right),
-\qquad
-s_{i,t}=\frac{VA_{i,t}}{\sum_j VA_{j,t}}.
-\label{eq:peso_tornqvist}
-\end{equation}
-
-Los nueve pesos suman uno. La contribución anual de la actividad \(i\) y su promedio de largo plazo son:
-
-\begin{equation}
-\begin{aligned}
-c_{i,t}
-&=\bar{s}_{i,t}\Delta\ln A_{i,t},\\
-\overline{c_i}
-&\equiv\frac{1}{19}\sum_{t=2006}^{2024}c_{i,t}
-=\frac{1}{19}\sum_{t=2006}^{2024}
-\bar{s}_{i,t}\Delta\ln A_{i,t}.
-\end{aligned}
-\label{eq:contribucion_largo_plazo}
-\end{equation}
-
-Por construcción, \(\overline{\Delta\ln A}=\sum_{i=1}^{9}\overline{c_i}\). Esta identidad requiere multiplicar el peso por la PTF de cada año antes de promediar.
-
-\subsection{Contrafactual contable}
-
-Sea \(S\) el conjunto formado por minería, construcción, finanzas e inmobiliarias y manufactura, las cuatro actividades con menor crecimiento anualizado de la PTF entre 2006 y 2024. El contrafactual reemplaza por cero la PTF de esas actividades en cada año. La PTF total contrafactual es:
-
-\begin{equation}
-\Delta\ln A_t^{CF}
-=\Delta\ln A_t-\sum_{i\in S}c_{i,t}.
-\label{eq:ptf_contrafactual}
-\end{equation}
-
-El ejercicio mantiene las contribuciones observadas del trabajo, el capital y los insumos intermedios. Por lo tanto, el cambio en la PTF total se traslada en la misma magnitud al crecimiento de la producción total:
-
-\begin{equation}
-\Delta\ln Y_t^{CF}
-=\Delta\ln Y_t-\sum_{i\in S}c_{i,t}.
-\label{eq:produccion_contrafactual}
-\end{equation}
-
-Al promediar las 19 variaciones anuales:
-
-\begin{equation}
-\overline{g_Y^{CF}}
-=\overline{g_Y}-\sum_{i\in S}\overline{c_i}
-=3,1525-(-0,4325)
-=3,5850.
-\label{eq:promedio_contrafactual}
-\end{equation}
-
-La selección de las cuatro actividades se hace con información de todo el periodo. El resultado es una simulación contable ex post: no estima cuánto habría crecido el PIB ni qué intervención habría permitido alcanzar una PTF igual a cero.
-
-\subsection{Qué se pondera en el largo plazo}
-
-La agregación no pondera los crecimientos acumulados sectoriales con un único vector. En cada año multiplica la variación logarítmica de la PTF de cada actividad por el peso de Törnqvist correspondiente. El CJC replica esta operación para las 19 variaciones anuales.
-
-La diferencia frente al uso de un peso fijo puede expresarse de manera explícita. Sea \(\widetilde{s}_i\) el promedio de los 19 pesos anuales de la actividad \(i\). La contribución de largo plazo satisface:
-
-\begin{equation}
-\overline{c_i}
-=\widetilde{s}_i\,\overline{g_i}
-+\operatorname{Cov}_t\left(
-\bar{s}_{i,t},\Delta\ln A_{i,t}
-\right),
-\qquad
-\widetilde{s}_i=\frac{1}{19}\sum_{t=2006}^{2024}\bar{s}_{i,t},
-\label{eq:contribucion_covarianza}
-\end{equation}
-
-donde la covarianza se calcula sobre los 19 años, con divisor 19. Por lo tanto, la PTF anualizada del total de la economía es:
-
-\begin{equation}
-\overline{g}
-=\sum_{i=1}^{9}\overline{c_i}
-=\sum_{i=1}^{9}\widetilde{s}_i\,\overline{g_i}
-+\sum_{i=1}^{9}\operatorname{Cov}_t\left(
-\bar{s}_{i,t},\Delta\ln A_{i,t}
-\right).
-\label{eq:agregacion_largo_plazo}
-\end{equation}
-
-Los pesos promedio \(\widetilde{s}_i\) suman uno. Sin embargo, multiplicarlos por las PTF sectoriales anualizadas y sumar los productos solo aproxima el resultado cuando los pesos cambian en el tiempo. En los datos de este informe, esa aproximación arroja \(-0,088\) puntos porcentuales por año, frente al resultado exacto de \(-0,081\). La diferencia, \(0,007\) puntos, corresponde a la suma de los términos de covarianza. El resultado exacto se obtiene al promediar las contribuciones calculadas año por año.
-
-Finalmente, el crecimiento acumulado del total, expresado en porcentaje, se obtiene a partir de su PTF anualizada:
-
-\begin{equation}
-G_{2005,2024}
-=100\left[
-\exp\left(\frac{19\,\overline{g}}{100}\right)-1
-\right].
-\label{eq:acumulado_total}
-\end{equation}
-
-La transformación exponencial implica que el crecimiento acumulado del total tampoco es un promedio aritmético ponderado de los crecimientos acumulados sectoriales. La magnitud que se suma exactamente entre actividades es la contribución a la variación logarítmica anual de la PTF; en el largo plazo, se suman los promedios de esas contribuciones.
-
-\subsection{Reconstrucción y validación de las ponderaciones}
-
-Para cada año se recupera un vector de nueve ponderaciones. El sistema usa las filas sectoriales y la fila del total para ocho componentes independientes: producción, composición del trabajo, horas, capital TIC, capital no TIC, energía, materiales y servicios. La novena ecuación exige que los pesos sumen uno. En notación matricial:
-
-\begin{equation}
-\begin{bmatrix}
-Z_{1,t}^{1} & \cdots & Z_{9,t}^{1}\\
-\vdots & \ddots & \vdots\\
-Z_{1,t}^{8} & \cdots & Z_{9,t}^{8}\\
-1 & \cdots & 1
-\end{bmatrix}
-\begin{bmatrix}
-\bar{s}_{1,t}\\
-\vdots\\
-\bar{s}_{9,t}
-\end{bmatrix}
-=
-\begin{bmatrix}
-Z_{t}^{1}\\
-\vdots\\
-Z_{t}^{8}\\
-1
-\end{bmatrix},
-\end{equation}
-
-donde \(Z_{i,t}^{k}\) es el componente \(k\) publicado para la actividad \(i\) y \(Z_t^k\) es el mismo componente para el total. Los pesos recuperados se encuentran entre 3,0\% y 26,8\% en las 19 observaciones. Al aplicarlos a las trece columnas, incluida la PTF que no se usa como ecuación independiente, el error máximo de reconciliación es \(5,3\times10^{-15}\). El procedimiento identifica los ponderadores implícitos en la publicación; no reconstruye los niveles nominales de valor agregado.
+\input{Paper/sections/tabla_contribucion_ptf_subperiodos}
 
 \subsection{Descomposición de largo plazo por actividad}
 
-Los Cuadros \ref{tab:descomposicion_largo_plazo} y \ref{tab:detalle_factores} presentan la descomposición completa del crecimiento de la producción y el detalle de las contribuciones del trabajo y el capital.
+Los Cuadros \ref{tab:descomposicion_largo_plazo} y \ref{tab:detalle_factores} presentan la descomposición completa del crecimiento de la producción y el detalle de las contribuciones del trabajo y el capital. La derivación de estos resultados se presenta en el paper académico.
 
-\clearpage
 \begin{landscape}
 \input{Paper/sections/tabla_descomposicion_largo_plazo}
 \end{landscape}
@@ -351,16 +160,12 @@ Los Cuadros \ref{tab:descomposicion_largo_plazo} y \ref{tab:detalle_factores} pr
 \input{Paper/sections/tabla_detalle_factores}
 \end{landscape}
 
-\subsection{Resultados por subperiodos}
-
-\input{Paper/sections/tabla_contribucion_ptf_subperiodos}
-
 \subsection{Actividades incluidas}
 
 \input{Paper/sections/tabla_subactividades}
 
 \subsection{Fuentes y reproducibilidad}
 
-La fuente primaria es el archivo \emph{anex-PTF-Productividad-2025.xlsx} del DANE. El repositorio del informe conserva una copia del anexo, las bases procesadas y los programas que extraen las series publicadas, seleccionan las 19 variaciones de 2006 a 2024, reconstruyen los pesos, verifican las identidades contables y generan los cuadros y figuras.
+La fuente primaria es el archivo \emph{anex-PTF-Productividad-2025.xlsx} del DANE. El repositorio conserva una copia del anexo, las bases procesadas, los programas que verifican las identidades contables y generan los resultados, y el paper académico con la metodología completa.
 
 La descripción de la medición se apoya en el \href{https://www.dane.gov.co/files/investigaciones/boletines/pib/productividad/doc-metodologico-PTF-productividad-total-factores-2021.pdf}{documento metodológico de la Productividad Total de los Factores del DANE}. La correspondencia sectorial se documenta con la \href{https://www.dane.gov.co/files/investigaciones/publicaciones/publicaciones/CIIU_rev3.pdf}{CIIU Revisión 3 adaptada para Colombia} y la \href{https://www.dane.gov.co/files/sen/nomenclatura/ciiu/CIIURev31AC.pdf}{CIIU Revisión 3.1 adaptada para Colombia}.

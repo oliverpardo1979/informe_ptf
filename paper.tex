@@ -1,0 +1,68 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage[margin=10pt,font=small,labelfont=bf]{caption}
+
+\geometry{margin=1in}
+\graphicspath{{Paper/figures/}{figures/}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=blue!55!black,
+  urlcolor=blue!55!black
+}
+
+\title{Sectoral Sources of Total Factor Productivity Growth in Colombia, 2005--2024}
+\author{
+Oliver Pardo\thanks{Associate Professor, Departamento de Administraci\'on, Pontificia Universidad Javeriana; Director, Centro Javeriano de Competitividad. Corresponding author: \href{mailto:pardoo@javeriana.edu.co}{pardoo@javeriana.edu.co}.}
+\and
+Jorge Orozco\thanks{Research Consultant, Centro Javeriano de Competitividad, Pontificia Universidad Javeriana.}
+}
+\date{July 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper reconstructs the long-run evolution of total factor productivity (TFP) for the Colombian economy and nine economic activities using the annual production-account results published by the national statistical office (DANE). We chain the 19 annual log changes from 2006 to 2024, recover the annual aggregation weights implicit in the publication, and decompose aggregate TFP into exact activity contributions. The aggregate TFP index fell from 100 in 2005 to 98.5 in 2024, equivalent to $-0.081$ percentage points per year. This small aggregate decline conceals large sectoral differences. Agricultural TFP increased by 27.6 percent, while mining TFP fell by 35.1 percent. Four activities contributed 0.361 percentage points per year to aggregate TFP, but five activities subtracted 0.441 points. An accounting counterfactual that sets annual TFP growth to zero in mining, construction, finance and real estate, and manufacturing raises production-account output growth from 3.15 to 3.59 percent per year. The exercise measures an accounting margin, not a causal policy effect or a counterfactual path for GDP.
+\end{abstract}
+
+\noindent\textbf{Keywords:} total factor productivity; growth accounting; KLEMS; sectoral productivity; Colombia.
+
+\noindent\textbf{JEL codes:} O47; O54; E23; C43.
+
+\input{Paper/paper_sections/introduction}
+\input{Paper/paper_sections/data_and_method}
+\input{Paper/paper_sections/results}
+\input{Paper/paper_sections/discussion}
+\input{Paper/paper_sections/conclusion}
+
+\appendix
+\input{Paper/paper_sections/appendix}
+
+\section*{Data and Code Availability}
+
+The DANE source annex, processed data, replication programs, figures, and table sources are available at:
+
+\url{https://github.com/oliverpardo1979/informe_ptf}.
+
+\noindent The original DANE annex is redistributed in the repository for reproducibility. Users should consult DANE for the official release and any subsequent revisions.
+
+\bibliographystyle{apalike}
+\small
+\bibliography{Paper/references}
+
+\end{document}
