@@ -337,7 +337,10 @@ def build_counterfactual(
             "level_difference_vs_observed": 0.0,
         },
         {
-            "scenario": "PTF igual a cero en las cuatro actividades",
+            "scenario": (
+                "Tasa anual de crecimiento de la PTF igual a cero "
+                "en las cuatro actividades"
+            ),
             "average_ptf": counterfactual_ptf_average,
             "average_production_growth": counterfactual_production_average,
             "output_index_2024": counterfactual_output_index,
@@ -417,7 +420,10 @@ def build_value_added_counterfactual(
             "annual_tfp_increment": 0.0,
         },
         {
-            "scenario": "PTF un punto porcentual adicional por año",
+            "scenario": (
+                "Tasa anual de crecimiento de la PTF un punto "
+                "porcentual mayor"
+            ),
             **{
                 **averages,
                 "gross_value_added": averages["gross_value_added"] + 1,
@@ -467,8 +473,9 @@ def write_value_added_table(summary: list[dict[str, object]]) -> None:
         r"\begin{tabular}{lrrrr}",
         r"\toprule",
         r" & Valor agregado bruto & Trabajo & Capital & PTF \\",
+        r" & (\% anual) & (pp por año) & (pp por año) & (\% anual) \\",
         r"\midrule",
-        "Crecimiento anualizado "
+        "2006--2024 "
         f"& {tex_fmt(float(observed['gross_value_added']))} "
         f"& {tex_fmt(float(observed['labor']))} "
         f"& {tex_fmt(float(observed['capital']))} "
@@ -477,7 +484,7 @@ def write_value_added_table(summary: list[dict[str, object]]) -> None:
         r"\end{tabular}",
         r"\vspace{0.2em}",
         r"\begin{minipage}{0.93\textwidth}",
-        r"\footnotesize \textit{Nota:} tasas logarítmicas promedio, en puntos porcentuales por año. Las columnas de trabajo y capital son contribuciones al crecimiento, no tasas de crecimiento de los insumos. La suma de trabajo, capital y PTF reproduce el crecimiento del valor agregado bruto, salvo diferencias por redondeo.",
+        r"\footnotesize \textit{Nota:} el valor agregado bruto y la PTF se expresan como tasas de crecimiento logarítmicas anualizadas. Trabajo y capital son contribuciones al crecimiento, en puntos porcentuales por año, no tasas de crecimiento de los insumos. Como la PTF entra con coeficiente uno en la identidad contable, su tasa de crecimiento también equivale numéricamente a su contribución al crecimiento del valor agregado. Las cifras pueden no sumar por redondeo.",
         r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
         r"\end{minipage}",
         r"\end{table}",
@@ -534,7 +541,7 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
     lines.extend(
         [
             r"\bottomrule",
-            r"\multicolumn{8}{p{15.9cm}}{\footnotesize \textit{Nota:} cifras en puntos porcentuales promedio por año, salvo la producción, expresada como tasa logarítmica anual. El periodo usa las 19 variaciones de 2006 a 2024, que enlazan los niveles de 2005 y 2024. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades. Por redondeo, los componentes pueden no sumar exactamente la producción.}\\",
+            r"\multicolumn{8}{p{15.9cm}}{\footnotesize \textit{Nota:} la producción y la PTF se expresan como tasas de crecimiento logarítmicas anualizadas (\%). Trabajo, capital, energía, materiales y servicios son contribuciones al crecimiento, en puntos porcentuales por año. Como la PTF entra con coeficiente uno en la identidad contable, su tasa también equivale numéricamente a su contribución. El periodo usa las 19 tasas anuales de 2006 a 2024, que enlazan los niveles de 2005 y 2024. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades. Por redondeo, los componentes pueden no sumar exactamente la producción.}\\",
             r"\multicolumn{8}{l}{\footnotesize Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.}\\",
             r"\end{longtable}",
             r"\endgroup",
@@ -640,7 +647,7 @@ def write_evolution_table(
             r"\end{tabular}",
             r"\vspace{0.15cm}",
             r"\begin{minipage}{0.96\textwidth}",
-            r"\footnotesize \textit{Nota:} contribución promedio anual de la PTF al crecimiento de la producción, en puntos porcentuales. El total de la economía corresponde a la serie agregada publicada por el DANE y no a un promedio simple de las actividades. Los subperiodos tienen distinta duración; se usan para describir cambios en la trayectoria, no para atribuirlos a un evento específico.",
+            r"\footnotesize \textit{Nota:} tasas de crecimiento logarítmicas anualizadas de la PTF (\%). Como la PTF entra con coeficiente uno en la identidad contable de cada actividad, la tasa también equivale numéricamente a su contribución al crecimiento de la producción. El total de la economía corresponde a la serie agregada publicada por el DANE y no a un promedio simple de las actividades. Los subperiodos tienen distinta duración; se usan para describir cambios en la trayectoria, no para atribuirlos a un evento específico.",
             r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
             r"\end{minipage}",
             r"\end{table}",
@@ -671,8 +678,8 @@ def write_aggregate_contribution_tables(
         r"\setlength{\tabcolsep}{3pt}",
         r"\begin{tabular}{p{4.3cm}>{\raggedleft\arraybackslash}p{1.7cm}>{\raggedleft\arraybackslash}p{2.25cm}>{\raggedleft\arraybackslash}p{2.2cm}>{\raggedleft\arraybackslash}p{2.35cm}}",
         r"\toprule",
-        r"Actividad & Peso promedio & Crecimiento acumulado & PTF anualizada & Contribución al total \\",
-        r" & (\%) & 2005--2024 (\%) & (pp por año) & (pp por año) \\",
+        r"Actividad & Peso promedio & Crecimiento acumulado & Tasa anualizada de la PTF & Contribución al total \\",
+        r" & (\%) & 2005--2024 (\%) & (\%) & (pp por año) \\",
         r"\midrule",
     ]
     for row in sectors:
@@ -696,7 +703,7 @@ def write_aggregate_contribution_tables(
             r"\end{tabular}",
             r"\vspace{0.15cm}",
             r"\begin{minipage}{0.96\textwidth}",
-            r"\footnotesize \textit{Nota:} el crecimiento acumulado compara el índice de 2024 con el de 2005; la PTF anualizada es la variación logarítmica promedio. Ambas medidas describen la PTF dentro de cada actividad y los acumulados sectoriales no se suman. La contribución multiplica cada PTF anual por su peso anual antes de promediar; las nueve contribuciones suman la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
+            r"\footnotesize \textit{Nota:} el crecimiento acumulado compara el índice de 2024 con el de 2005; la tasa anualizada es el promedio de las tasas de crecimiento logarítmicas anuales. Ambas medidas describen la PTF dentro de cada actividad y los crecimientos acumulados sectoriales no se suman. La contribución multiplica la tasa de crecimiento anual de la PTF de cada actividad por su peso anual antes de promediar; las nueve contribuciones suman la tasa de crecimiento de la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
             r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
             r"\end{minipage}",
             r"\end{table}",
@@ -754,7 +761,7 @@ def write_aggregate_contribution_tables(
             r"\end{tabular}",
             r"\vspace{0.15cm}",
             r"\begin{minipage}{0.96\textwidth}",
-            r"\footnotesize \textit{Nota:} promedio anual en puntos porcentuales. Cada celda es el promedio del producto entre el peso anual de la actividad y su PTF anual. Los subperiodos tienen distinta duración.",
+            r"\footnotesize \textit{Nota:} promedio anual en puntos porcentuales. Cada celda es el promedio del producto entre el peso anual de la actividad y la tasa anual de crecimiento de su PTF. Los subperiodos tienen distinta duración.",
             r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
             r"\end{minipage}",
             r"\end{table}",
@@ -797,8 +804,8 @@ def draw_value_added_tfp_bars(
     ]
     rows.sort(key=lambda row: int(row["year"]))
     img, draw, f = canvas(
-        "Variación anual de la PTF del total de la economía",
-        "Enfoque de valor agregado, 2006–2024; puntos porcentuales",
+        "Tasa anual de crecimiento de la PTF del total de la economía",
+        "Enfoque de valor agregado, 2006–2024; tasa logarítmica (%)",
         1800,
         1000,
     )
@@ -886,7 +893,7 @@ def draw_value_added_tfp_bars(
 
     draw.text(
         (80, 886),
-        "Nota: azul indica PTF positiva y rojo, PTF negativa. Las tasas son variaciones logarítmicas.",
+        "Nota: azul indica una tasa positiva y rojo, una tasa negativa. El DANE reporta tasas logarítmicas.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1347,7 +1354,7 @@ def draw_counterfactual(
     )
     draw.text(
         (80, 908),
-        "El ejercicio fija en cero la PTF anual de las cuatro actividades con menor crecimiento de la PTF en 2006–2024.",
+        "El ejercicio fija en cero la tasa anual de crecimiento de la PTF de las cuatro actividades con menor crecimiento en 2006–2024.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1456,7 +1463,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
     )
     rows = [*sector_rows, total]
     img, draw, f = canvas(
-        "Crecimiento acumulado y anualizado de la PTF",
+        "Crecimiento acumulado y tasa anualizada de la PTF",
         "Total y actividades, 2005–2024",
         1800,
         1180,
@@ -1476,7 +1483,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
     )
     draw.text(
         (1300, 190),
-        "PTF anualizada (pp por año)",
+        "Tasa anualizada de la PTF (%)",
         fill=BLUE,
         font=f["small_bold"],
     )
@@ -1635,7 +1642,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
         )
     draw.text(
         (70, 1035),
-        "Nota: el acumulado compara 2024 con 2005. La medida anualizada es la variación logarítmica promedio.",
+        "Nota: el acumulado compara 2024 con 2005. La tasa anualizada es el promedio de las tasas logarítmicas anuales.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1775,8 +1782,8 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
         "Total de la economía",
     ]
     img, draw, f = canvas(
-        "Variación anual de la PTF: total y actividades",
-        "2006–2024, puntos porcentuales; actividades ordenadas por PTF acumulada, de menor a mayor",
+        "Tasa anual de crecimiento de la PTF: total y actividades",
+        "2006–2024, tasa logarítmica (%); actividades ordenadas por crecimiento acumulado, de menor a mayor",
         1900,
         1200,
     )
@@ -1810,15 +1817,15 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
                 font=f["small"],
             )
     legend_y = 1010
-    draw.text((525, legend_y - 2), "PTF negativa", fill=GRAY, font=f["small"])
+    draw.text((525, legend_y - 2), "Tasa negativa", fill=GRAY, font=f["small"])
     for idx, value in enumerate([-6, -4, -2, 0, 2, 4, 6]):
         x = 705 + idx * 90
         draw.rectangle((x, legend_y, x + 87, legend_y + 28), fill=interpolate_color(value))
         draw.text((x + 28, legend_y + 34), str(value).replace("-", "−"), fill=GRAY, font=f["small"])
-    draw.text((1355, legend_y - 2), "PTF positiva", fill=GRAY, font=f["small"])
+    draw.text((1355, legend_y - 2), "Tasa positiva", fill=GRAY, font=f["small"])
     draw.text(
         (70, 1120),
-        "Nota: la escala de color se limita a ±6 puntos; las cifras dentro de cada celda conservan el valor observado.",
+        "Nota: la escala de color se limita a ±6%; las cifras dentro de cada celda conservan la tasa observada.",
         fill=GRAY,
         font=f["small"],
     )
