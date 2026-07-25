@@ -382,11 +382,11 @@ def build_value_added_counterfactual(
     rows = [
         row
         for row in observations
-        if 2005 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2025
     ]
-    if len(rows) != 20:
+    if len(rows) != 21:
         raise RuntimeError(
-            "El contrafactual de valor agregado requiere 20 observaciones"
+            "El contrafactual de valor agregado requiere 21 observaciones"
         )
     max_identity_error = max(
         abs(
@@ -415,7 +415,7 @@ def build_value_added_counterfactual(
         {
             "scenario": "Observado",
             **averages,
-            "value_added_index_2024": observed_index,
+            "value_added_index_2025": observed_index,
             "level_difference_vs_observed": 0.0,
             "annual_tfp_increment": 0.0,
         },
@@ -430,7 +430,7 @@ def build_value_added_counterfactual(
                 "factors": averages["factors"],
                 "ptf": averages["ptf"] + 1,
             },
-            "value_added_index_2024": counterfactual_index,
+            "value_added_index_2025": counterfactual_index,
             "level_difference_vs_observed": (
                 100 * (counterfactual_index / observed_index - 1)
             ),
@@ -766,12 +766,12 @@ def draw_value_added_tfp_bars(
     rows = [
         row
         for row in observations
-        if 2005 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2025
     ]
     rows.sort(key=lambda row: int(row["year"]))
     img, draw, f = canvas(
         "Tasa anual de crecimiento de la PTF del total de la economía",
-        "Enfoque de valor agregado, 2005–2024; tasa logarítmica (%)",
+        "Enfoque de valor agregado, 2005–2025; tasa logarítmica (%)",
         1800,
         1000,
     )
@@ -859,7 +859,7 @@ def draw_value_added_tfp_bars(
 
     draw.text(
         (80, 886),
-        "Nota: azul indica una tasa positiva y rojo, una tasa negativa. El DANE reporta tasas logarítmicas.",
+        "Nota: azul indica una tasa positiva y rojo, una tasa negativa. El DANE reporta tasas logarítmicas; 2025 es preliminar.",
         fill=GRAY,
         font=f["small"],
     )
@@ -886,7 +886,7 @@ def draw_value_added_waterfall(summary: list[dict[str, object]]) -> None:
 
     img, draw, f = canvas(
         "Descomposición del crecimiento del valor agregado bruto",
-        "Promedio anual, 2005–2024; tasa y contribuciones en puntos porcentuales por año",
+        "Promedio anual, 2005–2025; tasa y contribuciones en puntos porcentuales por año",
         1800,
         1000,
     )
@@ -1010,7 +1010,7 @@ def draw_value_added_waterfall(summary: list[dict[str, object]]) -> None:
     )
     draw.text(
         (80, 897),
-        "coeficiente uno en la identidad contable, también equivale a su contribución. Las cifras pueden no sumar por redondeo.",
+        "coeficiente uno en la identidad contable, también equivale a su contribución. Las cifras pueden no sumar por redondeo; 2025 es preliminar.",
         fill=GRAY,
         font=f["small"],
     )
@@ -2091,7 +2091,7 @@ def main() -> None:
     write_csv(COUNTERFACTUAL_ANNUAL_CSV, counterfactual_annual)
     write_csv(COUNTERFACTUAL_SUMMARY_CSV, counterfactual_summary)
     write_csv(
-        PROCESSED / "ptf_valor_agregado_resumen_2005_2024.csv",
+        PROCESSED / "ptf_valor_agregado_resumen_2005_2025.csv",
         value_added_summary,
     )
     write_tex_tables(comparison_long_run)
@@ -2154,7 +2154,7 @@ def main() -> None:
         f"{float(value_added_counterfactual['gross_value_added']):.6f}"
     )
     print(
-        "Diferencia de nivel del valor agregado en 2024: "
+        "Diferencia de nivel del valor agregado en 2025: "
         f"{float(value_added_counterfactual['level_difference_vs_observed']):.6f}%"
     )
 

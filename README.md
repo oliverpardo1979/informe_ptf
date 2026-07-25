@@ -28,9 +28,11 @@ por el paper.
 
 Los cálculos sectoriales usan los cuadros anuales del enfoque de producción y
 el bloque macroeconómico usa el Cuadro 1 del enfoque de valor agregado. El
-cambio entre los niveles de 2004 y 2024 se construye con las 20 tasas
-logarítmicas correspondientes a 2005--2024. La observación rotulada 2005 mide
-el crecimiento entre 2004 y 2005 y se incluye como el primer año.
+análisis sectorial encadena las 20 tasas logarítmicas de 2005--2024 y compara
+los niveles de 2004 y 2024. El bloque de valor agregado incluye además la tasa
+preliminar de 2025: encadena 21 tasas y compara los niveles de 2004 y 2025. En
+ambos casos, la observación rotulada 2005 mide el crecimiento entre 2004 y
+2005 y se incluye como el primer año.
 
 Los documentos principales son:
 
