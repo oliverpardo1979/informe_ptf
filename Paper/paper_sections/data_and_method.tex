@@ -4,7 +4,7 @@
 
 DANE publishes annual growth-accounting results for the total economy and nine activity aggregates \citep{DANE2025Annex}. The source annex reports output growth; contributions from labor composition and hours; contributions from information and communication technology (ICT) and non-ICT capital; contributions from energy, materials, and services; and TFP. The activity classification follows CIIU Rev. 3/3.1 as implemented in Colombia. The appendix lists the activities included in each aggregate.
 
-The analysis uses the 19 annual changes from 2006 through 2024. These observations connect the level in 2005 with the level in 2024. The row labeled 2005 in the DANE annex measures the change from 2004 to 2005 and is therefore not part of the 2005--2024 comparison.
+The analysis uses the 20 annual growth rates from 2005 through 2024. These observations connect the level in 2004 with the level in 2024. The 2005 row in the DANE annex measures growth from 2004 to 2005 and is included as the first observation.
 
 For activity \(i\) and year \(t\), the production-account identity is
 
@@ -26,7 +26,7 @@ This residual has a precise accounting meaning but not a unique structural inter
 
 \subsection{Chaining annual TFP changes}
 
-Let \(I_{i,t}\) denote the TFP index for activity \(i\), normalized to \(I_{i,2005}=100\). Because the annex reports log changes in percentage points, the index evolves according to
+Let \(I_{i,t}\) denote the TFP index for activity \(i\), normalized to \(I_{i,2004}=100\). Because the annex reports log growth rates in percentage points, the index evolves according to
 
 \begin{equation}
 I_{i,t}
@@ -35,13 +35,13 @@ I_{i,t}
 \label{eq:index_chain}
 \end{equation}
 
-The cumulative percentage change between 2005 and 2024 is
+The cumulative percentage change between 2004 and 2024 is
 
 \begin{equation}
 G_i
 =100\left[
 \exp\left(
-\frac{\sum_{t=2006}^{2024}\Delta\ln A_{i,t}}{100}
+\frac{\sum_{t=2005}^{2024}\Delta\ln A_{i,t}}{100}
 \right)-1
 \right],
 \label{eq:cumulative_tfp}
@@ -51,8 +51,8 @@ and the annualized log change is
 
 \begin{equation}
 \overline{g_i}
-=\frac{1}{19}\sum_{t=2006}^{2024}\Delta\ln A_{i,t}
-=\frac{100}{19}\ln\left(\frac{I_{i,2024}}{I_{i,2005}}\right).
+=\frac{1}{20}\sum_{t=2005}^{2024}\Delta\ln A_{i,t}
+=\frac{100}{20}\ln\left(\frac{I_{i,2024}}{I_{i,2004}}\right).
 \label{eq:annualized_tfp}
 \end{equation}
 
@@ -83,7 +83,7 @@ Its average annual contribution over the full period is
 
 \begin{equation}
 \overline{c_i}
-=\frac{1}{19}\sum_{t=2006}^{2024}c_{i,t}.
+=\frac{1}{20}\sum_{t=2005}^{2024}c_{i,t}.
 \label{eq:long_run_contribution}
 \end{equation}
 
@@ -106,11 +106,11 @@ This operation differs from applying a single set of average weights to cumulati
 \label{eq:covariance_decomposition}
 \end{equation}
 
-The covariance term matters whenever activity weights and TFP growth move together. In the data, multiplying average weights by annualized sectoral TFP yields aggregate TFP of $-0.088$ percentage points per year. The exact year-by-year calculation yields $-0.081$ points; the 0.007-point difference is the sum of the covariance terms.
+The covariance term matters whenever activity weights and TFP growth move together. In the data, multiplying average weights by annualized sectoral TFP yields aggregate TFP of $-0.075$ percentage points per year. The exact year-by-year calculation yields $-0.073$ points; the 0.002-point difference is the sum of the covariance terms.
 
 \subsection{Accounting counterfactual}
 
-Let \(\mathcal{S}\) contain mining, construction, finance and real estate, and manufacturing. These are the four activities with the lowest annualized TFP growth over 2006--2024. The counterfactual replaces their annual TFP growth with zero:
+Let \(\mathcal{S}\) contain mining, finance and real estate, construction, and electricity, gas, and water. These are the four activities with the lowest annualized TFP growth over 2005--2024. The counterfactual replaces their annual TFP growth with zero:
 
 \begin{equation}
 \Delta\ln A_t^{CF}

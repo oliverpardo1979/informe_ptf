@@ -189,14 +189,14 @@ const activityOrder = [...activityNames.values()];
 const weightRows = [];
 const indexRows = [];
 const periodDefinitions = [
-  [2006, 2010],
+  [2005, 2010],
   [2011, 2015],
   [2016, 2019],
   [2020, 2024],
 ];
 
 let maxReconciliationError = 0;
-for (let year = 2006; year <= 2024; year += 1) {
+for (let year = 2005; year <= 2024; year += 1) {
   const sectors = activityOrder.map((activity) =>
     sectorObservations.find(
       (row) => row.year === year && row.activity === activity,
@@ -250,8 +250,8 @@ if (maxReconciliationError > 1e-9) {
 
 for (const activity of [...activityOrder, "Total de la economía"]) {
   let index = 100;
-  indexRows.push({ year: 2005, activity, ptf: "", index });
-  for (let year = 2006; year <= 2024; year += 1) {
+  indexRows.push({ year: 2004, activity, ptf: "", index });
+  for (let year = 2005; year <= 2024; year += 1) {
     const ptf =
       activity === "Total de la economía"
         ? totalObservations.find((row) => row.year === year).ptf
@@ -285,7 +285,7 @@ const longRunRows = activityOrder.map((activity) => {
 });
 
 const totalRows = totalObservations.filter(
-  (row) => row.year >= 2006 && row.year <= 2024,
+  (row) => row.year >= 2005 && row.year <= 2024,
 );
 const totalIndex2024 = indexRows.find(
   (row) => row.activity === "Total de la economía" && row.year === 2024,

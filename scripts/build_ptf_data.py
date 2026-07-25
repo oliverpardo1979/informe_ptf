@@ -259,7 +259,7 @@ def build_counterfactual(
         "Minería",
         "Construcción",
         "Finanzas e inmobiliarias",
-        "Manufactura",
+        "Electricidad, gas y agua",
     }
     if selected_names != expected_names:
         raise RuntimeError(
@@ -270,7 +270,7 @@ def build_counterfactual(
     total_by_year = {
         int(row["year"]): row
         for row in total_observations
-        if 2006 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2024
     }
     contributions_by_year: dict[int, list[dict[str, float | int | str]]] = (
         defaultdict(list)
@@ -279,7 +279,7 @@ def build_counterfactual(
         contributions_by_year[int(row["year"])].append(row)
 
     annual_rows: list[dict[str, object]] = []
-    for year in range(2006, 2025):
+    for year in range(2005, 2025):
         selected_contribution = sum(
             float(row["contribution"])
             for row in contributions_by_year[year]
@@ -382,11 +382,11 @@ def build_value_added_counterfactual(
     rows = [
         row
         for row in observations
-        if 2006 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2024
     ]
-    if len(rows) != 19:
+    if len(rows) != 20:
         raise RuntimeError(
-            "El contrafactual de valor agregado requiere 19 observaciones"
+            "El contrafactual de valor agregado requiere 20 observaciones"
         )
     max_identity_error = max(
         abs(
@@ -466,7 +466,7 @@ def write_value_added_table(summary: list[dict[str, object]]) -> None:
     lines = [
         r"\begin{table}[H]",
         r"\centering",
-        r"\caption{Descomposición del crecimiento del valor agregado bruto total, 2006--2024}",
+        r"\caption{Descomposición del crecimiento del valor agregado bruto total, 2005--2024}",
         r"\label{tab:descomposicion_valor_agregado}",
         r"\small",
         r"\setlength{\tabcolsep}{12pt}",
@@ -475,7 +475,7 @@ def write_value_added_table(summary: list[dict[str, object]]) -> None:
         r" & Valor agregado bruto & Trabajo & Capital & PTF \\",
         r" & (\% anual) & (pp por año) & (pp por año) & (\% anual) \\",
         r"\midrule",
-        "2006--2024 "
+        "2005--2024 "
         f"& {tex_fmt(float(observed['gross_value_added']))} "
         f"& {tex_fmt(float(observed['labor']))} "
         f"& {tex_fmt(float(observed['capital']))} "
@@ -501,7 +501,7 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
         r"\small",
         r"\setlength{\tabcolsep}{4pt}",
         r"\begin{longtable}{p{4.45cm}rrrrrrr}",
-        r"\caption{Descomposición promedio anual del crecimiento de la producción por actividad, 2006--2024}",
+        r"\caption{Descomposición promedio anual del crecimiento de la producción por actividad, 2005--2024}",
         r"\label{tab:descomposicion_largo_plazo}\\",
         r"\toprule",
         r"Actividad & Producción & Trabajo & Capital & Energía & Materiales & Servicios & PTF \\",
@@ -541,7 +541,7 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
     lines.extend(
         [
             r"\bottomrule",
-            r"\multicolumn{8}{p{15.9cm}}{\footnotesize \textit{Nota:} la producción y la PTF se expresan como tasas de crecimiento logarítmicas anualizadas (\%). Trabajo, capital, energía, materiales y servicios son contribuciones al crecimiento, en puntos porcentuales por año. Como la PTF entra con coeficiente uno en la identidad contable, su tasa también equivale numéricamente a su contribución. El periodo usa las 19 tasas anuales de 2006 a 2024, que enlazan los niveles de 2005 y 2024. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades. Por redondeo, los componentes pueden no sumar exactamente la producción.}\\",
+            r"\multicolumn{8}{p{15.9cm}}{\footnotesize \textit{Nota:} la producción y la PTF se expresan como tasas de crecimiento logarítmicas anualizadas (\%). Trabajo, capital, energía, materiales y servicios son contribuciones al crecimiento, en puntos porcentuales por año. Como la PTF entra con coeficiente uno en la identidad contable, su tasa también equivale numéricamente a su contribución. El periodo usa las 20 tasas anuales de 2005 a 2024, que enlazan los niveles de 2004 y 2024. El total de la economía corresponde a la serie agregada publicada por el DANE y no a la suma ni al promedio simple de las actividades. Por redondeo, los componentes pueden no sumar exactamente la producción.}\\",
             r"\multicolumn{8}{l}{\footnotesize Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.}\\",
             r"\end{longtable}",
             r"\endgroup",
@@ -556,7 +556,7 @@ def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
         r"\small",
         r"\setlength{\tabcolsep}{4pt}",
         r"\begin{longtable}{p{4.65cm}rrrrrr}",
-        r"\caption{Descomposición de los servicios de trabajo y capital, promedio anual 2006--2024}",
+        r"\caption{Descomposición de los servicios de trabajo y capital, promedio anual 2005--2024}",
         r"\label{tab:detalle_factores}\\",
         r"\toprule",
         r"Actividad & Composición laboral & Horas & Trabajo & Capital TIC & Capital no TIC & Capital \\",
@@ -622,7 +622,7 @@ def write_evolution_table(
         r"\footnotesize",
         r"\begin{tabular}{p{3.8cm}rrrrr>{\centering\arraybackslash}p{1.3cm}}",
         r"\toprule",
-        r"Actividad & 2006--10 & 2011--15 & 2016--19 & 2020--24 & 2006--24 & Años positivos \\",
+        r"Actividad & 2005--10 & 2011--15 & 2016--19 & 2020--24 & 2005--24 & Años positivos \\",
         r"\midrule",
     ]
     for row in long_run:
@@ -632,7 +632,7 @@ def write_evolution_table(
             for label, _ in period_summaries
         ]
         lines.append(
-            "{} & {} & {} & {} & {} & {} & {}/19 \\\\".format(
+            "{} & {} & {} & {} & {} & {} & {}/20 \\\\".format(
                 tex_escape(TEX_NAMES[activity]),
                 *[tex_fmt(value) for value in values],
                 tex_fmt(float(row["ptf"])),
@@ -679,7 +679,7 @@ def write_aggregate_contribution_tables(
         r"\begin{tabular}{p{4.3cm}>{\raggedleft\arraybackslash}p{1.7cm}>{\raggedleft\arraybackslash}p{2.25cm}>{\raggedleft\arraybackslash}p{2.2cm}>{\raggedleft\arraybackslash}p{2.35cm}}",
         r"\toprule",
         r"Actividad & Peso promedio & Crecimiento acumulado & Tasa anualizada de la PTF & Contribución al total \\",
-        r" & (\%) & 2005--2024 (\%) & (\%) & (pp por año) \\",
+        r" & (\%) & 2004--2024 (\%) & (\%) & (pp por año) \\",
         r"\midrule",
     ]
     for row in sectors:
@@ -703,7 +703,7 @@ def write_aggregate_contribution_tables(
             r"\end{tabular}",
             r"\vspace{0.15cm}",
             r"\begin{minipage}{0.96\textwidth}",
-            r"\footnotesize \textit{Nota:} el crecimiento acumulado compara el índice de 2024 con el de 2005; la tasa anualizada es el promedio de las tasas de crecimiento logarítmicas anuales. Ambas medidas describen la PTF dentro de cada actividad y los crecimientos acumulados sectoriales no se suman. La contribución multiplica la tasa de crecimiento anual de la PTF de cada actividad por su peso anual antes de promediar; las nueve contribuciones suman la tasa de crecimiento de la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
+            r"\footnotesize \textit{Nota:} el crecimiento acumulado compara el índice de 2024 con el de 2004; la tasa anualizada es el promedio de las 20 tasas de crecimiento logarítmicas anuales de 2005 a 2024. Ambas medidas describen la PTF dentro de cada actividad y los crecimientos acumulados sectoriales no se suman. La contribución multiplica la tasa de crecimiento anual de la PTF de cada actividad por su peso anual antes de promediar; las nueve contribuciones suman la tasa de crecimiento de la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
             r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
             r"\end{minipage}",
             r"\end{table}",
@@ -713,7 +713,7 @@ def write_aggregate_contribution_tables(
         "\n".join(lines) + "\n", encoding="utf-8"
     )
 
-    periods = ["2006-2010", "2011-2015", "2016-2019", "2020-2024"]
+    periods = ["2005-2010", "2011-2015", "2016-2019", "2020-2024"]
     by_key = {
         (str(row["activity"]), str(row["period"])): float(
             row["average_contribution"]
@@ -733,7 +733,7 @@ def write_aggregate_contribution_tables(
         r"\setlength{\tabcolsep}{3pt}",
         r"\begin{tabular}{p{5.3cm}*{5}{>{\raggedleft\arraybackslash}p{1.45cm}}}",
         r"\toprule",
-        r"Actividad & 2006--2010 & 2011--2015 & 2016--2019 & 2020--2024 & 2006--2024 \\",
+        r"Actividad & 2005--2010 & 2011--2015 & 2016--2019 & 2020--2024 & 2005--2024 \\",
         r"\midrule",
     ]
     long_lookup = {
@@ -800,12 +800,12 @@ def draw_value_added_tfp_bars(
     rows = [
         row
         for row in observations
-        if 2006 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2024
     ]
     rows.sort(key=lambda row: int(row["year"]))
     img, draw, f = canvas(
         "Tasa anual de crecimiento de la PTF del total de la economía",
-        "Enfoque de valor agregado, 2006–2024; tasa logarítmica (%)",
+        "Enfoque de valor agregado, 2005–2024; tasa logarítmica (%)",
         1800,
         1000,
     )
@@ -917,7 +917,7 @@ def draw_total_index(
     rows.sort(key=lambda row: int(row["year"]))
     img, draw, f = canvas(
         "Índice encadenado de la PTF del total de la economía",
-        "Enfoque de producción, 2005=100",
+        "Enfoque de producción, 2004=100",
         1800,
         1000,
     )
@@ -935,18 +935,18 @@ def draw_total_index(
     for row in rows:
         year = int(row["year"])
         value = float(row["index"])
-        x = left + (year - 2005) / (2024 - 2005) * (right - left)
+        x = left + (year - 2004) / (2024 - 2004) * (right - left)
         y = bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
         points.append((x, y))
     draw.line(points, fill=MID_BLUE, width=6)
     for x, y in points:
         draw.ellipse((x - 6, y - 6, x + 6, y + 6), fill=MID_BLUE)
-    for year in [2005, 2006, 2010, 2015, 2020, 2024]:
-        x = left + (year - 2005) / (2024 - 2005) * (right - left)
+    for year in [2004, 2005, 2010, 2015, 2020, 2024]:
+        x = left + (year - 2004) / (2024 - 2004) * (right - left)
         draw.text((x - 26, bottom + 22), str(year), fill=GRAY, font=f["small"])
     label_rows = {
+        2004: (14, -55),
         2005: (14, -55),
-        2006: (10, -55),
         2020: (-45, 18),
         2024: (-80, -55),
     }
@@ -955,7 +955,7 @@ def draw_total_index(
         if year not in label_rows:
             continue
         value = float(row["index"])
-        x = left + (year - 2005) / (2024 - 2005) * (right - left)
+        x = left + (year - 2004) / (2024 - 2004) * (right - left)
         y = bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
         dx, dy = label_rows[year]
         draw.text(
@@ -966,7 +966,7 @@ def draw_total_index(
         )
     draw.text(
         (80, 900),
-        "Nota: cada variación anual se encadena de forma multiplicativa. La escala vertical se concentra entre 97 y 103.",
+        "Nota: las tasas logarítmicas anuales se encadenan de forma multiplicativa. La escala vertical se concentra entre 97 y 103.",
         fill=GRAY,
         font=f["small"],
     )
@@ -992,7 +992,7 @@ def draw_aggregate_contributions(
     rows = [*sector_rows, total]
     img, draw, f = canvas(
         "Contribuciones de las actividades a la PTF total",
-        "Acumuladas y anualizadas, 2006–2024",
+        "Acumuladas y anualizadas, 2005–2024",
         1800,
         1120,
     )
@@ -1170,13 +1170,13 @@ def draw_aggregate_contributions(
 
     draw.text(
         (70, 992),
-        "Nota: el acumulado suma las 19 contribuciones anuales en puntos logarítmicos; la anualizada divide esa suma por 19.",
+        "Nota: el acumulado suma las 20 contribuciones anuales en puntos logarítmicos; la anualizada divide esa suma por 20.",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
         (70, 1029),
-        "El acumulado no se interpreta como puntos porcentuales del cambio acumulado de −1,52%.",
+        "El acumulado no se interpreta como puntos porcentuales del cambio acumulado de −1,45%.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1207,7 +1207,7 @@ def draw_counterfactual(
     )
     img, draw, f = canvas(
         "Crecimiento anual de la producción total: observado y contrafactual",
-        "Promedio 2006–2024, tasa logarítmica anual (%)",
+        "Promedio 2005–2024, tasa logarítmica anual (%)",
         1800,
         1050,
     )
@@ -1233,6 +1233,7 @@ def draw_counterfactual(
             "Finanzas e inmobiliarias": "Finanzas e\ninmobiliarias",
             "Minería": "Minería",
             "Construcción": "Construcción",
+            "Electricidad, gas y agua": "Electricidad,\ngas y agua",
             "Manufactura": "Manufactura",
         }[str(row["activity"])]
         for row in driver_rows
@@ -1354,7 +1355,7 @@ def draw_counterfactual(
     )
     draw.text(
         (80, 908),
-        "El ejercicio fija en cero la tasa anual de crecimiento de la PTF de las cuatro actividades con menor crecimiento en 2006–2024.",
+        "El ejercicio fija en cero la tasa anual de crecimiento de la PTF de las cuatro actividades con menor crecimiento en 2005–2024.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1376,8 +1377,8 @@ def draw_counterfactual(
 def draw_aggregate_contributions_by_period(
     period_rows: list[dict[str, float | int | str]],
 ) -> None:
-    periods = ["2006-2010", "2011-2015", "2016-2019", "2020-2024"]
-    period_labels = ["2006–2010", "2011–2015", "2016–2019", "2020–2024"]
+    periods = ["2005-2010", "2011-2015", "2016-2019", "2020-2024"]
+    period_labels = ["2005–2010", "2011–2015", "2016–2019", "2020–2024"]
     colors = ["#9FBAD9", "#4F81BD", "#244A7C", "#E0A12B"]
     lookup = {
         (str(row["activity"]), str(row["period"])): float(
@@ -1464,7 +1465,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
     rows = [*sector_rows, total]
     img, draw, f = canvas(
         "Crecimiento acumulado y tasa anualizada de la PTF",
-        "Total y actividades, 2005–2024",
+        "20 tasas anuales, 2005–2024",
         1800,
         1180,
     )
@@ -1642,7 +1643,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
         )
     draw.text(
         (70, 1035),
-        "Nota: el acumulado compara 2024 con 2005. La tasa anualizada es el promedio de las tasas logarítmicas anuales.",
+        "Nota: el acumulado compara 2024 con 2004. La tasa anualizada es el promedio de las 20 tasas logarítmicas anuales.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1658,7 +1659,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
 def draw_decomposition(long_run: list[dict[str, float | int | str]]) -> None:
     img, draw, f = canvas(
         "Más producción no significó necesariamente más productividad",
-        "Descomposición promedio anual del crecimiento de la producción, 2006–2024 (puntos porcentuales)",
+        "Descomposición promedio anual del crecimiento de la producción, 2005–2024 (puntos porcentuales)",
     )
     left, right, top, bottom = 520, 1710, 245, 975
     xmin, xmax = -2.8, 5.0
@@ -1708,11 +1709,11 @@ def draw_decomposition(long_run: list[dict[str, float | int | str]]) -> None:
 def draw_series(observations: list[dict[str, float | int | str]]) -> None:
     by_activity: dict[str, list[dict[str, float | int | str]]] = defaultdict(list)
     for d in observations:
-        if int(d["year"]) >= 2006:
+        if int(d["year"]) >= 2005:
             by_activity[str(d["activity"])].append(d)
     img, draw, f = canvas(
         "La PTF sectorial fue volátil, pero los patrones no fueron aleatorios",
-        "Contribución anual de la PTF al crecimiento de la producción, 2006–2024 (puntos porcentuales)",
+        "Contribución anual de la PTF al crecimiento de la producción, 2005–2024 (puntos porcentuales)",
         1800,
         1280,
     )
@@ -1728,12 +1729,12 @@ def draw_series(observations: list[dict[str, float | int | str]]) -> None:
         draw.text((x1, y1 - 34), activity, fill=BLUE, font=f["small_bold"])
         y0 = y2 - (0 - ymin) / (ymax - ymin) * panel_h
         draw.line((x1, y0, x2, y0), fill=GRID, width=2)
-        x2020 = x1 + (2020 - 2006) / (2024 - 2006) * panel_w
+        x2020 = x1 + (2020 - 2005) / (2024 - 2005) * panel_w
         draw.rectangle((x2020, y1, x2, y2), fill="#F3F3F3")
         draw.line((x1, y0, x2, y0), fill=GRID, width=2)
         points = []
         for d in sorted(by_activity[activity], key=lambda z: int(z["year"])):
-            x = x1 + (int(d["year"]) - 2006) / (2024 - 2006) * panel_w
+            x = x1 + (int(d["year"]) - 2005) / (2024 - 2005) * panel_w
             value = max(ymin, min(ymax, float(d["ptf"])))
             y = y2 - (value - ymin) / (ymax - ymin) * panel_h
             points.append((x, y))
@@ -1741,7 +1742,7 @@ def draw_series(observations: list[dict[str, float | int | str]]) -> None:
         for x, y in points:
             draw.ellipse((x - 4, y - 4, x + 4, y + 4), fill=MID_BLUE)
         draw.rectangle((x1, y1, x2, y2), outline=GRID, width=1)
-        draw.text((x1, y2 + 6), "2006", fill=GRAY, font=f["small"])
+        draw.text((x1, y2 + 6), "2005", fill=GRAY, font=f["small"])
         draw.text((x2 - 52, y2 + 6), "2024", fill=GRAY, font=f["small"])
     draw.text((90, 1230), "Nota: el área gris corresponde a 2020–2024. La escala se limita a ±12 pp para facilitar la comparación.", fill=GRAY, font=f["small"])
     draw.text((90, 1256), "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.", fill=GRAY, font=f["small"])
@@ -1761,9 +1762,9 @@ def interpolate_color(value: float, limit: float = 6.0) -> str:
 
 
 def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
-    rows = [d for d in observations if int(d["year"]) >= 2006]
+    rows = [d for d in observations if int(d["year"]) >= 2005]
     lookup = {(str(d["activity"]), int(d["year"])): float(d["ptf"]) for d in rows}
-    years = list(range(2006, 2025))
+    years = list(range(2005, 2025))
     sector_activities = [
         activity for activity in ACTIVITY_ORDER if activity != "Total de la economía"
     ]
@@ -1783,7 +1784,7 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
     ]
     img, draw, f = canvas(
         "Tasa anual de crecimiento de la PTF: total y actividades",
-        "2006–2024, tasa logarítmica (%); actividades ordenadas por crecimiento acumulado, de menor a mayor",
+        "2005–2024, tasa logarítmica (%); actividades ordenadas por crecimiento acumulado, de menor a mayor",
         1900,
         1200,
     )
@@ -1928,15 +1929,15 @@ def main() -> None:
     )
     identity_error, detail_error = validate(observations)
     total_identity_error, total_detail_error = validate(total_observations)
-    long_run = summarize(observations, 2006, 2024)
+    long_run = summarize(observations, 2005, 2024)
     total_long_run = summarize(
-        total_observations, 2006, 2024, ["Total de la economía"]
+        total_observations, 2005, 2024, ["Total de la economía"]
     )
     comparison_long_run = [*total_long_run, *long_run]
-    pre = summarize(observations, 2006, 2019)
+    pre = summarize(observations, 2005, 2019)
     post = summarize(observations, 2020, 2024)
     period_summaries = [
-        ("2006–2010", summarize(observations, 2006, 2010)),
+        ("2005–2010", summarize(observations, 2005, 2010)),
         ("2011–2015", summarize(observations, 2011, 2015)),
         ("2016–2019", summarize(observations, 2016, 2019)),
         ("2020–2024", summarize(observations, 2020, 2024)),
@@ -1947,7 +1948,7 @@ def main() -> None:
             summarize(total_observations, start, end, ["Total de la economía"]),
         )
         for label, start, end in [
-            ("2006–2010", 2006, 2010),
+            ("2005–2010", 2005, 2010),
             ("2011–2015", 2011, 2015),
             ("2016–2019", 2016, 2019),
             ("2020–2024", 2020, 2024),
@@ -1963,14 +1964,14 @@ def main() -> None:
         )
         for label, total_rows in total_period_summaries
     ]
-    write_csv(PROCESSED / "ptf_actividad_promedio_2006_2024.csv", long_run)
-    write_csv(PROCESSED / "ptf_actividad_promedio_2006_2019.csv", pre)
+    write_csv(PROCESSED / "ptf_actividad_promedio_2005_2024.csv", long_run)
+    write_csv(PROCESSED / "ptf_actividad_promedio_2005_2019.csv", pre)
     write_csv(PROCESSED / "ptf_actividad_promedio_2020_2024.csv", post)
-    write_csv(PROCESSED / "ptf_total_economia_promedio_2006_2024.csv", total_long_run)
+    write_csv(PROCESSED / "ptf_total_economia_promedio_2005_2024.csv", total_long_run)
     write_csv(COUNTERFACTUAL_ANNUAL_CSV, counterfactual_annual)
     write_csv(COUNTERFACTUAL_SUMMARY_CSV, counterfactual_summary)
     write_csv(
-        PROCESSED / "ptf_valor_agregado_resumen_2006_2024.csv",
+        PROCESSED / "ptf_valor_agregado_resumen_2005_2024.csv",
         value_added_summary,
     )
     write_tex_tables(comparison_long_run)
@@ -1997,7 +1998,7 @@ def main() -> None:
     annual_lookup = {
         int(row["year"]): float(row["ptf"])
         for row in total_observations
-        if 2006 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2024
     }
     max_aggregate_error = max(
         abs(

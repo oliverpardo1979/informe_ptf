@@ -106,7 +106,7 @@ def draw_total_index() -> None:
     values = [float(row["index"]) for row in rows]
     image, draw, f = canvas(
         "Chained TFP index for the total economy",
-        "2005 = 100; annual log changes from the DANE production approach",
+        "2004 = 100; annual log growth rates from the DANE production approach",
         1800,
         1050,
     )
@@ -114,7 +114,7 @@ def draw_total_index() -> None:
     ymin, ymax = 96.5, 103.0
 
     def x(year: int) -> float:
-        return left + (year - 2005) / (2024 - 2005) * (right - left)
+        return left + (year - 2004) / (2024 - 2004) * (right - left)
 
     def y(value: float) -> float:
         return bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
@@ -123,7 +123,7 @@ def draw_total_index() -> None:
         yy = y(tick)
         draw.line((left, yy, right, yy), fill=BLUE if tick == 100 else LIGHT_GRAY, width=3 if tick == 100 else 1)
         draw.text((95, yy - 13), str(tick), font=f["small"], fill=GRAY)
-    for year in [2005, 2008, 2011, 2014, 2017, 2020, 2024]:
+    for year in [2004, 2008, 2012, 2016, 2020, 2024]:
         xx = x(year)
         label = str(year)
         draw.text((xx - text_width(draw, label, f["small"]) / 2, bottom + 26), label, font=f["small"], fill=GRAY)
@@ -156,12 +156,12 @@ def draw_heatmap() -> None:
     sectors = [
         row
         for row in load_csv("ptf_actividad_anual.csv")
-        if 2006 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2024
     ]
     totals = [
         row
         for row in load_csv("ptf_total_economia_anual.csv")
-        if 2006 <= int(row["year"]) <= 2024
+        if 2005 <= int(row["year"]) <= 2024
     ]
     long_run = load_csv("ptf_contribucion_largo_plazo.csv")
     ranking = sorted(
@@ -173,14 +173,14 @@ def draw_heatmap() -> None:
         key=lambda row: float(row["average_sector_ptf"]),
     )
     activities = [*[row["activity"] for row in ranking], "Total de la economía"]
-    years = list(range(2006, 2025))
+    years = list(range(2005, 2025))
     lookup = {
         (row["activity"], int(row["year"])): float(row["ptf"])
         for row in [*sectors, *totals]
     }
     image, draw, f = canvas(
         "Annual TFP growth by activity",
-        "2006-2024, percentage points; activities ranked by cumulative TFP growth",
+        "2005-2024, annual log growth rates (%); activities ranked by cumulative TFP growth",
         2200,
         1280,
     )
@@ -314,9 +314,9 @@ def draw_sector_performance() -> None:
         (-40, 32),
         (-2.7, 1.7),
         "Cumulative TFP growth (%)",
-        "Annualized TFP growth (pp per year)",
+        "Annualized TFP growth (%)",
         "Long-run sectoral TFP performance",
-        "2005-2024; the total economy is shown in dark gray",
+        "20 annual rates, 2005-2024; the total economy is shown in dark gray",
         "paper_fig_ptf_sector_performance.png",
         1,
         2,
@@ -335,7 +335,7 @@ def draw_contributions() -> None:
         "Cumulative contribution (log points)",
         "Average annual contribution (pp)",
         "Activity contributions to aggregate TFP",
-        "2006-2024; the total economy is shown in dark gray",
+        "2005-2024; the total economy is shown in dark gray",
         "paper_fig_ptf_contributions.png",
         2,
         3,
@@ -351,7 +351,7 @@ def draw_counterfactual() -> None:
         "Finanzas e inmobiliarias",
         "Minería",
         "Construcción",
-        "Manufactura",
+        "Electricidad, gas y agua",
     }
     drivers = [
         (ENGLISH[row["activity"]], -float(row["average_contribution"]))
@@ -361,7 +361,7 @@ def draw_counterfactual() -> None:
     drivers.sort(key=lambda item: item[1], reverse=True)
     image, draw, f = canvas(
         "Observed and counterfactual production-account output growth",
-        "2006-2024; counterfactual sets annual TFP growth to zero in four activities",
+        "2005-2024; counterfactual sets annual TFP growth to zero in four activities",
         1900,
         1100,
     )
