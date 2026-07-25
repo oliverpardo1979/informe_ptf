@@ -23,6 +23,12 @@ CONTRIBUTION_PERIOD_CSV = (
     ROOT / "data" / "processed" / "ptf_contribucion_subperiodos.csv"
 )
 INDEX_CSV = ROOT / "data" / "processed" / "ptf_indices_encadenados.csv"
+COUNTERFACTUAL_ANNUAL_CSV = (
+    ROOT / "data" / "processed" / "ptf_contrafactual_cuatro_actividades_anual.csv"
+)
+COUNTERFACTUAL_SUMMARY_CSV = (
+    ROOT / "data" / "processed" / "ptf_contrafactual_cuatro_actividades_resumen.csv"
+)
 PROCESSED = ROOT / "data" / "processed"
 FIGURES = ROOT / "Paper" / "figures"
 SECTIONS = ROOT / "Paper" / "sections"
@@ -203,6 +209,143 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+
+
+def build_counterfactual(
+    total_observations: list[dict[str, float | int | str]],
+    contribution_annual: list[dict[str, float | int | str]],
+    contribution_long: list[dict[str, float | int | str]],
+) -> tuple[
+    list[dict[str, object]],
+    list[dict[str, object]],
+    list[dict[str, object]],
+]:
+    sector_rows = [
+        row
+        for row in contribution_long
+        if str(row["activity"]) != "Total de la economía"
+    ]
+    selected = sorted(
+        sector_rows,
+        key=lambda row: float(row["average_sector_ptf"]),
+    )[:4]
+    selected_names = {str(row["activity"]) for row in selected}
+    expected_names = {
+        "Minería",
+        "Construcción",
+        "Finanzas e inmobiliarias",
+        "Manufactura",
+    }
+    if selected_names != expected_names:
+        raise RuntimeError(
+            "Las cuatro actividades con menor PTF cambiaron: "
+            f"{sorted(selected_names)}"
+        )
+
+    total_by_year = {
+        int(row["year"]): row
+        for row in total_observations
+        if 2006 <= int(row["year"]) <= 2024
+    }
+    contributions_by_year: dict[int, list[dict[str, float | int | str]]] = (
+        defaultdict(list)
+    )
+    for row in contribution_annual:
+        contributions_by_year[int(row["year"])].append(row)
+
+    annual_rows: list[dict[str, object]] = []
+    for year in range(2006, 2025):
+        selected_contribution = sum(
+            float(row["contribution"])
+            for row in contributions_by_year[year]
+            if str(row["activity"]) in selected_names
+        )
+        all_contributions = sum(
+            float(row["contribution"]) for row in contributions_by_year[year]
+        )
+        observed_ptf = float(total_by_year[year]["ptf"])
+        observed_production = float(total_by_year[year]["production"])
+        if abs(all_contributions - observed_ptf) > 1e-9:
+            raise RuntimeError(
+                f"Las contribuciones no reproducen la PTF total en {year}"
+            )
+        annual_rows.append(
+            {
+                "year": year,
+                "selected_contribution": selected_contribution,
+                "observed_ptf": observed_ptf,
+                "counterfactual_ptf": observed_ptf - selected_contribution,
+                "observed_production": observed_production,
+                "counterfactual_production": (
+                    observed_production - selected_contribution
+                ),
+            }
+        )
+
+    n = len(annual_rows)
+    observed_ptf_average = sum(
+        float(row["observed_ptf"]) for row in annual_rows
+    ) / n
+    counterfactual_ptf_average = sum(
+        float(row["counterfactual_ptf"]) for row in annual_rows
+    ) / n
+    observed_production_average = sum(
+        float(row["observed_production"]) for row in annual_rows
+    ) / n
+    counterfactual_production_average = sum(
+        float(row["counterfactual_production"]) for row in annual_rows
+    ) / n
+    observed_output_index = 100 * math.exp(
+        sum(float(row["observed_production"]) for row in annual_rows) / 100
+    )
+    counterfactual_output_index = 100 * math.exp(
+        sum(float(row["counterfactual_production"]) for row in annual_rows)
+        / 100
+    )
+    summary_rows: list[dict[str, object]] = [
+        {
+            "scenario": "Observado",
+            "average_ptf": observed_ptf_average,
+            "average_production_growth": observed_production_average,
+            "output_index_2024": observed_output_index,
+            "cumulative_production_growth": observed_output_index - 100,
+            "level_difference_vs_observed": 0.0,
+        },
+        {
+            "scenario": "PTF igual a cero en las cuatro actividades",
+            "average_ptf": counterfactual_ptf_average,
+            "average_production_growth": counterfactual_production_average,
+            "output_index_2024": counterfactual_output_index,
+            "cumulative_production_growth": counterfactual_output_index - 100,
+            "level_difference_vs_observed": (
+                100 * (counterfactual_output_index / observed_output_index - 1)
+            ),
+        },
+    ]
+    driver_rows: list[dict[str, object]] = [
+        {
+            "activity": str(row["activity"]),
+            "average_sector_ptf": float(row["average_sector_ptf"]),
+            "average_contribution": float(row["average_contribution"]),
+            "change_in_aggregate_growth": -float(row["average_contribution"]),
+        }
+        for row in selected
+    ]
+    driver_rows.sort(
+        key=lambda row: float(row["change_in_aggregate_growth"]),
+        reverse=True,
+    )
+    expected_change = sum(
+        float(row["change_in_aggregate_growth"]) for row in driver_rows
+    )
+    observed_change = (
+        counterfactual_production_average - observed_production_average
+    )
+    if abs(expected_change - observed_change) > 1e-12:
+        raise RuntimeError(
+            "El contrafactual no coincide con la suma de las contribuciones"
+        )
+    return annual_rows, summary_rows, driver_rows
 
 
 def fmt(value: float) -> str:
@@ -809,6 +952,190 @@ def draw_aggregate_contributions(
     img.save(FIGURES / "fig_ptf_contribucion_total_actividad.png", quality=95)
 
 
+def draw_counterfactual(
+    summary_rows: list[dict[str, object]],
+    driver_rows: list[dict[str, object]],
+) -> None:
+    observed = next(
+        row for row in summary_rows if str(row["scenario"]) == "Observado"
+    )
+    counterfactual = next(
+        row
+        for row in summary_rows
+        if str(row["scenario"]) != "Observado"
+    )
+    observed_growth = float(observed["average_production_growth"])
+    counterfactual_growth = float(
+        counterfactual["average_production_growth"]
+    )
+    img, draw, f = canvas(
+        "Crecimiento anual de la producción total: observado y contrafactual",
+        "Promedio 2006–2024, tasa logarítmica anual (%)",
+        1800,
+        1050,
+    )
+    left, right, top, bottom = 155, 1690, 245, 790
+    ymin, ymax = 3.0, 3.7
+
+    def y_position(value: float) -> float:
+        return bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
+
+    for tick in [3.0, 3.2, 3.4, 3.6]:
+        y = y_position(tick)
+        draw.line((left, y, right, y), fill=GRID, width=1)
+        draw.text(
+            (75, y - 13),
+            f"{tick:.1f}".replace(".", ","),
+            fill=GRAY,
+            font=f["small"],
+        )
+
+    labels = ["Observado"]
+    labels.extend(
+        {
+            "Finanzas e inmobiliarias": "Finanzas e\ninmobiliarias",
+            "Minería": "Minería",
+            "Construcción": "Construcción",
+            "Manufactura": "Manufactura",
+        }[str(row["activity"])]
+        for row in driver_rows
+    )
+    labels.append("Contrafactual")
+    positions = [
+        left + (index + 0.5) * (right - left) / len(labels)
+        for index in range(len(labels))
+    ]
+    bar_width = 150
+    anchor_color = "#4A4A4A"
+
+    observed_y = y_position(observed_growth)
+    draw.rectangle(
+        (
+            positions[0] - bar_width / 2,
+            observed_y,
+            positions[0] + bar_width / 2,
+            y_position(ymin),
+        ),
+        fill=anchor_color,
+    )
+    draw.text(
+        (positions[0], observed_y - 18),
+        f"{observed_growth:.2f}%".replace(".", ","),
+        fill=anchor_color,
+        font=f["axis_bold"],
+        anchor="ms",
+    )
+
+    current = observed_growth
+    previous_right = positions[0] + bar_width / 2
+    for index, row in enumerate(driver_rows, start=1):
+        change = float(row["change_in_aggregate_growth"])
+        updated = current + change
+        x = positions[index]
+        draw.line(
+            (
+                previous_right,
+                y_position(current),
+                x - bar_width / 2,
+                y_position(current),
+            ),
+            fill=GRAY,
+            width=2,
+        )
+        draw.rectangle(
+            (
+                x - bar_width / 2,
+                y_position(updated),
+                x + bar_width / 2,
+                y_position(current),
+            ),
+            fill=MID_BLUE,
+            outline=BLUE,
+            width=2,
+        )
+        draw.text(
+            (x, y_position(updated) - 18),
+            f"+{change:.3f} pp".replace(".", ","),
+            fill=BLUE,
+            font=f["small_bold"],
+            anchor="ms",
+        )
+        current = updated
+        previous_right = x + bar_width / 2
+
+    counterfactual_x = positions[-1]
+    draw.line(
+        (
+            previous_right,
+            y_position(current),
+            counterfactual_x - bar_width / 2,
+            y_position(current),
+        ),
+        fill=GRAY,
+        width=2,
+    )
+    draw.rectangle(
+        (
+            counterfactual_x - bar_width / 2,
+            y_position(counterfactual_growth),
+            counterfactual_x + bar_width / 2,
+            y_position(ymin),
+        ),
+        fill=anchor_color,
+    )
+    draw.text(
+        (counterfactual_x, y_position(counterfactual_growth) - 18),
+        f"{counterfactual_growth:.2f}%".replace(".", ","),
+        fill=anchor_color,
+        font=f["axis_bold"],
+        anchor="ms",
+    )
+
+    for x, label in zip(positions, labels):
+        box = draw.multiline_textbbox(
+            (0, 0),
+            label,
+            font=f["small"],
+            spacing=3,
+            align="center",
+        )
+        label_width = box[2] - box[0]
+        draw.multiline_text(
+            (x - label_width / 2, bottom + 28),
+            label,
+            fill="#222222",
+            font=f["small"],
+            spacing=3,
+            align="center",
+        )
+
+    draw.text(
+        (80, 875),
+        "Nota: la producción total corresponde al enfoque de producción KLEMS; no es la tasa de crecimiento del PIB.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 908),
+        "El ejercicio fija en cero la PTF anual de las cuatro actividades con menor crecimiento de la PTF en 2006–2024.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 941),
+        "Mantiene las contribuciones de los insumos y los ponderadores anuales observados; no estima efectos causales. La escala inicia en 3,0%.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 974),
+        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    img.save(FIGURES / "fig_ptf_contrafactual_cuatro_actividades.png", quality=95)
+
+
 def draw_aggregate_contributions_by_period(
     period_rows: list[dict[str, float | int | str]],
 ) -> None:
@@ -1349,6 +1676,15 @@ def main() -> None:
         {"activity"},
         {"year"},
     )
+    (
+        counterfactual_annual,
+        counterfactual_summary,
+        counterfactual_drivers,
+    ) = build_counterfactual(
+        total_observations,
+        contribution_annual,
+        contribution_long,
+    )
     identity_error, detail_error = validate(observations)
     total_identity_error, total_detail_error = validate(total_observations)
     long_run = summarize(observations, 2006, 2024)
@@ -1390,11 +1726,14 @@ def main() -> None:
     write_csv(PROCESSED / "ptf_actividad_promedio_2006_2019.csv", pre)
     write_csv(PROCESSED / "ptf_actividad_promedio_2020_2024.csv", post)
     write_csv(PROCESSED / "ptf_total_economia_promedio_2006_2024.csv", total_long_run)
+    write_csv(COUNTERFACTUAL_ANNUAL_CSV, counterfactual_annual)
+    write_csv(COUNTERFACTUAL_SUMMARY_CSV, counterfactual_summary)
     write_tex_tables(comparison_long_run)
     write_evolution_table(comparison_long_run, comparison_period_summaries)
     write_aggregate_contribution_tables(contribution_long, contribution_periods)
     draw_total_index(index_rows)
     draw_aggregate_contributions(contribution_long)
+    draw_counterfactual(counterfactual_summary, counterfactual_drivers)
     draw_aggregate_contributions_by_period(contribution_periods)
     draw_ptf_bars(contribution_long)
     draw_decomposition(long_run)
@@ -1427,6 +1766,17 @@ def main() -> None:
     print(
         "Error máximo suma de contribuciones sectoriales = PTF total: "
         f"{max_aggregate_error:.3e}"
+    )
+    observed = counterfactual_summary[0]
+    counterfactual = counterfactual_summary[1]
+    print(
+        "Crecimiento anual observado y contrafactual: "
+        f"{float(observed['average_production_growth']):.6f}; "
+        f"{float(counterfactual['average_production_growth']):.6f}"
+    )
+    print(
+        "Diferencia de nivel en 2024 frente al observado: "
+        f"{float(counterfactual['level_difference_vs_observed']):.6f}%"
     )
 
 

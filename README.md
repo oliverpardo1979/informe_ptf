@@ -20,7 +20,8 @@ El primer script extrae las series de las nueve actividades y del total de la
 economía. También recupera las ponderaciones anuales de Törnqvist, verifica que
 reproduzcan las trece columnas publicadas por el DANE y calcula la contribución
 de cada actividad a la PTF total. El segundo script construye los indicadores
-de largo plazo y genera los cuadros y figuras.
+de largo plazo, calcula el contrafactual que fija en cero la PTF anual de las
+cuatro actividades con menor crecimiento y genera los cuadros y figuras.
 
 Los cálculos usan los cuadros anuales del enfoque de producción. El cambio
 entre los niveles de 2005 y 2024 se construye con las 19 variaciones
