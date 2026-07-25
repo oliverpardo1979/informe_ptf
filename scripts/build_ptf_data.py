@@ -461,40 +461,6 @@ def tex_escape(text: str) -> str:
     return text.replace("&", r"\&").replace("%", r"\%")
 
 
-def write_value_added_table(summary: list[dict[str, object]]) -> None:
-    observed = summary[0]
-    lines = [
-        r"\begin{table}[H]",
-        r"\centering",
-        r"\caption{Descomposición del crecimiento del valor agregado bruto total, 2005--2024}",
-        r"\label{tab:descomposicion_valor_agregado}",
-        r"\small",
-        r"\setlength{\tabcolsep}{12pt}",
-        r"\begin{tabular}{lrrrr}",
-        r"\toprule",
-        r" & Valor agregado bruto & Trabajo & Capital & PTF \\",
-        r" & (\% anual) & (pp por año) & (pp por año) & (\% anual) \\",
-        r"\midrule",
-        "2005--2024 "
-        f"& {tex_fmt(float(observed['gross_value_added']))} "
-        f"& {tex_fmt(float(observed['labor']))} "
-        f"& {tex_fmt(float(observed['capital']))} "
-        f"& {tex_fmt(float(observed['ptf']))} \\\\",
-        r"\bottomrule",
-        r"\end{tabular}",
-        r"\vspace{0.2em}",
-        r"\begin{minipage}{0.93\textwidth}",
-        r"\footnotesize \textit{Nota:} el valor agregado bruto y la PTF se expresan como tasas de crecimiento logarítmicas anualizadas. Trabajo y capital son contribuciones al crecimiento, en puntos porcentuales por año, no tasas de crecimiento de los insumos. Como la PTF entra con coeficiente uno en la identidad contable, su tasa de crecimiento también equivale numéricamente a su contribución al crecimiento del valor agregado. Las cifras pueden no sumar por redondeo.",
-        r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
-        r"\end{minipage}",
-        r"\end{table}",
-    ]
-    (SECTIONS / "tabla_descomposicion_valor_agregado.tex").write_text(
-        "\n".join(lines) + "\n",
-        encoding="utf-8",
-    )
-
-
 def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
     lines = [
         r"\begingroup",
@@ -904,6 +870,160 @@ def draw_value_added_tfp_bars(
         font=f["small"],
     )
     img.save(FIGURES / "fig_ptf_total_anual_valor_agregado.png", quality=95)
+
+
+def draw_value_added_waterfall(summary: list[dict[str, object]]) -> None:
+    observed = summary[0]
+    labor = float(observed["labor"])
+    capital = float(observed["capital"])
+    ptf = float(observed["ptf"])
+    value_added = float(observed["gross_value_added"])
+    factors = labor + capital
+    if abs(factors + ptf - value_added) > 1e-9:
+        raise RuntimeError(
+            "No reconcilia la cascada del crecimiento del valor agregado"
+        )
+
+    img, draw, f = canvas(
+        "Descomposición del crecimiento del valor agregado bruto",
+        "Promedio anual, 2005–2024; tasa y contribuciones en puntos porcentuales por año",
+        1800,
+        1000,
+    )
+    left, right, top, bottom = 150, 1650, 245, 765
+    ymin, ymax = 0.0, 4.2
+
+    def y_position(value: float) -> float:
+        return bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
+
+    for tick in range(0, 5):
+        y = y_position(float(tick))
+        draw.line(
+            (left, y, right, y),
+            fill=BLUE if tick == 0 else GRID,
+            width=3 if tick == 0 else 1,
+        )
+        draw.text(
+            (98, y - 13),
+            str(tick),
+            fill=GRAY,
+            font=f["small"],
+        )
+
+    labels = ["Trabajo", "Capital", "PTF", "Valor agregado"]
+    positions = [
+        left + (index + 0.5) * (right - left) / len(labels)
+        for index in range(len(labels))
+    ]
+    bar_width = 220
+    positive_color = MID_BLUE
+    negative_color = "#E0A12B"
+    total_color = "#4A4A4A"
+
+    components = [
+        (labor, 0.0, labor, positive_color),
+        (capital, labor, factors, positive_color),
+        (ptf, factors, value_added, negative_color),
+    ]
+    previous_right = None
+    for index, (change, start, end, color) in enumerate(components):
+        x = positions[index]
+        if previous_right is not None:
+            draw.line(
+                (
+                    previous_right,
+                    y_position(start),
+                    x - bar_width / 2,
+                    y_position(start),
+                ),
+                fill=GRAY,
+                width=2,
+            )
+        draw.rectangle(
+            (
+                x - bar_width / 2,
+                min(y_position(start), y_position(end)),
+                x + bar_width / 2,
+                max(y_position(start), y_position(end)),
+            ),
+            fill=color,
+            outline=BLUE if change >= 0 else "#9A6A12",
+            width=2,
+        )
+        label = f"{change:+.2f} pp".replace(".", ",").replace("-", "−")
+        label_y = (
+            min(y_position(start), y_position(end)) - 36
+            if change >= 0
+            else max(y_position(start), y_position(end)) + 36
+        )
+        draw.text(
+            (x, label_y),
+            label,
+            fill=BLUE if change >= 0 else "#8A5A08",
+            font=f["axis_bold"],
+            anchor="ms",
+        )
+        previous_right = x + bar_width / 2
+
+    total_x = positions[-1]
+    draw.line(
+        (
+            previous_right,
+            y_position(value_added),
+            total_x - bar_width / 2,
+            y_position(value_added),
+        ),
+        fill=GRAY,
+        width=2,
+    )
+    draw.rectangle(
+        (
+            total_x - bar_width / 2,
+            y_position(value_added),
+            total_x + bar_width / 2,
+            y_position(0.0),
+        ),
+        fill=total_color,
+    )
+    draw.text(
+        (total_x, y_position(value_added) - 36),
+        f"{value_added:.2f}%".replace(".", ","),
+        fill=total_color,
+        font=f["axis_bold"],
+        anchor="ms",
+    )
+
+    for x, label in zip(positions, labels):
+        draw.text(
+            (x, bottom + 28),
+            label,
+            fill="#222222",
+            font=f["axis"],
+            anchor="ma",
+        )
+
+    draw.text(
+        (80, 865),
+        "Nota: trabajo y capital son contribuciones al crecimiento. La PTF es una tasa de crecimiento y, como entra con",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 897),
+        "coeficiente uno en la identidad contable, también equivale a su contribución. Las cifras pueden no sumar por redondeo.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 940),
+        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    img.save(
+        FIGURES / "fig_descomposicion_valor_agregado.png",
+        quality=95,
+    )
 
 
 def draw_total_index(
@@ -1977,8 +2097,8 @@ def main() -> None:
     write_tex_tables(comparison_long_run)
     write_evolution_table(comparison_long_run, comparison_period_summaries)
     write_aggregate_contribution_tables(contribution_long, contribution_periods)
-    write_value_added_table(value_added_summary)
     draw_value_added_tfp_bars(value_added_observations)
+    draw_value_added_waterfall(value_added_summary)
     draw_total_index(index_rows)
     draw_aggregate_contributions(contribution_long)
     draw_counterfactual(counterfactual_summary, counterfactual_drivers)
