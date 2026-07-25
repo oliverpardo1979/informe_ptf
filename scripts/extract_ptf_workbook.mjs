@@ -27,6 +27,14 @@ const fields = [
   "ptf",
 ];
 
+const valueAddedFields = [
+  "gross_value_added",
+  "labor",
+  "capital",
+  "factors",
+  "ptf",
+];
+
 // Estas ocho columnas son algebraicamente independientes. Junto con la
 // restricción de que los pesos suman uno, identifican los nueve pesos anuales.
 const independentFields = [
@@ -115,6 +123,34 @@ const input = await FileBlob.load(inputPath);
 const workbook = await SpreadsheetFile.importXlsx(input);
 const sectorObservations = [];
 const totalObservations = [];
+const valueAddedTotalObservations = [];
+
+const valueAddedValues = workbook.worksheets
+  .getItem("Cuadro 1")
+  .getUsedRange(true).values;
+for (const row of valueAddedValues) {
+  const year = Number.parseInt(String(row[1]), 10);
+  if (
+    !Number.isInteger(year) ||
+    year < 2005 ||
+    year > 2025 ||
+    typeof row[2] !== "number"
+  ) {
+    continue;
+  }
+  const observation = { year };
+  valueAddedFields.forEach((field, index) => {
+    observation[field] = Number(row[index + 2]);
+  });
+  valueAddedTotalObservations.push(observation);
+}
+
+if (valueAddedTotalObservations.length !== 21) {
+  throw new Error(
+    "Cobertura inesperada en el enfoque de valor agregado: " +
+      `${valueAddedTotalObservations.length} filas`,
+  );
+}
 
 for (let year = 2005; year <= 2024; year += 1) {
   const sheet = workbook.worksheets.getItem(`Cuadro ${year - 2001}`);
@@ -295,6 +331,11 @@ await writeCsv(
   "ptf_total_economia_anual.csv",
   ["year", "activity_full", "activity", ...fields],
   totalObservations,
+);
+await writeCsv(
+  "ptf_valor_agregado_total_anual.csv",
+  ["year", ...valueAddedFields],
+  valueAddedTotalObservations,
 );
 await writeCsv(
   "ptf_pesos_contribuciones_anual.csv",

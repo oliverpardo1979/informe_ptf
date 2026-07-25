@@ -13,6 +13,9 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 SECTOR_CSV = ROOT / "data" / "processed" / "ptf_actividad_anual.csv"
 TOTAL_CSV = ROOT / "data" / "processed" / "ptf_total_economia_anual.csv"
+VALUE_ADDED_TOTAL_CSV = (
+    ROOT / "data" / "processed" / "ptf_valor_agregado_total_anual.csv"
+)
 CONTRIBUTION_ANNUAL_CSV = (
     ROOT / "data" / "processed" / "ptf_pesos_contribuciones_anual.csv"
 )
@@ -45,6 +48,14 @@ FIELDS = [
     "materials",
     "services",
     "intermediate",
+    "factors",
+    "ptf",
+]
+
+VALUE_ADDED_FIELDS = [
+    "gross_value_added",
+    "labor",
+    "capital",
     "factors",
     "ptf",
 ]
@@ -131,6 +142,20 @@ def load_total_observations() -> list[dict[str, float | int | str]]:
     if len(observations) != 20:
         raise RuntimeError(
             f"Se esperaban 20 observaciones del total y se obtuvieron {len(observations)}"
+        )
+    return observations
+
+
+def load_value_added_total() -> list[dict[str, float | int | str]]:
+    observations = load_numeric_csv(
+        VALUE_ADDED_TOTAL_CSV,
+        set(),
+        {"year"},
+    )
+    if len(observations) != 21:
+        raise RuntimeError(
+            "Se esperaban 21 observaciones del enfoque de valor agregado y "
+            f"se obtuvieron {len(observations)}"
         )
     return observations
 
@@ -348,6 +373,66 @@ def build_counterfactual(
     return annual_rows, summary_rows, driver_rows
 
 
+def build_value_added_counterfactual(
+    observations: list[dict[str, float | int | str]],
+) -> list[dict[str, object]]:
+    rows = [
+        row
+        for row in observations
+        if 2006 <= int(row["year"]) <= 2024
+    ]
+    if len(rows) != 19:
+        raise RuntimeError(
+            "El contrafactual de valor agregado requiere 19 observaciones"
+        )
+    max_identity_error = max(
+        abs(
+            float(row["gross_value_added"])
+            - float(row["labor"])
+            - float(row["capital"])
+            - float(row["ptf"])
+        )
+        for row in rows
+    )
+    if max_identity_error > 1e-9:
+        raise RuntimeError(
+            "No reconcilia la identidad de valor agregado: "
+            f"{max_identity_error}"
+        )
+
+    averages = {
+        field: sum(float(row[field]) for row in rows) / len(rows)
+        for field in VALUE_ADDED_FIELDS
+    }
+    observed_index = 100 * math.exp(
+        sum(float(row["gross_value_added"]) for row in rows) / 100
+    )
+    counterfactual_index = observed_index * math.exp(len(rows) / 100)
+    return [
+        {
+            "scenario": "Observado",
+            **averages,
+            "value_added_index_2024": observed_index,
+            "level_difference_vs_observed": 0.0,
+            "annual_tfp_increment": 0.0,
+        },
+        {
+            "scenario": "PTF un punto porcentual adicional por año",
+            **{
+                **averages,
+                "gross_value_added": averages["gross_value_added"] + 1,
+                "factors": averages["factors"],
+                "ptf": averages["ptf"] + 1,
+            },
+            "value_added_index_2024": counterfactual_index,
+            "level_difference_vs_observed": (
+                100 * (counterfactual_index / observed_index - 1)
+            ),
+            "annual_tfp_increment": 1.0,
+        },
+    ]
+
+
 def fmt(value: float) -> str:
     if abs(value) < 0.005:
         value = 0.0
@@ -368,6 +453,39 @@ def tex_fmt3(value: float) -> str:
 
 def tex_escape(text: str) -> str:
     return text.replace("&", r"\&").replace("%", r"\%")
+
+
+def write_value_added_table(summary: list[dict[str, object]]) -> None:
+    observed = summary[0]
+    lines = [
+        r"\begin{table}[H]",
+        r"\centering",
+        r"\caption{Descomposición del crecimiento del valor agregado bruto total, 2006--2024}",
+        r"\label{tab:descomposicion_valor_agregado}",
+        r"\small",
+        r"\setlength{\tabcolsep}{12pt}",
+        r"\begin{tabular}{lrrrr}",
+        r"\toprule",
+        r" & Valor agregado bruto & Trabajo & Capital & PTF \\",
+        r"\midrule",
+        "Crecimiento anualizado "
+        f"& {tex_fmt(float(observed['gross_value_added']))} "
+        f"& {tex_fmt(float(observed['labor']))} "
+        f"& {tex_fmt(float(observed['capital']))} "
+        f"& {tex_fmt(float(observed['ptf']))} \\\\",
+        r"\bottomrule",
+        r"\end{tabular}",
+        r"\vspace{0.2em}",
+        r"\begin{minipage}{0.93\textwidth}",
+        r"\footnotesize \textit{Nota:} tasas logarítmicas promedio, en puntos porcentuales por año. Las columnas de trabajo y capital son contribuciones al crecimiento, no tasas de crecimiento de los insumos. La suma de trabajo, capital y PTF reproduce el crecimiento del valor agregado bruto, salvo diferencias por redondeo.",
+        r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
+        r"\end{minipage}",
+        r"\end{table}",
+    ]
+    (SECTIONS / "tabla_descomposicion_valor_agregado.tex").write_text(
+        "\n".join(lines) + "\n",
+        encoding="utf-8",
+    )
 
 
 def write_tex_tables(long_run: list[dict[str, float | int | str]]) -> None:
@@ -667,6 +785,118 @@ def canvas(title: str, subtitle: str, width: int = 1800, height: int = 1120):
     draw.text((85, 62), title, fill=BLUE, font=f["title"])
     draw.text((87, 128), subtitle, fill=GRAY, font=f["subtitle"])
     return img, draw, f
+
+
+def draw_value_added_tfp_bars(
+    observations: list[dict[str, float | int | str]],
+) -> None:
+    rows = [
+        row
+        for row in observations
+        if 2006 <= int(row["year"]) <= 2024
+    ]
+    rows.sort(key=lambda row: int(row["year"]))
+    img, draw, f = canvas(
+        "Variación anual de la PTF del total de la economía",
+        "Enfoque de valor agregado, 2006–2024; puntos porcentuales",
+        1800,
+        1000,
+    )
+    left, right, top, bottom = 125, 1710, 220, 790
+    ymin, ymax = -3.0, 5.0
+
+    def y_position(value: float) -> float:
+        return bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
+
+    for tick in range(-3, 6):
+        y = y_position(float(tick))
+        draw.line(
+            (left, y, right, y),
+            fill=BLUE if tick == 0 else GRID,
+            width=3 if tick == 0 else 1,
+        )
+        draw.text((72, y - 13), str(tick), fill=GRAY, font=f["small"])
+
+    step = (right - left) / len(rows)
+    bar_width = step * 0.62
+    zero_y = y_position(0.0)
+    for index, row in enumerate(rows):
+        year = int(row["year"])
+        value = float(row["ptf"])
+        x_center = left + step * (index + 0.5)
+        value_y = y_position(value)
+        fill = MID_BLUE if value >= 0 else RED
+        draw.rectangle(
+            (
+                x_center - bar_width / 2,
+                min(zero_y, value_y),
+                x_center + bar_width / 2,
+                max(zero_y, value_y),
+            ),
+            fill=fill,
+        )
+        value_label = f"{value:.1f}".replace("-", "−")
+        label_box = draw.textbbox((0, 0), value_label, font=f["small_bold"])
+        label_width = label_box[2] - label_box[0]
+        label_y = value_y - 30 if value >= 0 else value_y + 6
+        draw.text(
+            (x_center - label_width / 2, label_y),
+            value_label,
+            fill=BLUE if value >= 0 else RED,
+            font=f["small_bold"],
+        )
+        year_label = str(year)[2:]
+        year_box = draw.textbbox((0, 0), year_label, font=f["small"])
+        year_width = year_box[2] - year_box[0]
+        draw.text(
+            (x_center - year_width / 2, bottom + 19),
+            year_label,
+            fill=GRAY,
+            font=f["small"],
+        )
+
+    average = sum(float(row["ptf"]) for row in rows) / len(rows)
+    average_y = y_position(average)
+    dash = 14
+    x = left
+    while x < right:
+        draw.line(
+            (x, average_y, min(x + dash, right), average_y),
+            fill=GRAY,
+            width=2,
+        )
+        x += dash * 2
+    average_label = f"Promedio: {average:.2f}".replace("-", "−")
+    average_box = draw.textbbox((0, 0), average_label, font=f["small_bold"])
+    draw.rectangle(
+        (
+            right - (average_box[2] - average_box[0]) - 20,
+            average_y - 28,
+            right,
+            average_y - 2,
+        ),
+        fill=WHITE,
+    )
+    draw.text(
+        (right - (average_box[2] - average_box[0]) - 10, average_y - 28),
+        average_label,
+        fill=GRAY,
+        font=f["small_bold"],
+    )
+
+    draw.text(
+        (80, 886),
+        "Nota: azul indica PTF positiva y rojo, PTF negativa. Las tasas son variaciones logarítmicas.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 925),
+        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    img.save(FIGURES / "fig_ptf_total_anual_valor_agregado.png", quality=95)
 
 
 def draw_total_index(
@@ -1657,6 +1887,7 @@ def main() -> None:
     SECTIONS.mkdir(parents=True, exist_ok=True)
     observations = load_observations()
     total_observations = load_total_observations()
+    value_added_observations = load_value_added_total()
     contribution_annual = load_numeric_csv(
         CONTRIBUTION_ANNUAL_CSV,
         {"activity"},
@@ -1684,6 +1915,9 @@ def main() -> None:
         total_observations,
         contribution_annual,
         contribution_long,
+    )
+    value_added_summary = build_value_added_counterfactual(
+        value_added_observations
     )
     identity_error, detail_error = validate(observations)
     total_identity_error, total_detail_error = validate(total_observations)
@@ -1728,9 +1962,15 @@ def main() -> None:
     write_csv(PROCESSED / "ptf_total_economia_promedio_2006_2024.csv", total_long_run)
     write_csv(COUNTERFACTUAL_ANNUAL_CSV, counterfactual_annual)
     write_csv(COUNTERFACTUAL_SUMMARY_CSV, counterfactual_summary)
+    write_csv(
+        PROCESSED / "ptf_valor_agregado_resumen_2006_2024.csv",
+        value_added_summary,
+    )
     write_tex_tables(comparison_long_run)
     write_evolution_table(comparison_long_run, comparison_period_summaries)
     write_aggregate_contribution_tables(contribution_long, contribution_periods)
+    write_value_added_table(value_added_summary)
+    draw_value_added_tfp_bars(value_added_observations)
     draw_total_index(index_rows)
     draw_aggregate_contributions(contribution_long)
     draw_counterfactual(counterfactual_summary, counterfactual_drivers)
@@ -1777,6 +2017,17 @@ def main() -> None:
     print(
         "Diferencia de nivel en 2024 frente al observado: "
         f"{float(counterfactual['level_difference_vs_observed']):.6f}%"
+    )
+    value_added_observed = value_added_summary[0]
+    value_added_counterfactual = value_added_summary[1]
+    print(
+        "Valor agregado anual observado y con PTF +1 pp: "
+        f"{float(value_added_observed['gross_value_added']):.6f}; "
+        f"{float(value_added_counterfactual['gross_value_added']):.6f}"
+    )
+    print(
+        "Diferencia de nivel del valor agregado en 2024: "
+        f"{float(value_added_counterfactual['level_difference_vs_observed']):.6f}%"
     )
 
 
