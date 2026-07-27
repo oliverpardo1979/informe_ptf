@@ -1336,83 +1336,134 @@ def draw_aggregate_contributions(
 
 def draw_counterfactual(
     summary_rows: list[dict[str, object]],
-    driver_rows: list[dict[str, object]],
+    long_rows: list[dict[str, float | int | str]],
 ) -> None:
     observed = next(
         row for row in summary_rows if str(row["scenario"]) == "Observado"
     )
-    counterfactual = next(
-        row
-        for row in summary_rows
-        if str(row["scenario"]) != "Observado"
+    total = next(
+        row for row in long_rows if str(row["activity"]) == "Total de la economía"
     )
+    sector_rows = [
+        row for row in long_rows if str(row["activity"]) != "Total de la economía"
+    ]
+    positive_rows = sorted(
+        [
+            row
+            for row in sector_rows
+            if float(row["average_sector_ptf"]) > 0
+        ],
+        key=lambda row: float(row["average_contribution"]),
+    )
+    negative_rows = sorted(
+        [
+            row
+            for row in sector_rows
+            if float(row["average_sector_ptf"]) < 0
+        ],
+        key=lambda row: float(row["average_contribution"]),
+    )
+    if len(positive_rows) != 4 or len(negative_rows) != 5:
+        raise RuntimeError(
+            "La cascada requiere cuatro actividades con PTF positiva y cinco "
+            "con PTF negativa"
+        )
+    if any(
+        float(row["average_sector_ptf"])
+        * float(row["average_contribution"])
+        <= 0
+        for row in sector_rows
+    ):
+        raise RuntimeError(
+            "El signo de una contribución sectorial no coincide con el signo "
+            "de su tasa de crecimiento de la PTF"
+        )
+
     observed_growth = float(observed["average_production_growth"])
-    counterfactual_growth = float(
-        counterfactual["average_production_growth"]
+    total_ptf_contribution = float(total["average_contribution"])
+    growth_without_ptf = observed_growth - total_ptf_contribution
+    positive_contribution = sum(
+        float(row["average_contribution"]) for row in positive_rows
     )
+    negative_contribution = sum(
+        float(row["average_contribution"]) for row in negative_rows
+    )
+    counterfactual_growth = growth_without_ptf + positive_contribution
+    rebuilt_observed_growth = counterfactual_growth + negative_contribution
+    if abs(rebuilt_observed_growth - observed_growth) > 1e-9:
+        raise RuntimeError(
+            "La cascada no reproduce el crecimiento observado de la producción"
+        )
+
     img, draw, f = canvas(
-        "Crecimiento anual de la producción total: observado y contrafactual",
-        "Promedio 2005–2024, tasa logarítmica anual (%)",
+        "De las contribuciones sectoriales al crecimiento observado",
+        "Promedio anual, 2005–2024; tasa y contribuciones en puntos porcentuales",
         1800,
-        1050,
+        1120,
     )
-    left, right, top, bottom = 155, 1690, 245, 790
-    ymin, ymax = 3.0, 3.7
+    left, right, top, bottom = 105, 1735, 245, 740
+    ymin, ymax = 3.20, 3.70
 
     def y_position(value: float) -> float:
         return bottom - (value - ymin) / (ymax - ymin) * (bottom - top)
 
-    for tick in [3.0, 3.2, 3.4, 3.6]:
+    for tick in [3.2, 3.3, 3.4, 3.5, 3.6, 3.7]:
         y = y_position(tick)
         draw.line((left, y, right, y), fill=GRID, width=1)
         draw.text(
-            (75, y - 13),
+            (45, y - 13),
             f"{tick:.1f}".replace(".", ","),
             fill=GRAY,
             font=f["small"],
         )
 
-    labels = ["Observado"]
-    labels.extend(
-        {
-            "Finanzas e inmobiliarias": "Finanzas e\ninmobiliarias",
-            "Minería": "Minería",
-            "Construcción": "Construcción",
-            "Electricidad, gas y agua": "Electricidad,\ngas y agua",
-            "Manufactura": "Manufactura",
-        }[str(row["activity"])]
-        for row in driver_rows
-    )
-    labels.append("Contrafactual")
+    short_labels = {
+        "Agricultura": "Agricultura",
+        "Minería": "Minería",
+        "Manufactura": "Manufactura",
+        "Electricidad, gas y agua": "Electricidad,\ngas y agua",
+        "Construcción": "Construcción",
+        "Comercio, hoteles y restaurantes": "Comercio",
+        "Transporte y comunicaciones": "Transporte",
+        "Finanzas e inmobiliarias": "Finanzas e\ninmobiliarias",
+        "Servicios sociales": "Servicios\nsociales",
+    }
+    labels = [
+        "Sin PTF",
+        *[short_labels[str(row["activity"])] for row in positive_rows],
+        "Contrafactual",
+        *[short_labels[str(row["activity"])] for row in negative_rows],
+        "Observado",
+    ]
     positions = [
         left + (index + 0.5) * (right - left) / len(labels)
         for index in range(len(labels))
     ]
-    bar_width = 150
-    anchor_color = "#4A4A4A"
+    bar_width = 88
+    anchor_color = "#3A3A3A"
 
-    observed_y = y_position(observed_growth)
+    base_y = y_position(growth_without_ptf)
     draw.rectangle(
         (
             positions[0] - bar_width / 2,
-            observed_y,
+            base_y,
             positions[0] + bar_width / 2,
             y_position(ymin),
         ),
         fill=anchor_color,
     )
     draw.text(
-        (positions[0], observed_y - 18),
-        f"{observed_growth:.2f}%".replace(".", ","),
+        (positions[0], base_y - 18),
+        f"{growth_without_ptf:.2f}%".replace(".", ","),
         fill=anchor_color,
         font=f["axis_bold"],
         anchor="ms",
     )
 
-    current = observed_growth
+    current = growth_without_ptf
     previous_right = positions[0] + bar_width / 2
-    for index, row in enumerate(driver_rows, start=1):
-        change = float(row["change_in_aggregate_growth"])
+    for index, row in enumerate(positive_rows, start=1):
+        change = float(row["average_contribution"])
         updated = current + change
         x = positions[index]
         draw.line(
@@ -1433,12 +1484,12 @@ def draw_counterfactual(
                 y_position(current),
             ),
             fill=MID_BLUE,
-            outline=BLUE,
+            outline=MID_BLUE,
             width=2,
         )
         draw.text(
-            (x, y_position(updated) - 18),
-            f"+{change:.3f} pp".replace(".", ","),
+            (x, min(y_position(current), y_position(updated)) - 16),
+            f"+{change:.2f} pp".replace(".", ","),
             fill=BLUE,
             font=f["small_bold"],
             anchor="ms",
@@ -1446,7 +1497,8 @@ def draw_counterfactual(
         current = updated
         previous_right = x + bar_width / 2
 
-    counterfactual_x = positions[-1]
+    counterfactual_index = 1 + len(positive_rows)
+    counterfactual_x = positions[counterfactual_index]
     draw.line(
         (
             previous_right,
@@ -1474,6 +1526,73 @@ def draw_counterfactual(
         anchor="ms",
     )
 
+    current = counterfactual_growth
+    previous_right = counterfactual_x + bar_width / 2
+    negative_start = counterfactual_index + 1
+    for offset, row in enumerate(negative_rows):
+        index = negative_start + offset
+        change = float(row["average_contribution"])
+        updated = current + change
+        x = positions[index]
+        draw.line(
+            (
+                previous_right,
+                y_position(current),
+                x - bar_width / 2,
+                y_position(current),
+            ),
+            fill=GRAY,
+            width=2,
+        )
+        draw.rectangle(
+            (
+                x - bar_width / 2,
+                y_position(current),
+                x + bar_width / 2,
+                y_position(updated),
+            ),
+            fill=RED,
+            outline=RED,
+            width=2,
+        )
+        draw.text(
+            (x, min(y_position(current), y_position(updated)) - 16),
+            f"{change:.2f} pp".replace("-", "−").replace(".", ","),
+            fill=RED,
+            font=f["small_bold"],
+            anchor="ms",
+        )
+        current = updated
+        previous_right = x + bar_width / 2
+
+    observed_x = positions[-1]
+    draw.line(
+        (
+            previous_right,
+            y_position(current),
+            observed_x - bar_width / 2,
+            y_position(current),
+        ),
+        fill=GRAY,
+        width=2,
+    )
+    draw.rectangle(
+        (
+            observed_x - bar_width / 2,
+            y_position(observed_growth),
+            observed_x + bar_width / 2,
+            y_position(ymin),
+        ),
+        fill=anchor_color,
+    )
+    draw.text(
+        (observed_x, y_position(observed_growth) - 18),
+        f"{observed_growth:.2f}%".replace(".", ","),
+        fill=anchor_color,
+        font=f["axis_bold"],
+        anchor="ms",
+    )
+
     for x, label in zip(positions, labels):
         box = draw.multiline_textbbox(
             (0, 0),
@@ -1493,30 +1612,30 @@ def draw_counterfactual(
         )
 
     draw.text(
-        (80, 875),
-        "Nota: la producción total corresponde al enfoque de producción KLEMS; no es la tasa de crecimiento del PIB.",
+        (80, 895),
+        "Nota: “Sin PTF” suma las contribuciones del trabajo, el capital y los insumos intermedios. El contrafactual",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
-        (80, 908),
-        "El ejercicio fija en cero la tasa anual de crecimiento de la PTF de las cuatro actividades con menor crecimiento en 2005–2024.",
+        (80, 930),
+        "mantiene las contribuciones positivas y fija en cero las negativas. Es una identidad contable y no un efecto causal.",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
-        (80, 941),
-        "Mantiene las contribuciones de los insumos y los ponderadores anuales observados; no estima efectos causales. La escala inicia en 3,0%.",
+        (80, 965),
+        "La producción corresponde al enfoque KLEMS y no al PIB. La escala vertical comienza en 3,20%.",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
-        (80, 974),
+        (80, 1000),
         "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
         fill=GRAY,
         font=f["small"],
     )
-    img.save(FIGURES / "fig_ptf_contrafactual_cuatro_actividades.png", quality=95)
+    img.save(FIGURES / "fig_ptf_cascada_contribuciones_actividad.png", quality=95)
 
 
 def draw_aggregate_contributions_by_period(
@@ -2126,7 +2245,7 @@ def main() -> None:
     draw_value_added_waterfall(value_added_summary)
     draw_total_index(index_rows)
     draw_aggregate_contributions(contribution_long)
-    draw_counterfactual(counterfactual_summary, counterfactual_drivers)
+    draw_counterfactual(counterfactual_summary, contribution_long)
     draw_aggregate_contributions_by_period(contribution_periods)
     draw_ptf_bars(contribution_long)
     draw_decomposition(long_run)
@@ -2161,15 +2280,40 @@ def main() -> None:
         f"{max_aggregate_error:.3e}"
     )
     observed = counterfactual_summary[0]
-    counterfactual = counterfactual_summary[1]
+    total_contribution = next(
+        row
+        for row in contribution_long
+        if str(row["activity"]) == "Total de la economía"
+    )
+    sector_contributions = [
+        row
+        for row in contribution_long
+        if str(row["activity"]) != "Total de la economía"
+    ]
+    positive_contribution = sum(
+        float(row["average_contribution"])
+        for row in sector_contributions
+        if float(row["average_sector_ptf"]) > 0
+    )
+    negative_contribution = sum(
+        float(row["average_contribution"])
+        for row in sector_contributions
+        if float(row["average_sector_ptf"]) < 0
+    )
+    observed_growth = float(observed["average_production_growth"])
+    growth_without_ptf = observed_growth - float(
+        total_contribution["average_contribution"]
+    )
+    waterfall_counterfactual = growth_without_ptf + positive_contribution
     print(
-        "Crecimiento anual observado y contrafactual: "
-        f"{float(observed['average_production_growth']):.6f}; "
-        f"{float(counterfactual['average_production_growth']):.6f}"
+        "Cascada crecimiento sin PTF, contrafactual y observado: "
+        f"{growth_without_ptf:.6f}; "
+        f"{waterfall_counterfactual:.6f}; "
+        f"{observed_growth:.6f}"
     )
     print(
-        "Diferencia de nivel en 2024 frente al observado: "
-        f"{float(counterfactual['level_difference_vs_observed']):.6f}%"
+        "Contribuciones positivas y negativas a la cascada: "
+        f"{positive_contribution:.6f}; {negative_contribution:.6f}"
     )
     value_added_observed = value_added_summary[0]
     value_added_counterfactual = value_added_summary[1]
