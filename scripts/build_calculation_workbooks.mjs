@@ -5,7 +5,11 @@ import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
 const root = path.resolve(import.meta.dirname, "..");
 const processedDir = path.join(root, "data", "processed");
 const rawDir = path.join(root, "data", "raw");
-const outputDir = path.join(root, "outputs", "ptf_pesos_vbp_20260727");
+const outputDir = path.join(
+  root,
+  "outputs",
+  "ptf_pesos_vbp_20260727_financieras",
+);
 const previewDir = path.join(outputDir, "previews");
 await fs.mkdir(previewDir, { recursive: true });
 
@@ -153,7 +157,7 @@ const displayLabel = new Map([
   ["Construcción", "Construcción"],
   ["Comercio, hoteles y restaurantes", "Comercio y hotelería"],
   ["Transporte y comunicaciones", "Transporte y comunicaciones"],
-  ["Finanzas e inmobiliarias", "Finanzas"],
+  ["Finanzas e inmobiliarias", "Financieras"],
   ["Servicios sociales", "Servicios sociales y personales"],
   ["Total de la economía", "Total de la economía"],
 ]);

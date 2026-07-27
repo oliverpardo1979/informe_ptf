@@ -81,7 +81,7 @@ TEX_NAMES = {
     "Construcción": "Construcción",
     "Comercio, hoteles y restaurantes": "Comercio y hotelería",
     "Transporte y comunicaciones": "Transporte y comunicaciones",
-    "Finanzas e inmobiliarias": "Finanzas",
+    "Finanzas e inmobiliarias": "Financieras",
     "Servicios sociales": "Servicios sociales y personales",
 }
 
@@ -94,7 +94,7 @@ FIGURE_NAMES = {
     "Construcción": "Construcción",
     "Comercio, hoteles y restaurantes": "Comercio y hotelería",
     "Transporte y comunicaciones": "Transporte y comunicaciones",
-    "Finanzas e inmobiliarias": "Finanzas",
+    "Finanzas e inmobiliarias": "Financieras",
     "Servicios sociales": "Servicios sociales y personales",
 }
 
@@ -1467,7 +1467,7 @@ def draw_counterfactual(
         "Construcción": "Construcción",
         "Comercio, hoteles y restaurantes": "Comercio y\nhotelería",
         "Transporte y comunicaciones": "Transporte y\ncomunic.",
-        "Finanzas e inmobiliarias": "Finanzas",
+        "Finanzas e inmobiliarias": "Financieras",
         "Servicios sociales": "Servicios\nsociales",
     }
     labels = [
