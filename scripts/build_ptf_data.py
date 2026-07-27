@@ -77,11 +77,11 @@ TEX_NAMES = {
     "Agricultura": "Agropecuario, silvicultura y pesca",
     "Minería": "Minería",
     "Manufactura": "Manufactura",
-    "Electricidad, gas y agua": "Electricidad, gas y agua",
+    "Electricidad, gas y agua": "Servicios públicos",
     "Construcción": "Construcción",
-    "Comercio, hoteles y restaurantes": "Comercio, hotelería y restaurantes",
+    "Comercio, hoteles y restaurantes": "Comercio y hotelería",
     "Transporte y comunicaciones": "Transporte y comunicaciones",
-    "Finanzas e inmobiliarias": "Finanzas, inmobiliarias y servicios empresariales",
+    "Finanzas e inmobiliarias": "Finanzas",
     "Servicios sociales": "Servicios sociales y personales",
 }
 
@@ -90,13 +90,11 @@ FIGURE_NAMES = {
     "Agricultura": "Agropecuario,\nsilvicultura y pesca",
     "Minería": "Minería",
     "Manufactura": "Manufactura",
-    "Electricidad, gas y agua": "Electricidad, gas y agua",
+    "Electricidad, gas y agua": "Servicios públicos",
     "Construcción": "Construcción",
-    "Comercio, hoteles y restaurantes": "Comercio, hotelería\ny restaurantes",
+    "Comercio, hoteles y restaurantes": "Comercio y hotelería",
     "Transporte y comunicaciones": "Transporte y comunicaciones",
-    "Finanzas e inmobiliarias": (
-        "Finanzas, inmobiliarias y\nservicios empresariales"
-    ),
+    "Finanzas e inmobiliarias": "Finanzas",
     "Servicios sociales": "Servicios sociales y personales",
 }
 
@@ -1465,11 +1463,11 @@ def draw_counterfactual(
         "Agricultura": "Agropecuario",
         "Minería": "Minería",
         "Manufactura": "Manufactura",
-        "Electricidad, gas y agua": "Electricidad,\ngas y agua",
+        "Electricidad, gas y agua": "Servicios\npúblicos",
         "Construcción": "Construcción",
-        "Comercio, hoteles y restaurantes": "Comercio,\nhotelería y\nrestaurantes",
+        "Comercio, hoteles y restaurantes": "Comercio y\nhotelería",
         "Transporte y comunicaciones": "Transporte y\ncomunic.",
-        "Finanzas e inmobiliarias": "Finanzas e\ninmob.",
+        "Finanzas e inmobiliarias": "Finanzas",
         "Servicios sociales": "Servicios\nsociales",
     }
     labels = [
