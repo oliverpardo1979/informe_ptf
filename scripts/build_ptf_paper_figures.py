@@ -343,25 +343,20 @@ def draw_contributions() -> None:
 
 
 def draw_counterfactual() -> None:
-    summary = load_csv("ptf_contrafactual_cuatro_actividades_resumen.csv")
+    total = load_csv("ptf_total_economia_promedio_2005_2024.csv")
     long_run = load_csv("ptf_contribucion_largo_plazo.csv")
-    observed = float(summary[0]["average_production_growth"])
-    counterfactual = float(summary[1]["average_production_growth"])
-    selected = {
-        "Finanzas e inmobiliarias",
-        "Minería",
-        "Construcción",
-        "Electricidad, gas y agua",
-    }
+    observed = float(total[0]["production"])
     drivers = [
         (ENGLISH[row["activity"]], -float(row["average_contribution"]))
         for row in long_run
-        if row["activity"] in selected
+        if row["activity"] != "Total de la economía"
+        and float(row["average_contribution"]) < 0
     ]
     drivers.sort(key=lambda item: item[1], reverse=True)
+    counterfactual = observed + sum(change for _, change in drivers)
     image, draw, f = canvas(
         "Observed and counterfactual production-account output growth",
-        "2005-2024; counterfactual sets annual TFP growth to zero in four activities",
+        "2005-2024; counterfactual sets annual TFP growth to zero in five activities",
         1900,
         1100,
     )

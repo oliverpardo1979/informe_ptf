@@ -70,7 +70,23 @@ DANE states that aggregate productivity and its components are constructed as T\
 \label{eq:aggregate_tfp}
 \end{equation}
 
-where \(w_{i,t}\) is the annual aggregation weight. The public annex does not report these weights. We recover one vector for each year by requiring the same weights to reproduce eight independent published components for the total economy and by imposing that the nine weights sum to one. The recovered weights also reproduce the five remaining columns, including aggregate TFP, even though those columns are not used to identify the system. Appendix~A describes this validation.
+where \(w_{i,t}\) is the annual aggregation weight. Under the production approach, this weight is the T\"ornqvist average of activity \(i\)'s share in nominal gross output:
+
+\begin{equation}
+s_{i,t}
+=
+\frac{P^{Y}_{i,t}Y_{i,t}}
+{\sum_{j=1}^{9}P^{Y}_{j,t}Y_{j,t}},
+\qquad
+w_{i,t}
+=
+\frac{1}{2}\left(s_{i,t-1}+s_{i,t}\right).
+\label{eq:gross_output_weight}
+\end{equation}
+
+The public TFP annex does not report these weights. We recover one vector for each year by requiring the same weights to reproduce eight independent published components for the total economy and by imposing that the nine weights sum to one. The recovered weights also reproduce the five remaining columns, including aggregate TFP, even though those columns are not used to identify the system.
+
+We validate the recovered high-precision weights against nominal gross output from DANE's current-price supply-use tables \citep{DANE2020COU,DANE2026COU}. Across 171 activity-year comparisons for 2006--2024, the largest difference is 0.00031 percentage points and the root mean squared difference is 0.000064 points. These discrepancies are consistent with the rounding of the published nominal levels. The contribution calculations use the recovered weights because they reproduce the 13 published aggregate components exactly. For 2005, the direct T\"ornqvist calculation would also require 2004 nominal gross output, which is not included in the public base-2015 series; we therefore retain the recovered weight for that year. Appendix~A provides the full validation.
 
 The contribution of activity \(i\) in year \(t\) is
 
@@ -110,7 +126,7 @@ The covariance term matters whenever activity weights and TFP growth move togeth
 
 \subsection{Accounting counterfactual}
 
-Let \(\mathcal{S}\) contain mining, finance and real estate, construction, and electricity, gas, and water. These are the four activities with the lowest annualized TFP growth over 2005--2024. The counterfactual replaces their annual TFP growth with zero:
+Let \(\mathcal{S}\) contain the five activities whose annualized TFP growth was negative over 2005--2024: mining, finance and real estate, construction, manufacturing, and electricity, gas, and water. The counterfactual replaces their annual TFP growth with zero:
 
 \begin{equation}
 \Delta\ln A_t^{CF}
@@ -130,4 +146,4 @@ All other input contributions and the recovered annual weights remain fixed. The
 \label{eq:counterfactual_output}
 \end{equation}
 
-The exercise is deliberately mechanical. Activity selection uses the full sample, the counterfactual does not specify an intervention, and it does not allow labor, capital, intermediate inputs, prices, or weights to respond. Its purpose is to measure the accounting importance of the four negative long-run contributions.
+The exercise is deliberately mechanical. Activity selection uses the full sample, the counterfactual does not specify an intervention, and it does not allow labor, capital, intermediate inputs, prices, or weights to respond. Its purpose is to measure the accounting importance of the five negative long-run contributions.

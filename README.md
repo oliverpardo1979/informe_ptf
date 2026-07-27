@@ -13,6 +13,8 @@ procesadas, los cuadros y las figuras:
 
 ```powershell
 node scripts/extract_ptf_workbook.mjs
+node scripts/validate_ptf_weights.mjs
+node scripts/build_calculation_workbooks.mjs
 python scripts/build_ptf_data.py
 python scripts/build_ptf_paper_figures.py
 ```
@@ -21,10 +23,20 @@ El primer script extrae las series de las nueve actividades y del total de la
 economía bajo el enfoque de producción, así como la serie agregada del enfoque
 de valor agregado. También recupera las ponderaciones anuales de Törnqvist,
 verifica que reproduzcan las trece columnas publicadas por el DANE y calcula la
-contribución de cada actividad a la PTF total. El segundo script construye los
-indicadores de largo plazo, calcula los contrafactuales y genera los cuadros y
-figuras del informe. El tercer script genera las figuras en inglés utilizadas
-por el paper.
+contribución de cada actividad a la PTF total. El segundo construye los
+ponderadores directos como el promedio de las participaciones del valor bruto
+de producción nominal en dos años consecutivos y los compara con los pesos
+implícitos. El tercero agrega a los dos anexos originales seis hojas con los
+cálculos, la validación y la trazabilidad de las figuras, sin modificar los
+cuadros del DANE. Los dos scripts de Python construyen los indicadores,
+contrafactuales, cuadros y figuras del informe y del paper.
+
+La validación directa usa los cuadros oferta-utilización a precios corrientes
+de 2005--2013 y 2014--2024, conservados en `data/raw`. Entre 2006 y 2024, la
+diferencia máxima entre el ponderador directo y el implícito es de 0,00031
+puntos porcentuales. Para 2005 se conserva el peso implícito porque el promedio
+de Törnqvist exige la producción nominal de 2004 y la serie pública con base
+2015 comienza en 2005.
 
 Los cálculos sectoriales usan los cuadros anuales del enfoque de producción y
 el bloque macroeconómico usa el Cuadro 1 del enfoque de valor agregado. El
