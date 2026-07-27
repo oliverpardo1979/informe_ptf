@@ -74,33 +74,30 @@ SHORT = {
 
 TEX_NAMES = {
     "Total de la economía": "Total de la economía",
-    "Agricultura": "Agricultura, ganadería, caza, silvicultura y pesca",
-    "Minería": "Minería y extracción",
-    "Manufactura": "Industrias manufactureras",
+    "Agricultura": "Agropecuario, silvicultura y pesca",
+    "Minería": "Minería",
+    "Manufactura": "Manufactura",
     "Electricidad, gas y agua": "Electricidad, gas y agua",
     "Construcción": "Construcción",
-    "Comercio, hoteles y restaurantes": "Comercio, hoteles y restaurantes",
-    "Transporte y comunicaciones": "Transporte, almacenamiento y comunicaciones",
-    "Finanzas e inmobiliarias": "Intermediación financiera, actividades inmobiliarias, empresariales y de alquiler",
-    "Servicios sociales": "Actividades de servicios sociales, comunales y personales",
+    "Comercio, hoteles y restaurantes": "Comercio, hotelería y restaurantes",
+    "Transporte y comunicaciones": "Transporte y comunicaciones",
+    "Finanzas e inmobiliarias": "Finanzas, inmobiliarias y servicios empresariales",
+    "Servicios sociales": "Servicios sociales y personales",
 }
 
 FIGURE_NAMES = {
     "Total de la economía": "Total de la economía",
-    "Agricultura": "Agricultura, ganadería, caza,\nsilvicultura y pesca",
-    "Minería": "Minería y extracción",
-    "Manufactura": "Industrias manufactureras",
+    "Agricultura": "Agropecuario,\nsilvicultura y pesca",
+    "Minería": "Minería",
+    "Manufactura": "Manufactura",
     "Electricidad, gas y agua": "Electricidad, gas y agua",
     "Construcción": "Construcción",
-    "Comercio, hoteles y restaurantes": "Comercio, hoteles y restaurantes",
-    "Transporte y comunicaciones": "Transporte, almacenamiento\ny comunicaciones",
+    "Comercio, hoteles y restaurantes": "Comercio, hotelería\ny restaurantes",
+    "Transporte y comunicaciones": "Transporte y comunicaciones",
     "Finanzas e inmobiliarias": (
-        "Intermediación financiera,\nactividades inmobiliarias,\n"
-        "empresariales y de alquiler"
+        "Finanzas, inmobiliarias y\nservicios empresariales"
     ),
-    "Servicios sociales": (
-        "Actividades de servicios sociales,\ncomunales y personales"
-    ),
+    "Servicios sociales": "Servicios sociales y personales",
 }
 
 ACTIVITY_ORDER = ["Total de la economía", *SHORT.values()]
@@ -1465,12 +1462,12 @@ def draw_counterfactual(
         )
 
     short_labels = {
-        "Agricultura": "Agricultura\ny pesca",
-        "Minería": "Minería y\nextracción",
-        "Manufactura": "Industrias\nmanuf.",
+        "Agricultura": "Agropecuario",
+        "Minería": "Minería",
+        "Manufactura": "Manufactura",
         "Electricidad, gas y agua": "Electricidad,\ngas y agua",
         "Construcción": "Construcción",
-        "Comercio, hoteles y restaurantes": "Comercio y\nhoteles",
+        "Comercio, hoteles y restaurantes": "Comercio,\nhotelería y\nrestaurantes",
         "Transporte y comunicaciones": "Transporte y\ncomunic.",
         "Finanzas e inmobiliarias": "Finanzas e\ninmob.",
         "Servicios sociales": "Servicios\nsociales",
