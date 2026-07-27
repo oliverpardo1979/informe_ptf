@@ -81,8 +81,26 @@ TEX_NAMES = {
     "Construcción": "Construcción",
     "Comercio, hoteles y restaurantes": "Comercio, hoteles y restaurantes",
     "Transporte y comunicaciones": "Transporte, almacenamiento y comunicaciones",
-    "Finanzas e inmobiliarias": "Intermediación financiera, inmobiliarias, empresariales y de alquiler",
-    "Servicios sociales": "Servicios sociales, comunales y personales",
+    "Finanzas e inmobiliarias": "Intermediación financiera, actividades inmobiliarias, empresariales y de alquiler",
+    "Servicios sociales": "Actividades de servicios sociales, comunales y personales",
+}
+
+FIGURE_NAMES = {
+    "Total de la economía": "Total de la economía",
+    "Agricultura": "Agricultura, ganadería, caza,\nsilvicultura y pesca",
+    "Minería": "Minería y extracción",
+    "Manufactura": "Industrias manufactureras",
+    "Electricidad, gas y agua": "Electricidad, gas y agua",
+    "Construcción": "Construcción",
+    "Comercio, hoteles y restaurantes": "Comercio, hoteles y restaurantes",
+    "Transporte y comunicaciones": "Transporte, almacenamiento\ny comunicaciones",
+    "Finanzas e inmobiliarias": (
+        "Intermediación financiera,\nactividades inmobiliarias,\n"
+        "empresariales y de alquiler"
+    ),
+    "Servicios sociales": (
+        "Actividades de servicios sociales,\ncomunales y personales"
+    ),
 }
 
 ACTIVITY_ORDER = ["Total de la economía", *SHORT.values()]
@@ -760,6 +778,33 @@ def canvas(title: str, subtitle: str, width: int = 1800, height: int = 1120):
     return img, draw, f
 
 
+def draw_activity_label(
+    draw: ImageDraw.ImageDraw,
+    f: dict[str, ImageFont.FreeTypeFont],
+    activity: str,
+    x: float,
+    y: float,
+    *,
+    bold: bool = False,
+) -> None:
+    label = FIGURE_NAMES[activity]
+    font = f["small_bold"] if bold else f["small"]
+    box = draw.multiline_textbbox(
+        (0, 0),
+        label,
+        font=font,
+        spacing=1,
+    )
+    height = box[3] - box[1]
+    draw.multiline_text(
+        (x, y - height / 2),
+        label,
+        fill="#222222",
+        font=font,
+        spacing=1,
+    )
+
+
 def draw_value_added_tfp_bars(
     observations: list[dict[str, float | int | str]],
 ) -> None:
@@ -1246,11 +1291,13 @@ def draw_aggregate_contributions(
                 fill=BLUE,
                 width=3,
             )
-        draw.text(
-            (left_label, y - 15),
+        draw_activity_label(
+            draw,
+            f,
             str(row["activity"]),
-            fill="#222222",
-            font=f["axis_bold"] if is_total else f["axis"],
+            left_label,
+            y,
+            bold=is_total,
         )
         draw.rectangle(
             (
@@ -1418,14 +1465,14 @@ def draw_counterfactual(
         )
 
     short_labels = {
-        "Agricultura": "Agricultura",
-        "Minería": "Minería",
-        "Manufactura": "Manufactura",
+        "Agricultura": "Agricultura\ny pesca",
+        "Minería": "Minería y\nextracción",
+        "Manufactura": "Industrias\nmanuf.",
         "Electricidad, gas y agua": "Electricidad,\ngas y agua",
         "Construcción": "Construcción",
-        "Comercio, hoteles y restaurantes": "Comercio",
-        "Transporte y comunicaciones": "Transporte",
-        "Finanzas e inmobiliarias": "Finanzas e\ninmobiliarias",
+        "Comercio, hoteles y restaurantes": "Comercio y\nhoteles",
+        "Transporte y comunicaciones": "Transporte y\ncomunic.",
+        "Finanzas e inmobiliarias": "Finanzas e\ninmob.",
         "Servicios sociales": "Servicios\nsociales",
     }
     labels = [
@@ -1613,24 +1660,30 @@ def draw_counterfactual(
 
     draw.text(
         (80, 895),
-        "Nota: “Sin PTF” suma las contribuciones del trabajo, el capital y los insumos intermedios. El contrafactual",
+        "Nota: por espacio, la cascada abrevia las denominaciones de las actividades. El apéndice reproduce los nombres del DANE.",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
         (80, 930),
-        "mantiene las contribuciones positivas y fija en cero las negativas. Es una identidad contable y no un efecto causal.",
+        "“Sin PTF” suma las contribuciones del trabajo, el capital y los insumos intermedios. El contrafactual mantiene",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
         (80, 965),
-        "La producción corresponde al enfoque KLEMS y no al PIB. La escala vertical comienza en 3,20%.",
+        "las contribuciones positivas y fija en cero las negativas. Es una identidad contable y no un efecto causal.",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
         (80, 1000),
+        "La producción corresponde al enfoque KLEMS y no al PIB. La escala vertical comienza en 3,20%.",
+        fill=GRAY,
+        font=f["small"],
+    )
+    draw.text(
+        (80, 1035),
         "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
         fill=GRAY,
         font=f["small"],
@@ -1685,7 +1738,7 @@ def draw_aggregate_contributions_by_period(
     row_h = (bottom - top) / len(activities)
     for index, activity in enumerate(activities):
         y = top + (index + 0.5) * row_h
-        draw.text((65, y - 14), activity, fill="#222222", font=f["axis"])
+        draw_activity_label(draw, f, activity, 65, y)
         points = []
         for period_index, period in enumerate(periods):
             value = lookup[(activity, period)]
@@ -1844,11 +1897,13 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
                 fill=BLUE,
                 width=3,
             )
-        draw.text(
-            (left_label, y - 16),
+        draw_activity_label(
+            draw,
+            f,
             str(row["activity"]),
-            fill="#222222",
-            font=f["axis_bold"] if is_total else f["axis"],
+            left_label,
+            y,
+            bold=is_total,
         )
         draw.rectangle(
             (
@@ -1948,7 +2003,7 @@ def draw_decomposition(long_run: list[dict[str, float | int | str]]) -> None:
     row_h = (bottom - top) / len(long_run)
     for i, row in enumerate(long_run):
         y = top + (i + 0.5) * row_h
-        draw.text((65, y - 14), str(row["activity"]), fill="#222222", font=f["axis"])
+        draw_activity_label(draw, f, str(row["activity"]), 65, y)
         positive = 0.0
         negative = 0.0
         for key, _ in labels:
@@ -1979,18 +2034,32 @@ def draw_series(observations: list[dict[str, float | int | str]]) -> None:
         "La PTF sectorial fue volátil, pero los patrones no fueron aleatorios",
         "Contribución anual de la PTF al crecimiento de la producción, 2005–2024 (puntos porcentuales)",
         1800,
-        1280,
+        1400,
     )
-    plot_left, plot_top = 90, 225
-    panel_w, panel_h = 535, 285
-    gap_x, gap_y = 55, 65
+    plot_left, plot_top = 90, 255
+    panel_w, panel_h = 535, 275
+    gap_x, gap_y = 55, 95
     ymin, ymax = -12.0, 12.0
     for idx, activity in enumerate(SHORT.values()):
         col, row = idx % 3, idx // 3
         x1 = plot_left + col * (panel_w + gap_x)
         y1 = plot_top + row * (panel_h + gap_y)
         x2, y2 = x1 + panel_w, y1 + panel_h
-        draw.text((x1, y1 - 34), activity, fill=BLUE, font=f["small_bold"])
+        panel_label = FIGURE_NAMES[activity]
+        label_box = draw.multiline_textbbox(
+            (0, 0),
+            panel_label,
+            font=f["small_bold"],
+            spacing=1,
+        )
+        label_height = label_box[3] - label_box[1]
+        draw.multiline_text(
+            (x1, y1 - label_height - 8),
+            panel_label,
+            fill=BLUE,
+            font=f["small_bold"],
+            spacing=1,
+        )
         y0 = y2 - (0 - ymin) / (ymax - ymin) * panel_h
         draw.line((x1, y0, x2, y0), fill=GRID, width=2)
         x2020 = x1 + (2020 - 2005) / (2024 - 2005) * panel_w
@@ -2008,8 +2077,8 @@ def draw_series(observations: list[dict[str, float | int | str]]) -> None:
         draw.rectangle((x1, y1, x2, y2), outline=GRID, width=1)
         draw.text((x1, y2 + 6), "2005", fill=GRAY, font=f["small"])
         draw.text((x2 - 52, y2 + 6), "2024", fill=GRAY, font=f["small"])
-    draw.text((90, 1230), "Nota: el área gris corresponde a 2020–2024. La escala se limita a ±12 pp para facilitar la comparación.", fill=GRAY, font=f["small"])
-    draw.text((90, 1256), "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.", fill=GRAY, font=f["small"])
+    draw.text((90, 1340), "Nota: el área gris corresponde a 2020–2024. La escala se limita a ±12 pp para facilitar la comparación.", fill=GRAY, font=f["small"])
+    draw.text((90, 1370), "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.", fill=GRAY, font=f["small"])
     img.save(FIGURES / "fig_ptf_series_actividad.png", quality=95)
 
 
@@ -2065,7 +2134,7 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
                 fill=BLUE,
                 width=4,
             )
-        draw.text((60, y + 19), activity, fill="#222222", font=f["axis"])
+        draw_activity_label(draw, f, activity, 60, y + cell_h / 2)
         for j, year in enumerate(years):
             value = lookup[(activity, year)]
             x = left + j * cell_w
@@ -2132,7 +2201,7 @@ def draw_periods(
     row_h = (bottom - top) / len(ACTIVITY_ORDER)
     for i, activity in enumerate(ACTIVITY_ORDER):
         y = top + (i + 0.5) * row_h
-        draw.text((65, y - 15), activity, fill="#222222", font=f["axis"])
+        draw_activity_label(draw, f, activity, 65, y)
         points = []
         for period_idx, period in enumerate(by_period):
             value = period[activity]
