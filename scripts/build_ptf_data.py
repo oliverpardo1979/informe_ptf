@@ -74,7 +74,7 @@ SHORT = {
 
 TEX_NAMES = {
     "Total de la economía": "Total de la economía",
-    "Agricultura": "Agropecuario, silvicultura y pesca",
+    "Agricultura": "Agropecuario",
     "Minería": "Minería",
     "Manufactura": "Manufactura",
     "Electricidad, gas y agua": "Servicios públicos",
@@ -87,7 +87,7 @@ TEX_NAMES = {
 
 FIGURE_NAMES = {
     "Total de la economía": "Total de la economía",
-    "Agricultura": "Agropecuario,\nsilvicultura y pesca",
+    "Agricultura": "Agropecuario",
     "Minería": "Minería",
     "Manufactura": "Manufactura",
     "Electricidad, gas y agua": "Servicios públicos",
