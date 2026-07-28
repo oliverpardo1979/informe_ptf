@@ -464,12 +464,6 @@ def tex_fmt(value: float) -> str:
     return f"{value:.2f}".replace(".", ",")
 
 
-def tex_fmt3(value: float) -> str:
-    if abs(value) < 0.0005:
-        value = 0.0
-    return f"{value:.3f}".replace(".", ",")
-
-
 def tex_escape(text: str) -> str:
     return text.replace("&", r"\&").replace("%", r"\%")
 
@@ -658,7 +652,7 @@ def write_aggregate_contribution_tables(
         r"\begin{tabular}{p{4.3cm}>{\raggedleft\arraybackslash}p{1.7cm}>{\raggedleft\arraybackslash}p{2.25cm}>{\raggedleft\arraybackslash}p{2.2cm}>{\raggedleft\arraybackslash}p{2.35cm}}",
         r"\toprule",
         r"Actividad & Peso promedio & Crecimiento acumulado & Tasa anualizada de la PTF & Contribución al total \\",
-        r" & (\%) & 2004--2024 (\%) & (\%) & (pp por año) \\",
+        r" & (\%) & 2005--2024 (\%) & (\%) & (pp por año) \\",
         r"\midrule",
     ]
     for row in sectors:
@@ -668,7 +662,7 @@ def write_aggregate_contribution_tables(
                 tex_fmt(float(row["average_weight"]) * 100),
                 tex_fmt(float(row["ptf_index_2024"]) - 100),
                 tex_fmt(float(row["average_sector_ptf"])),
-                tex_fmt3(float(row["average_contribution"])),
+                tex_fmt(float(row["average_contribution"])),
             )
         )
     lines.extend(
@@ -677,12 +671,12 @@ def write_aggregate_contribution_tables(
             r"\textbf{Total de la economía} & \textbf{100,00} & "
             + rf"\textbf{{{tex_fmt(float(total['ptf_index_2024']) - 100)}}} & "
             + rf"\textbf{{{tex_fmt(float(total['average_sector_ptf']))}}} & "
-            + rf"\textbf{{{tex_fmt3(float(total['average_contribution']))}}} \\",
+            + rf"\textbf{{{tex_fmt(float(total['average_contribution']))}}} \\",
             r"\bottomrule",
             r"\end{tabular}",
             r"\vspace{0.15cm}",
             r"\begin{minipage}{0.96\textwidth}",
-            r"\footnotesize \textit{Nota:} el crecimiento acumulado compara el índice de 2024 con el de 2004; la tasa anualizada es el promedio de las 20 tasas de crecimiento logarítmicas anuales de 2005 a 2024. Ambas medidas describen la PTF dentro de cada actividad y los crecimientos acumulados sectoriales no se suman. La contribución multiplica la tasa de crecimiento anual de la PTF de cada actividad por su peso anual antes de promediar; las nueve contribuciones suman la tasa de crecimiento de la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
+            r"\footnotesize \textit{Nota:} el crecimiento acumulado de 2005 a 2024 compara el índice al final de 2024 con el índice al final de 2004; la tasa anualizada es el promedio de las 20 tasas de crecimiento logarítmicas anuales de 2005 a 2024. Ambas medidas describen la PTF dentro de cada actividad y los crecimientos acumulados sectoriales no se suman. La contribución multiplica la tasa de crecimiento anual de la PTF de cada actividad por su peso anual antes de promediar; las nueve contribuciones suman la tasa de crecimiento de la PTF del total de la economía. Las cifras pueden no sumar por redondeo.",
             r"\par\textit{Fuente:} cálculos del CJC con base en DANE, anexo PTF 2025.",
             r"\end{minipage}",
             r"\end{table}",
@@ -723,8 +717,8 @@ def write_aggregate_contribution_tables(
         lines.append(
             "{} & {} & {} & {} & {} & {} \\\\".format(
                 tex_escape(TEX_NAMES[activity]),
-                *[tex_fmt3(by_key[(activity, period)]) for period in periods],
-                tex_fmt3(long_lookup[activity]),
+                *[tex_fmt(by_key[(activity, period)]) for period in periods],
+                tex_fmt(long_lookup[activity]),
             )
         )
     lines.extend(
@@ -732,10 +726,10 @@ def write_aggregate_contribution_tables(
             r"\midrule",
             r"\textbf{Total de la economía} & "
             + " & ".join(
-                rf"\textbf{{{tex_fmt3(total_by_period[period])}}}"
+                rf"\textbf{{{tex_fmt(total_by_period[period])}}}"
                 for period in periods
             )
-            + rf" & \textbf{{{tex_fmt3(long_lookup['Total de la economía'])}}} \\",
+            + rf" & \textbf{{{tex_fmt(long_lookup['Total de la economía'])}}} \\",
             r"\bottomrule",
             r"\end{tabular}",
             r"\vspace{0.15cm}",
