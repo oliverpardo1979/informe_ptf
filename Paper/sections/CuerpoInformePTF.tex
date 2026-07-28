@@ -11,20 +11,9 @@
 
 \textbf{Sin embargo, este aparente estancamiento oculta una gran heterogeneidad de la evolución de la PTF a través de actividades económicas.} Entre 2005 y 2024, la PTF aumentó en cuatro de las nueve ramas de actividad económica y disminuyó en las otras cinco. Si la PTF de estas cinco actividades se hubiera mantenido constante, la economía habría crecido 3,65\% al año en vez de 3,26\%.
 
-\textbf{El informe se organiza en cuatro secciones, incluyendo la presente introducción.} La segunda sección presenta la metodología, la tercera los resultados, y la cuarta las conclusiones. 
+\textbf{El informe se organiza en tres secciones, incluyendo la presente introducción.} La segunda sección presenta los resultados y la tercera, las conclusiones.
 
 \clearpage
-\section{Metodología}
-\thispagestyle{fancy}
-
-\textbf{El DANE publica la PTF con los enfoques de valor agregado y de producción.} El primero descompone el crecimiento entre las contribuciones del trabajo, el capital y la PTF. El segundo añade la energía, los materiales y los servicios, y permite comparar nueve actividades económicas. Para facilitar la lectura, el informe usa denominaciones abreviadas; el Cuadro \ref{tab:subactividades} presenta los nombres completos del DANE y las subactividades incluidas. En este informe, ``crecimiento de la economía'' se refiere al crecimiento del valor agregado en el resultado agregado de 2005 a 2025 y al crecimiento de la producción en el análisis por actividades de 2005 a 2024. Ninguna de estas dos medidas es idéntica al crecimiento del PIB. En ambos enfoques, la PTF es un residuo contable y puede recoger cambios en la utilización de la capacidad, reasignaciones y errores de medición.
-
-\textbf{El DANE reporta tasas de crecimiento logarítmicas y el CJC las usa directamente para calcular las tasas anualizadas y los cambios acumulados.} La tasa anualizada es el promedio de las tasas disponibles: 21 en el enfoque de valor agregado y 20 en el análisis sectorial bajo el enfoque de producción. Para tasas pequeñas, la diferencia frente al cambio porcentual convencional es mínima. El cambio acumulado se obtiene al encadenar las tasas y se reporta como la variación porcentual exacta del índice. En el enfoque de producción, el ponderador de cada actividad es el promedio de su participación en el valor bruto de producción nominal del año corriente y del anterior. Como el anexo no publica esos pesos, el CJC recupera los que reproducen los agregados y los contrasta con los cuadros oferta-utilización del DANE. La coincidencia es prácticamente exacta. Los contrafactuales modifican únicamente las tasas de crecimiento de la PTF y mantienen constantes las demás contribuciones. Por eso, describen identidades contables y no efectos causales.
-
-\textbf{El paper académico contiene la metodología sectorial completa.} \emph{Aggregate Stagnation and Sectoral Divergence: Total Factor Productivity in Colombia, 2005--2024} presenta las ecuaciones de encadenamiento, la recuperación y validación de los ponderadores, la descomposición de largo plazo y el contrafactual por actividades. El documento y los materiales de replicación están disponibles en el \href{https://github.com/oliverpardo1979/informe_ptf}{repositorio del proyecto}. La nota metodológica del DANE describe los enfoques de valor agregado y producción \citep{DANE2022TFP}.
-
-\clearpage
-
 \section{Resultados}
 \thispagestyle{fancy}
 
@@ -170,7 +159,7 @@ El ejercicio es contable, no causal: mantiene constantes el trabajo, el capital,
 
 \subsection{Descomposición de largo plazo por actividad}
 
-Los Cuadros \ref{tab:descomposicion_largo_plazo} y \ref{tab:detalle_factores} presentan la descomposición completa del crecimiento de la producción y el detalle de las contribuciones del trabajo y el capital. La derivación de estos resultados se presenta en el paper académico.
+Los Cuadros \ref{tab:descomposicion_largo_plazo} y \ref{tab:detalle_factores} presentan la descomposición completa del crecimiento de la producción y el detalle de las contribuciones del trabajo y el capital. Los archivos de Excel citados en la sección de fuentes y reproducibilidad contienen los cálculos que alimentan estos cuadros y las figuras del informe.
 
 \begin{landscape}
 \input{Paper/sections/tabla_descomposicion_largo_plazo}
@@ -185,6 +174,8 @@ Los Cuadros \ref{tab:descomposicion_largo_plazo} y \ref{tab:detalle_factores} pr
 \input{Paper/sections/tabla_subactividades}
 
 \subsection{Fuentes y reproducibilidad}
+
+Los cálculos que alimentan las figuras y los cuadros están disponibles en el \href{https://github.com/oliverpardo1979/informe_ptf/blob/main/outputs/ptf_pesos_vbp_20260727_financieras/anex-PTF-Productividad-2025_con_calculos_CJC.xlsx}{anexo de PTF con cálculos del CJC} y en el \href{https://github.com/oliverpardo1979/informe_ptf/blob/main/outputs/ptf_pesos_vbp_20260727_financieras/anex-PTF-ProductividadLaboral-2025_con_calculos_CJC.xlsx}{anexo de productividad laboral con cálculos del CJC}. En ambos archivos, las hojas añadidas se identifican con el prefijo CJC y la hoja \emph{CJC Figuras} señala los rangos utilizados en cada figura.
 
 La fuente primaria es el archivo \emph{anex-PTF-Productividad-2025.xlsx} del DANE \citep{DANE2025Annex}. Los ponderadores sectoriales se validan con los cuadros oferta-utilización a precios corrientes de 2005--2013 y 2014--2024 \citep{DANE2020COU,DANE2026COU}. Entre 2006 y 2024, el promedio de las participaciones del valor bruto de producción reproduce los pesos implícitos con una diferencia máxima de 0,00031 puntos porcentuales. Aunque el pie del anexo se refiere a la composición del valor agregado, esos pesos no reproducen los totales; los pesos basados en la producción nominal sí lo hacen. Para 2005 se conserva el peso implícito, pues la serie pública con base 2015 comienza en ese año y el cálculo requiere también la producción nominal de 2004. El repositorio conserva los anexos, las bases procesadas y los programas que verifican las identidades contables y generan los resultados.
 
