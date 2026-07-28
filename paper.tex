@@ -45,21 +45,27 @@ Colombia's near-zero aggregate total factor productivity (TFP) growth conceals e
 \noindent\textbf{JEL codes:} O47; O54; E23; C43.
 
 \input{Paper/paper_sections/introduction}
-\input{Paper/paper_sections/data_and_method}
 \input{Paper/paper_sections/results}
 \input{Paper/paper_sections/discussion}
 \input{Paper/paper_sections/conclusion}
 
+\clearpage
 \appendix
 \input{Paper/paper_sections/appendix}
 
-\section*{Data and Code Availability}
+\section*{Data and Replication Files}
 
-The DANE source annex, processed data, replication programs, figures, and table sources are available at:
+The DANE source annexes, processed data, replication programs, figures, and table sources are available in the project repository:
 
 \url{https://github.com/oliverpardo1979/informe_ptf}.
 
-\noindent The original DANE annex is redistributed in the repository for reproducibility. Users should consult DANE for the official release and any subsequent revisions.
+\noindent The spreadsheet calculations behind the six figures and the paper's principal results are contained in the six sheets whose names begin with \texttt{CJC} in the
+\href{https://github.com/oliverpardo1979/informe_ptf/blob/main/outputs/ptf_pesos_vbp_20260727_financieras/anex-PTF-Productividad-2025_con_calculos_CJC.xlsx}{primary TFP calculation workbook}.
+Those sheets report the aggregate value-added decomposition, chained activity indices, annual gross-output weights, sectoral contributions, counterfactuals, and the source range for each figure. The sheet \texttt{CJC Gu\'ia} provides a map of the calculations and distinguishes source data from formulas.
+
+\noindent The same six calculation sheets are also included in the
+\href{https://github.com/oliverpardo1979/informe_ptf/blob/main/outputs/ptf_pesos_vbp_20260727_financieras/anex-PTF-ProductividadLaboral-2025_con_calculos_CJC.xlsx}{companion labor-productivity workbook}.
+This second file is a convenience copy, not an independent source of calculations or results: the two workbooks retain different original DANE tables but share the same \texttt{CJC} calculation package. The original DANE annexes are redistributed in the repository for reproducibility; users should consult DANE for the official releases and any subsequent revisions.
 
 \bibliographystyle{apalike}
 \small

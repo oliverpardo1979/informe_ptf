@@ -1,37 +1,3 @@
-\section{Annual Aggregation Weights}
-
-For each year, we recover nine activity weights. The system uses the activity and total-economy rows for eight independent components: output, labor composition, hours, ICT capital, non-ICT capital, energy, materials, and services. A ninth equation requires the weights to sum to one:
-
-\begin{equation}
-\begin{bmatrix}
-Z_{1,t}^{1} & \cdots & Z_{9,t}^{1}\\
-\vdots & \ddots & \vdots\\
-Z_{1,t}^{8} & \cdots & Z_{9,t}^{8}\\
-1 & \cdots & 1
-\end{bmatrix}
-\begin{bmatrix}
-w_{1,t}\\
-\vdots\\
-w_{9,t}
-\end{bmatrix}
-=
-\begin{bmatrix}
-Z_{t}^{1}\\
-\vdots\\
-Z_{t}^{8}\\
-1
-\end{bmatrix},
-\label{eq:weight_recovery}
-\end{equation}
-
-where \(Z_{i,t}^{k}\) is component \(k\) for activity \(i\), and \(Z_t^k\) is the corresponding published total. The nine-equation system is full rank in every year, so the recovered vector is unique conditional on the published components. The recovered weights range from 3.0 to 26.8 percent across the 20 years. Applying them to all 13 columns, including the five columns not used as independent equations, produces a maximum reconciliation error of \(5.3\times10^{-15}\).
-
-The weights have an observable economic counterpart. For the production approach, DANE's T\"ornqvist aggregation uses the average of each activity's nominal gross-output share in years \(t-1\) and \(t\), as defined in equation~\eqref{eq:gross_output_weight}. We construct those shares from the current-price supply-use tables and map their detailed activities into the nine KLEMS aggregates \citep{DANE2020COU,DANE2026COU}. The direct and recovered weights are compared for 171 activity-year observations over 2006--2024. The maximum absolute difference is 0.00031 percentage points and the root mean squared difference is 0.000064 points. The differences reflect rounding in the public nominal levels. Although a footnote in the TFP annex refers to the composition of value added, value-added shares do not reconcile the published totals; the gross-output weights do.
-
-We use the recovered weights in the contribution decomposition because they preserve the precision of DANE's published aggregate growth rates. For 2005, direct validation would require nominal gross output for both 2004 and 2005. The public base-2015 supply-use series begins in 2005, so only the recovered weight is available for that first year.
-
-\section{Average Growth-Accounting Decomposition}
-
 \input{Paper/paper_sections/growth_accounting_table}
 
 \section{Contributions by Subperiod}
