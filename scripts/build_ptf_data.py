@@ -1368,8 +1368,8 @@ def draw_counterfactual(
         )
 
     img, draw, f = canvas(
-        "De las contribuciones sectoriales al crecimiento observado",
-        "Promedio anual, 2005–2024; tasa y contribuciones en puntos porcentuales",
+        "Contribuciones sectoriales al crecimiento observado",
+        "2005–2024; tasa y contribuciones en puntos porcentuales",
         1800,
         1120,
     )
@@ -1585,31 +1585,13 @@ def draw_counterfactual(
 
     draw.text(
         (80, 895),
-        "Nota: por espacio, la cascada abrevia las denominaciones de las actividades. El apéndice reproduce los nombres del DANE.",
+        "Nota: el contrafactual mantiene las contribuciones positivas y fija en cero las negativas.",
         fill=GRAY,
         font=f["small"],
     )
     draw.text(
         (80, 930),
-        "“Sin PTF” suma las contribuciones del trabajo, el capital y los insumos intermedios. El contrafactual mantiene",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (80, 965),
-        "las contribuciones positivas y fija en cero las negativas. Es una identidad contable y no un efecto causal.",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (80, 1000),
-        "La producción corresponde al enfoque KLEMS y no al PIB. La escala vertical comienza en 3,20%.",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (80, 1035),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        "Fuente: cálculos del CJC con base en DANE.",
         fill=GRAY,
         font=f["small"],
     )
