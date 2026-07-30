@@ -2060,7 +2060,7 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
     draw.text((1355, legend_y - 2), "Tasa positiva", fill=GRAY, font=f["small"])
     draw.text(
         (70, 1120),
-        "Fuente: cálculos del CJC con base en DANE.",
+        "Fuente: DANE.",
         fill=GRAY,
         font=f["small"],
     )
