@@ -864,7 +864,7 @@ def draw_value_added_tfp_bars(
 
     draw.text(
         (80, 886),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
+        "Fuente: cálculos del CJC con base en DANE, Cuadro 1.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1079,7 +1079,7 @@ def draw_total_index(
     )
     draw.text(
         (80, 935),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        "Fuente: cálculos del CJC con base en DANE.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1666,7 +1666,7 @@ def draw_aggregate_contributions_by_period(
             )
     draw.text(
         (70, 1065),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        "Fuente: cálculos del CJC con base en DANE.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1869,7 +1869,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
         )
     draw.text(
         (70, 1035),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        "Fuente: cálculos del CJC con base en DANE.",
         fill=GRAY,
         font=f["small"],
     )
@@ -1922,7 +1922,7 @@ def draw_decomposition(long_run: list[dict[str, float | int | str]]) -> None:
         xp = left + (production - xmin) * xscale
         draw.line((xp, y - 28, xp, y + 28), fill="#111111", width=3)
     draw.text((85, 1055), "Nota: la marca negra indica el crecimiento de la producción. Insumos = energía, materiales y servicios.", fill=GRAY, font=f["small"])
-    draw.text((85, 1083), "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.", fill=GRAY, font=f["small"])
+    draw.text((85, 1083), "Fuente: cálculos del CJC con base en DANE.", fill=GRAY, font=f["small"])
     img.save(FIGURES / "fig_descomposicion_actividad.png", quality=95)
 
 
@@ -1979,7 +1979,7 @@ def draw_series(observations: list[dict[str, float | int | str]]) -> None:
         draw.text((x1, y2 + 6), "2005", fill=GRAY, font=f["small"])
         draw.text((x2 - 52, y2 + 6), "2024", fill=GRAY, font=f["small"])
     draw.text((90, 1340), "Nota: el área gris corresponde a 2020–2024. La escala se limita a ±12 pp para facilitar la comparación.", fill=GRAY, font=f["small"])
-    draw.text((90, 1370), "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.", fill=GRAY, font=f["small"])
+    draw.text((90, 1370), "Fuente: cálculos del CJC con base en DANE.", fill=GRAY, font=f["small"])
     img.save(FIGURES / "fig_ptf_series_actividad.png", quality=95)
 
 
@@ -2060,7 +2060,7 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
     draw.text((1355, legend_y - 2), "Tasa positiva", fill=GRAY, font=f["small"])
     draw.text(
         (70, 1120),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        "Fuente: cálculos del CJC con base en DANE.",
         fill=GRAY,
         font=f["small"],
     )
@@ -2110,7 +2110,7 @@ def draw_periods(
             draw.line((55, y + row_h / 2, right, y + row_h / 2), fill=BLUE, width=3)
     draw.text(
         (70, 1065),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        "Fuente: cálculos del CJC con base en DANE.",
         fill=GRAY,
         font=f["small"],
     )
