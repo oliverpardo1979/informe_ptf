@@ -1297,26 +1297,9 @@ def draw_aggregate_contributions(
             font=f["small_bold"],
         )
 
-    cumulative_total_label = f"{total_cumulative_change:.2f}".replace("-", "−")
-    annual_total_label = f"{float(total['average_contribution']):.2f}".replace(
-        "-", "−"
-    )
     draw.text(
         (70, 992),
-        "Nota: las contribuciones acumuladas distribuyen el cambio exacto de la PTF total en proporción a las",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (70, 1029),
-        f"contribuciones logarítmicas. Las barras suman {cumulative_total_label} pp en el panel izquierdo y "
-        f"{annual_total_label} pp por año en el derecho; las cifras pueden no sumar por redondeo.",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (70, 1066),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
+        "Fuente: cálculos del CJC con base en DANE.",
         fill=GRAY,
         font=f["small"],
     )
