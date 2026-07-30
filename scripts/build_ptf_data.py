@@ -885,7 +885,7 @@ def draw_value_added_waterfall(summary: list[dict[str, object]]) -> None:
 
     img, draw, f = canvas(
         "Descomposición del crecimiento del valor agregado bruto",
-        "Promedio anual, 2005–2025; tasa y contribuciones en puntos porcentuales por año",
+        "Puntos porcentuales por año",
         1800,
         1000,
     )
@@ -1003,19 +1003,7 @@ def draw_value_added_waterfall(summary: list[dict[str, object]]) -> None:
 
     draw.text(
         (80, 865),
-        "Nota: trabajo y capital son contribuciones al crecimiento. La PTF es una tasa de crecimiento y, como entra con",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (80, 897),
-        "coeficiente uno en la identidad contable, también equivale a su contribución. Las cifras pueden no sumar por redondeo; 2025 es preliminar.",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (80, 940),
-        "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
+        "Fuente: cálculos del CJC con base en DANE, Cuadro 1.",
         fill=GRAY,
         font=f["small"],
     )
