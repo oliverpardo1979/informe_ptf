@@ -862,35 +862,6 @@ def draw_value_added_tfp_bars(
             font=f["small"],
         )
 
-    average = sum(float(row["ptf"]) for row in rows) / len(rows)
-    average_y = y_position(average)
-    dash = 14
-    x = left
-    while x < right:
-        draw.line(
-            (x, average_y, min(x + dash, right), average_y),
-            fill=GRAY,
-            width=2,
-        )
-        x += dash * 2
-    average_label = f"Promedio: {average:.2f}".replace("-", "−")
-    average_box = draw.textbbox((0, 0), average_label, font=f["small_bold"])
-    draw.rectangle(
-        (
-            right - (average_box[2] - average_box[0]) - 20,
-            average_y - 28,
-            right,
-            average_y - 2,
-        ),
-        fill=WHITE,
-    )
-    draw.text(
-        (right - (average_box[2] - average_box[0]) - 10, average_y - 28),
-        average_label,
-        fill=GRAY,
-        font=f["small_bold"],
-    )
-
     draw.text(
         (80, 886),
         "Nota: azul indica una tasa positiva y rojo, una tasa negativa. El DANE reporta tasas logarítmicas; 2025 es preliminar.",
