@@ -804,7 +804,7 @@ def draw_value_added_tfp_bars(
     ]
     rows.sort(key=lambda row: int(row["year"]))
     img, draw, f = canvas(
-        "Tasa anual de crecimiento de la PTF del total de la economía",
+        "Crecimiento de la PTF",
         "Enfoque de valor agregado, 2005–2025; tasa logarítmica (%)",
         1800,
         1000,
