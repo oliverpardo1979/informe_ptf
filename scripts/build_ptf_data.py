@@ -2058,8 +2058,8 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
         "Total de la economía",
     ]
     img, draw, f = canvas(
-        "Tasa anual de crecimiento de la PTF: total y actividades",
-        "2005–2024, tasa logarítmica (%); actividades ordenadas por crecimiento acumulado, de menor a mayor",
+        "Crecimiento de la PTF por actividad económica 2005-2024",
+        "",
         1900,
         1200,
     )
@@ -2101,12 +2101,6 @@ def draw_heatmap(observations: list[dict[str, float | int | str]]) -> None:
     draw.text((1355, legend_y - 2), "Tasa positiva", fill=GRAY, font=f["small"])
     draw.text(
         (70, 1120),
-        "Nota: la escala de color se limita a ±6%; las cifras dentro de cada celda conservan la tasa observada.",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (70, 1155),
         "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
         fill=GRAY,
         font=f["small"],
