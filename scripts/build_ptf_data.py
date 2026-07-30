@@ -1260,7 +1260,7 @@ def draw_aggregate_contributions(
             fill=color,
         )
 
-        accumulated_label = f"{accumulated:.2f}".replace("-", "−")
+        accumulated_label = f"{accumulated:.1f}".replace("-", "−")
         annualized_label = f"{annualized:.2f}".replace("-", "−")
         accumulated_box = draw.textbbox(
             (0, 0),
