@@ -864,12 +864,6 @@ def draw_value_added_tfp_bars(
 
     draw.text(
         (80, 886),
-        "Nota: azul indica una tasa positiva y rojo, una tasa negativa. El DANE reporta tasas logarítmicas; 2025 es preliminar.",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (80, 925),
         "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025, Cuadro 1.",
         fill=GRAY,
         font=f["small"],
