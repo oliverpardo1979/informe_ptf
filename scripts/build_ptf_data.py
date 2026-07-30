@@ -1723,8 +1723,8 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
     )
     rows = [*sector_rows, total]
     img, draw, f = canvas(
-        "Crecimiento acumulado y tasa anualizada de la PTF",
-        "20 tasas anuales, 2005–2024",
+        "Crecimiento acumulado y tasa anualizada de la PTF 2005-2024",
+        "",
         1800,
         1180,
     )
@@ -1904,12 +1904,6 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
         )
     draw.text(
         (70, 1035),
-        "Nota: el acumulado compara 2024 con 2004. La tasa anualizada es el promedio de las 20 tasas logarítmicas anuales.",
-        fill=GRAY,
-        font=f["small"],
-    )
-    draw.text(
-        (70, 1080),
         "Fuente: cálculos del CJC con base en DANE, anexo PTF 2025.",
         fill=GRAY,
         font=f["small"],
