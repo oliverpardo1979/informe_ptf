@@ -1878,7 +1878,7 @@ def draw_ptf_bars(long_run: list[dict[str, float | int | str]]) -> None:
 
 def draw_decomposition(long_run: list[dict[str, float | int | str]]) -> None:
     img, draw, f = canvas(
-        "Más producción no significó necesariamente más productividad",
+        "Descomposición del crecimiento de las ramas de actividad",
         "Descomposición promedio anual del crecimiento de la producción, 2005–2024 (puntos porcentuales)",
     )
     left, right, top, bottom = 520, 1710, 245, 975
