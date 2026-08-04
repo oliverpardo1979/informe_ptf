@@ -220,7 +220,7 @@ def build() -> Path:
 
     # Definición pedagógica
     draw.rounded_rectangle(
-        (91, 804, 825, 914),
+        (91, 804, 825, 893),
         radius=18,
         fill=(246, 241, 232, 226),
         outline=(23, 54, 93, 70),
@@ -234,13 +234,7 @@ def build() -> Path:
     )
     draw.text(
         (116, 855),
-        "Qué tan eficientemente se combinan el trabajo y el capital",
-        font=font(18),
-        fill=TEXT,
-    )
-    draw.text(
-        (116, 881),
-        "para producir.",
+        "Qué tan eficientemente se combinan el trabajo y el capital para producir.",
         font=font(18),
         fill=TEXT,
     )
