@@ -227,13 +227,13 @@ def build() -> Path:
     )
     draw.text(
         (116, 855),
-        "Qué tan eficientemente se combinan el trabajo, el capital",
+        "Qué tan eficientemente se combinan el trabajo y el capital",
         font=font(18),
         fill=TEXT,
     )
     draw.text(
         (116, 881),
-        "y los insumos para producir.",
+        "para producir.",
         font=font(18),
         fill=TEXT,
     )
