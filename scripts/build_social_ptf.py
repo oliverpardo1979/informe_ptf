@@ -119,14 +119,21 @@ def build() -> Path:
     )
     draw.text(
         (92, 119),
-        "colombiana terminó 2024 un 1,5%",
+        "colombiana ha estado estancada",
         font=font(56, bold=True),
         fill=TEXT,
     )
+    title_tail = "al menos durante los últimos "
     draw.text(
         (92, 184),
-        "por debajo de su nivel de 2004.",
+        title_tail,
         font=font(56),
+        fill=TEXT,
+    )
+    draw.text(
+        (92 + draw.textlength(title_tail, font=font(56)), 184),
+        "20 años.",
+        font=font(56, bold=True),
         fill=TEXT,
     )
 
